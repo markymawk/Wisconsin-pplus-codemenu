@@ -22,7 +22,7 @@ using namespace std;
 
 int main()
 {
-	string OutputTextPath = "C:\\Users\\johno\\Documents\\Modding\\Dolphin\\SD_Raws\\ASM.txt";
+	string OutputTextPath = "C:\\Users\\m\\Desktop\\Wisco PM\\wisco build P+\\asm.txt";
 	
 	CodeStart(OutputTextPath);
 	//place all ASM code here
@@ -100,6 +100,6 @@ int main()
 #endif
 	//string InputGCTPath = "C:\\Users\\john\\Downloads\\LXPL 2.1 v1 [Wii]\\LegacyLT\\RSBE01.gct";
 	string OutputGCTPath = R"(C:\Users\johno\Documents\Modding\Dolphin\SD_Raws\RSBE01.gct)";
-	MakeGCT(OutputTextPath, InputGCTPath, OutputGCTPath); //remove if you don't want to append code
+	//MakeGCT(OutputTextPath, InputGCTPath, OutputGCTPath); //remove if you don't want to append code
 	return 0;
 }
