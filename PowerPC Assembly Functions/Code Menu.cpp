@@ -167,18 +167,18 @@ void CodeMenu()
 	DebugLines.push_back(new Comment(""));
 	DebugLines.push_back(new Toggle("Debug Mode", false, DEBUG_MODE_INDEX));
 	DebugLines.push_back(new Selection("Hitbox Display", { "OFF", "ON", "Models Off" }, 0, DISPLAY_HITBOXES_INDEX));
+	DebugLines.push_back(new Toggle("Draw DI", false, DI_DRAW_INDEX));
 	DebugLines.push_back(new Toggle("Collision Display", false, DISPLAY_COLLISION_INDEX));
 	DebugLines.push_back(new Selection("Stage Collisions", { "OFF", "ON", "Background Off" }, 0, DISPLAY_LEDGEGRAB_INDEX));
 	DebugLines.push_back(new Toggle("Camera Lock", false, CAMERA_LOCK_INDEX));
-	DebugLines.push_back(new Toggle("Draw DI", false, DI_DRAW_INDEX));
-	DebugLines.push_back(new Toggle("FPS Display", false, FPS_DISPLAY_INDEX));
 	DebugLines.push_back(new Toggle("HUD", true, HUD_DISPLAY_INDEX));
+	DebugLines.push_back(new Toggle("FPS Display", false, FPS_DISPLAY_INDEX));
 	Page DebugMode("Debug Mode Settings", DebugLines);
 
 	//value setting
 	vector<Line*> ConstantsLines;
-	ConstantsLines.push_back(new Comment("Set attributes to new values"));
-	ConstantsLines.push_back(new Comment(""));
+	//ConstantsLines.push_back(new Comment("Set attributes to new values"));
+	//ConstantsLines.push_back(new Comment(""));
 	ConstantsLines.push_back(new Floating("Hitstun Multiplier", 0, 999, 0.4, .01, HITSTUN_MULTIPLIER_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B87AA8, HITSTUN_MULTIPLIER_INDEX);
 	ConstantsLines.push_back(new Floating("Hitlag Multiplier", 0, 999, 1. / 3., .02, HITLAG_MULTIPLIER_INDEX, "%.3f"));
@@ -208,7 +208,7 @@ void CodeMenu()
 	constantOverrides.emplace_back(0x80B88510, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX);
 	ConstantsLines.push_back(new Floating("Knockback Decay Rate", -999, 999, 0.051, .001, KNOCKBACK_DECAY_MULTIPLIER_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B88534, KNOCKBACK_DECAY_MULTIPLIER_INDEX);
-	ConstantsLines.push_back(new Selection("Staling Toggle", { "Default", "ON", "OFF" }, 0, STALING_TOGGLE_INDEX));
+	ConstantsLines.push_back(new Selection("Move Staling", { "Default", "ON", "OFF" }, 0, STALING_TOGGLE_INDEX));
 	Page ConstantsPage("Gameplay Modifiers", ConstantsLines);
 
 	//DBZ Mode settings
@@ -233,8 +233,6 @@ void CodeMenu()
 #else
 	MainLines.push_back(new Comment("Legacy TE 2.5 Code Menu", &MENU_TITLE_CHECK_LOCATION));
 #endif
-	MainLines.push_back(new Comment("Green = Comments | Blue = Changed"));
-	MainLines.push_back(new Comment("A = Enter Submenu | B = Back/Exit"));
 	MainLines.push_back(new Comment("X = Reset Selection | Y = Reset Page"));
 	MainLines.push_back(new Comment("Hold Z = Scroll Faster"));
 	MainLines.push_back(new Comment(""));
