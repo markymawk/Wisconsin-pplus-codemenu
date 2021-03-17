@@ -114,7 +114,6 @@ void CodeMenu()
 	vector<Line*> P1Lines;
 	P1Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P1_INDEX));
 	P1Lines.push_back(new Selection("P1 Character Select", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P1_INDEX));
-	//P1Lines.push_back(new Selection("P1 Identity Crisis", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P1_INDEX));
 	P1Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P1_INDEX, "%.0f%%"));
 	P1Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P1_INDEX));
 	P1Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P1_INDEX));
@@ -141,7 +140,6 @@ void CodeMenu()
 	vector<Line*> P3Lines;
 	P3Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P3_INDEX));
 	P3Lines.push_back(new Selection("P3 Character Select", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P3_INDEX));
-	//P3Lines.push_back(new Selection("P3 Identity Crisis", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P3_INDEX));
 	P3Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P3_INDEX, "%.0f%%"));
 	P3Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P3_INDEX));
 	P3Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P3_INDEX));
@@ -153,7 +151,6 @@ void CodeMenu()
 	vector<Line*> P4Lines;
 	P4Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P4_INDEX));
 	P4Lines.push_back(new Selection("P4 Character Select", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P4_INDEX));
-	//P4Lines.push_back(new Selection("P4 Identity Crisis", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P4_INDEX));
 	P4Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P4_INDEX, "%.0f%%"));
 	P4Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P4_INDEX));
 	P4Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P4_INDEX));
@@ -232,7 +229,7 @@ void CodeMenu()
 #endif
 
 #if BUILD_TYPE == PROJECT_PLUS
-	MainLines.push_back(new Comment("Project+ Code Menu", &MENU_TITLE_CHECK_LOCATION));
+	MainLines.push_back(new Comment("WI P+ Code Menu", &MENU_TITLE_CHECK_LOCATION));
 #else
 	MainLines.push_back(new Comment("Legacy TE 2.5 Code Menu", &MENU_TITLE_CHECK_LOCATION));
 #endif
@@ -300,24 +297,6 @@ void CodeMenu()
 
 	Page Main("Main", MainLines);
 	
-	
-	//MainLines.push_back(new Selection("Infinity War", { "OFF", "Same Stage", "Random Stage" }, 0, ENDLESS_FRIENDLIES_INDEX));
-	
-	//MainLines.push_back(new Toggle("Terminate Celebrations", false, AUTO_SKIP_TO_CSS_INDEX));
-	
-	
-	
-	
-	
-	
-	
-	//int KnucklesTemp;
-	//MainLines.push_back(new Toggle("Knuckles Friendlies", false, KnucklesTemp));
-	
-	
-
-	
-
 	//Unclepunch fps code
 	vector<unsigned int> x = { 3254926684, 3, 2288895028, 946012161, 2557330484, 2283733000, 1610612736, 0, 3254926716, 6, 2288895029, 946012161, 2557330485, 738394172, 1098907672, 2288895028, 2959983670, 945815552, 2557330484, 2557330485, 2147549204, 0 };
 
@@ -952,9 +931,12 @@ void ControlCodeMenu()
 	int ActionReg = 14;
 
 	int NotLoaded = GetNextLabel();
+	//prevents Code Menu from booting if it doesn't match a specified string (lol)
+
 #if BUILD_TYPE == PROJECT_PLUS
-	LoadHalfToReg(Reg1, MENU_TITLE_CHECK_LOCATION + 7 + Line::COMMENT_LINE_TEXT_START);
-	If(Reg1, NOT_EQUAL_I_L, 0x2B20); //+
+	LoadHalfToReg(Reg1, MENU_TITLE_CHECK_LOCATION + Line::COMMENT_LINE_TEXT_START);
+	//If(Reg1, NOT_EQUAL_I_L, 0x2B20); //+
+	If(Reg1, NOT_EQUAL_I_L, 0x5749); //WI
 	{
 		JumpToLabel(NotLoaded);
 	}EndIf();
