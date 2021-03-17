@@ -266,7 +266,7 @@ void orderRotationQueueByMatchPlacing() {
 
 	IfInVersus(reg1); {
 		LoadWordToReg(reg1, ENDLESS_FRIENDLIES_MODE_INDEX + Line::VALUE);
-		If(reg1, EQUAL_I, 4); //Rotation
+		If(reg1, EQUAL_I, 2); //1v1 Rotation
 		{
 			//shift 1st position back
 			SetRegister(reg2, 0);
@@ -279,7 +279,7 @@ void orderRotationQueueByMatchPlacing() {
 			RLWINM(reg2, reg2, 8, 0, 24); //<<8
 			STW(reg2, reg1, 0);
 			STB(reg3, queuePtrReg, -1); //reg4 is address of first 0
-		} Else(); If(reg1, GREATER_OR_EQUAL_I, 2); //Winner or Loser Stays
+		} Else(); If(reg1, GREATER_OR_EQUAL_I, 3); //Winner or Loser Stays ** WI BUILD CHANGED TO 3
 		{
 			SetRegister(placementListReg, ENDLESS_ROTATION_PLACEMENT_LIST_LOC);
 			CounterLoop(portReg, 1, 5, 1); {
