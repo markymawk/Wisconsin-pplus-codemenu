@@ -180,6 +180,9 @@ const int MENU_SELECTED_TAG_OFFSET = 0x164;
 #define WHITE 0xFFFFFFFF
 #define PURPLE 0x6E0094FF
 #define TEAL 0x6DD0FFFF
+
+#define MENU_TEXT_YELLOW 0xFFFF22FF
+#define MENU_TEXT_GRAY 0xDDDDDDFF
 ///colors end
 ///primitive types
 #define PRIMITIVE_LINE 0xB0
