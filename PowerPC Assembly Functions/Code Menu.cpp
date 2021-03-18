@@ -112,57 +112,54 @@ void CodeMenu()
 	
 	//player pages
 	vector<Line*> P1Lines;
+	P1Lines.push_back(new Print("Tag Hex: %s", { &P1_TAG_STRING_INDEX }));
+	P1Lines.push_back(new Comment(""));
 	P1Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P1_INDEX));
 	P1Lines.push_back(new Selection("P1 Character Select", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P1_INDEX));
 	P1Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P1_INDEX, "%.0f%%"));
 	P1Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P1_INDEX));
 	P1Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P1_INDEX));
-	P1Lines.push_back(new Comment(""));
-	P1Lines.push_back(new Print("Tag Hex: %s", { &P1_TAG_STRING_INDEX }));
-	P1Lines.push_back(new Comment("For Use With Tag-Based Costumes"));
-
-	for (auto x : P1Lines) {
-		cout << x->Text << endl;
-	}
+	
+	//for (auto x : P1Lines) {
+	//	cout << x->Text << endl;
+	//}
 	Page P1("Player 1 Codes", P1Lines);
 
 	vector<Line*> P2Lines;
+	P2Lines.push_back(new Print("Tag Hex: %s", { &P2_TAG_STRING_INDEX }));
+	P2Lines.push_back(new Comment(""));
 	P2Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P2_INDEX));
 	P2Lines.push_back(new Selection("P2 Character Select", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P2_INDEX));
 	P2Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P2_INDEX, "%.0f%%"));
 	P2Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P2_INDEX));
 	P2Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P2_INDEX));
-	P2Lines.push_back(new Comment(""));
-	P2Lines.push_back(new Print("Tag Hex: %s", { &P2_TAG_STRING_INDEX }));
-	P2Lines.push_back(new Comment("For Use With Tag-Based Costumes"));
+
 	Page P2("Player 2 Codes", P2Lines);
 
 	vector<Line*> P3Lines;
+	P3Lines.push_back(new Print("Tag Hex: %s", { &P3_TAG_STRING_INDEX }));
+	P3Lines.push_back(new Comment(""));
 	P3Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P3_INDEX));
 	P3Lines.push_back(new Selection("P3 Character Select", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P3_INDEX));
 	P3Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P3_INDEX, "%.0f%%"));
 	P3Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P3_INDEX));
 	P3Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P3_INDEX));
-	P3Lines.push_back(new Comment(""));
-	P3Lines.push_back(new Print("Tag Hex: %s", { &P3_TAG_STRING_INDEX }));
-	P3Lines.push_back(new Comment("For Use With Tag-Based Costumes"));
+
 	Page P3("Player 3 Codes", P3Lines);
 
 	vector<Line*> P4Lines;
+	P4Lines.push_back(new Print("Tag Hex: %s", { &P4_TAG_STRING_INDEX }));
+	P4Lines.push_back(new Comment(""));
 	P4Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P4_INDEX));
 	P4Lines.push_back(new Selection("P4 Character Select", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P4_INDEX));
 	P4Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P4_INDEX, "%.0f%%"));
 	P4Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P4_INDEX));
 	P4Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P4_INDEX));
-	P4Lines.push_back(new Comment(""));
-	P4Lines.push_back(new Print("Tag Hex: %s", { &P4_TAG_STRING_INDEX }));
-	P4Lines.push_back(new Comment("For Use With Tag-Based Costumes"));
+
 	Page P4("Player 4 Codes", P4Lines);
 
 	vector<Line*> PlayerCodesLines;
 	PlayerCodesLines.push_back(new Comment("Enable per-port toggles"));
-	PlayerCodesLines.push_back(new Comment(""));
-	PlayerCodesLines.push_back(new Comment(""));
 	PlayerCodesLines.push_back(new Comment(""));
 	PlayerCodesLines.push_back(&P1.CalledFromLine);
 	PlayerCodesLines.push_back(&P2.CalledFromLine);
@@ -179,11 +176,11 @@ void CodeMenu()
 	DebugLines.push_back(new Toggle("Debug Mode", false, DEBUG_MODE_INDEX));
 	DebugLines.push_back(new Selection("Hitbox Display", { "OFF", "ON", "ON (Hide Characters)" }, 0, DISPLAY_HITBOXES_INDEX));
 	DebugLines.push_back(new Toggle("ECB Display", false, DISPLAY_COLLISION_INDEX));
-	DebugLines.push_back(new Selection("Stage Collisions", { "OFF", "ON", "Background Off" }, 0, DISPLAY_LEDGEGRAB_INDEX));
+	DebugLines.push_back(new Selection("Stage Collisions", { "OFF", "ON", "ON (Hide Stage)" }, 0, DISPLAY_LEDGEGRAB_INDEX));
 	DebugLines.push_back(new Toggle("Camera Lock", false, CAMERA_LOCK_INDEX));
 	DebugLines.push_back(new Toggle("Draw DI", false, DI_DRAW_INDEX));
 	DebugLines.push_back(new Toggle("HUD", true, HUD_DISPLAY_INDEX));
-	DebugLines.push_back(new Toggle("Display FPS", false, FPS_DISPLAY_INDEX));
+	DebugLines.push_back(new Toggle("FPS Display", false, FPS_DISPLAY_INDEX));
 	Page DebugMode("Debug Mode Settings", DebugLines);
 
 	//Flight Mode page
@@ -199,6 +196,9 @@ void CodeMenu()
 	Page FlightModePage("Flight Mode", FlightModeLines);
 
 	vector<Line*> GameplayConstantsLines;
+	GameplayConstantsLines.push_back(new Comment("Modify core game mechanics"));
+	GameplayConstantsLines.push_back(new Comment(""));
+	GameplayConstantsLines.push_back(new Comment("On-hit behavior"));
 	GameplayConstantsLines.push_back(new Floating("Hitstun Multiplier", 0, 999, 0.4, .01, HITSTUN_MULTIPLIER_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B87AA8, HITSTUN_MULTIPLIER_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Hitlag Multiplier", 0, 999, 1. / 3., .02, HITLAG_MULTIPLIER_INDEX, "%.3f"));
@@ -211,8 +211,9 @@ void CodeMenu()
 	constantOverrides.emplace_back(0x80B88354, SDI_DISTANCE_INDEX);
 	GameplayConstantsLines.push_back(new Floating("ASDI Distance", -999, 999, 3, .5, ASDI_DISTANCE_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B88358, ASDI_DISTANCE_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Walljump Horizontal Multiplier", -999, 999, 0.9, .05, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX, "%.3f"));
-	constantOverrides.emplace_back(0x80B88420, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX);
+	GameplayConstantsLines.push_back(new Floating("Knockback Decay Rate", -999, 999, 0.051, .001, KNOCKBACK_DECAY_MULTIPLIER_INDEX, "%.3f"));
+	constantOverrides.emplace_back(0x80B88534, KNOCKBACK_DECAY_MULTIPLIER_INDEX);
+	GameplayConstantsLines.push_back(new Comment("Shield mechanics"));
 	GameplayConstantsLines.push_back(new Floating("Minimum Shield Size Scale", -999, 999, 0.15, .02, MINIMUM_SHIELD_SIZE_SCALING_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B88444, MINIMUM_SHIELD_SIZE_SCALING_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Shield Damage Multiplier", -999, 999, 1, .02, SHIELD_DAMAGE_MULTIPLIER_INDEX, "%.3f"));
@@ -223,16 +224,18 @@ void CodeMenu()
 	constantOverrides.emplace_back(0x80B88478, SHIELD_SIZE_MULTIPLIER_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Shield Tilt Multiplier", -999, 999, 0.5, .05, SHIELD_TILT_MULTIPLIER_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B88484, SHIELD_TILT_MULTIPLIER_INDEX);
+	GameplayConstantsLines.push_back(new Comment("Other"));
 	//ValueLines.push_back(new Floating("Attacker Shield Pushback Friction Multiplier", -999, 999, 1.1, .05, SDI_DISTANCE_INDEX, "%.3f"));
+	GameplayConstantsLines.push_back(new Floating("Walljump Horizontal Multiplier", -999, 999, 0.9, .05, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX, "%.3f"));
+	constantOverrides.emplace_back(0x80B88420, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Wall Bounce Knockback Multiplier", -999, 999, 0.80, .02, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B88510, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Knockback Decay Rate", -999, 999, 0.051, .001, KNOCKBACK_DECAY_MULTIPLIER_INDEX, "%.3f"));
-	constantOverrides.emplace_back(0x80B88534, KNOCKBACK_DECAY_MULTIPLIER_INDEX);
+
 	Page GameplayConstantsPage("Gameplay Modifiers", GameplayConstantsLines);
 
 	//Gameplay Modifiers ("Special Settings") setting
 	vector<Line*> SpecialSettings;
-	SpecialSettings.push_back(new Comment("Enable gameplay modifiers and other modes"));
+	SpecialSettings.push_back(new Comment("Toggle gameplay modifiers and for-fun modes"));
 	SpecialSettings.push_back(new Comment(""));
 	SpecialSettings.push_back(&GameplayConstantsPage.CalledFromLine);
 	SpecialSettings.push_back(&FlightModePage.CalledFromLine);
@@ -697,8 +700,8 @@ void CreateMenu(Page MainPage)
 	//line colors
 	AddValueToByteArray(MENU_TEXT_GRAY, Header); //unhighlighted line color, prev WHITE
 	AddValueToByteArray(MENU_TEXT_YELLOW, Header); //highlighted line color, prev YELLOW
-	AddValueToByteArray(TEAL, Header); //changed line color
-	AddValueToByteArray(BLUE, Header); //changed and highlighted line color
+	AddValueToByteArray(MENU_TEXT_MODIFIED_UNSELECTED, Header); //changed line color
+	AddValueToByteArray(MENU_TEXT_MODIFIED_SELECTED, Header); //changed and highlighted line color
 	AddValueToByteArray(GREEN, Header); //comment line color
 	//frame timers
 	AddValueToByteArray(0, Header); //move frame timer
