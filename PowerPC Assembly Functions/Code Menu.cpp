@@ -178,10 +178,11 @@ void CodeMenu()
 	DebugLines.push_back(new Comment(""));
 	DebugLines.push_back(new Toggle("Debug Mode", false, DEBUG_MODE_INDEX));
 	DebugLines.push_back(new Selection("Hitbox Display", { "OFF", "ON", "ON (Hide Characters)" }, 0, DISPLAY_HITBOXES_INDEX));
+	DebugLines.push_back(new Toggle("Draw DI", false, DI_DRAW_INDEX));
 	DebugLines.push_back(new Toggle("ECB Display", false, DISPLAY_COLLISION_INDEX));
 	DebugLines.push_back(new Selection("Stage Collisions", { "OFF", "ON", "ON (Hide Stage)" }, 0, DISPLAY_LEDGEGRAB_INDEX));
+	DebugLines.push_back(new Comment(""));
 	DebugLines.push_back(new Toggle("Camera Lock", false, CAMERA_LOCK_INDEX));
-	DebugLines.push_back(new Toggle("Draw DI", false, DI_DRAW_INDEX));
 	DebugLines.push_back(new Toggle("HUD", true, HUD_DISPLAY_INDEX));
 	DebugLines.push_back(new Toggle("FPS Display", false, FPS_DISPLAY_INDEX));
 	Page DebugMode("Debug Mode Settings", DebugLines);
