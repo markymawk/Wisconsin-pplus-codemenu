@@ -57,6 +57,7 @@ int P4_TAG_STRING_INDEX = -1;
 int TAG_COSTUME_TOGGLE_INDEX = -1;
 int CROWD_CHEER_TOGGLE_INDEX = -1;
 int STALING_TOGGLE_INDEX = -1;
+int RANDOM_ANGLE_TOGGLE_INDEX = -1;
 
 //constant overrides
 vector<ConstantPair> constantOverrides;
@@ -240,6 +241,7 @@ void CodeMenu()
 	SpecialSettings.push_back(&GameplayConstantsPage.CalledFromLine);
 	SpecialSettings.push_back(&FlightModePage.CalledFromLine);
 	SpecialSettings.push_back(new Comment(""));
+	SpecialSettings.push_back(new Toggle("Random Angle Mode", false, RANDOM_ANGLE_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Selection("Move Staling", { "ON (Versus)", "ON (Versus + Solo)", "OFF" }, 0, STALING_TOGGLE_INDEX));
 	Page SpecialSettingsPage("Special Settings", SpecialSettings);
@@ -820,6 +822,9 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(0, Header);
 	//SHOULD_RESET_STAGE_COLLISIONS_FLAG_LOC
 	AddValueToByteArray(0, Header);
+	
+	//Random Angle Toggle
+	AddValueToByteArray(RANDOM_ANGLE_TOGGLE_INDEX, Header);
 	
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);
