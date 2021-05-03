@@ -1228,7 +1228,7 @@ void ControlCodeMenu()
 			ANDIS(Reg1, Reg1, ~0x0010); //allow frame advance
 			ADDI(Reg4, Reg4, FRAME_ADVANCE_NUM_WAIT_FRAMES);
 
-			CounterLoop(Reg7, 8, 32, 8);
+			CounterLoop(Reg7, 0, 32, 8);
 			{
 				LHZX(Reg8, Reg3, Reg7);
 				ANDI(Reg8, Reg8, ~0x0010);
@@ -1243,8 +1243,12 @@ void ControlCodeMenu()
 	If(OpenFlagReg, EQUAL_I, CODE_MENU_OPEN); {
 		SetRegister(Reg2, -1); //stop all debug commands
 	}EndIf();
-	OR(Reg1, Reg1, Reg2);
-	STW(Reg1, Reg3, 0);
+	CounterLoop(Reg7, 0, 32, 8);
+	{
+		LWZX(Reg8, Reg3, Reg7);
+		OR(Reg8, Reg8, Reg2);
+		STWX(Reg8, Reg3, Reg7);
+	} CounterLoopEnd();
 	//stop Z and start if in menu
 
 	ApplyMenuSetting(DEBUG_MODE_INDEX, 0x80583FFC + 3, Reg1, Reg2, 1);
