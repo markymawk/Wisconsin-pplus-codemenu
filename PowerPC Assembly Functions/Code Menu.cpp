@@ -1336,7 +1336,7 @@ void ControlCodeMenu()
 
 									SetRegister(Reg3, 0x80615520);
 									RLWINM(Reg4, Reg8, 2, 0, 31); //<< 2
-									ADD(Reg3, Reg3, Reg8);
+									ADD(Reg3, Reg3, Reg4);
 									LWZ(Reg3, Reg3, 0x4C);
 
 									FCTIWZ(0, 1);
