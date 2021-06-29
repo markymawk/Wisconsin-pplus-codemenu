@@ -60,6 +60,7 @@ int STALING_TOGGLE_INDEX = -1;
 int RANDOM_ANGLE_TOGGLE_INDEX = -1;
 int BIG_HEAD_TOGGLE_INDEX = -1;
 int STAGELIST_INDEX = -1;
+int ALL_CHARS_WALLJUMP_INDEX = -1;
 //int SCALE_MODIFIER_INDEX = -1;
 
 //constant overrides
@@ -245,6 +246,7 @@ void CodeMenu()
 	GameplayConstantsLines.push_back(new Comment("Other"));
 	//ValueLines.push_back(new Floating("Attacker Shield Pushback Friction Multiplier", -999, 999, 1.1, .05, SDI_DISTANCE_INDEX, "%.3f"));
 	//GameplayConstantsLines.push_back(new Floating("Character Size", 0.1, 3, 1, 0.1, SCALE_MODIFIER_INDEX, "%.1fx"));
+	GameplayConstantsLines.push_back(new Toggle("Universal Walljumps", false, ALL_CHARS_WALLJUMP_INDEX));
 	GameplayConstantsLines.push_back(new Floating("Walljump Horizontal Multiplier", -1, 5, 0.9, .05, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88420, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Wall Bounce Knockback Multiplier", -1, 5, 0.80, .05, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX, "%.2fx"));
@@ -305,7 +307,7 @@ void CodeMenu()
 	//MainLines.push_back(new Toggle("Save Previous Replay", false, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Comment(""));
-	MainLines.push_back(new Selection("Stagelist", { "Default", "WI Singles", "WI Doubles" }, 0, STAGELIST_INDEX));
+	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (WI)", "Singles (PMBR)", "Doubles (WI)", "Doubles (PMBR)" }, 0, STAGELIST_INDEX));
 	MainLines.push_back(&SpecialSettingsPage.CalledFromLine);
 	MainLines.push_back(&PlayerCodes.CalledFromLine);
 	MainLines.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
@@ -845,6 +847,9 @@ void CreateMenu(Page MainPage)
 	//Stagelist Looter
 	AddValueToByteArray(STAGELIST_INDEX, Header);
 
+	//Universal walljump
+	AddValueToByteArray(ALL_CHARS_WALLJUMP_INDEX, Header);
+
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);
 	DSB[0x4 / 4] = 0xFFFFFFFF;
@@ -877,12 +882,25 @@ void constantOverride() {
 	int reg1 = 4;
 	int reg2 = 5;
 
-	for(auto& x : constantOverrides) {
+	for (auto& x : constantOverrides) {
 		LoadWordToReg(reg1, *x.index + Line::VALUE);
 		SetRegister(reg2, x.address);
 		STW(reg1, reg2, 0);
 	}
 
+	// Universal walljumping - works, but match must be restarted. Attempted writing to 0x80FC15C0 and 0x80FC15D8, but got same result
+	LoadWordToReg(reg1, ALL_CHARS_WALLJUMP_INDEX + Line::VALUE);
+	SetRegister(reg2, 0x80FAA9A0); //walljump comparison
+	// Universal Walljump: If set, write 1
+	If(reg1, GREATER_I, 0); {
+		SetRegister(reg1, 1);	// word 1 @ $80FAA9A0, everyone can walljump
+	}
+	// If not set, write 2
+	Else(); {
+		SetRegister(reg1, 2);  // word 2 @ $80FAA9A0, normal walljump mechanics
+	} EndIf();
+	STW(reg1, reg2, 0);
+	
 	ASMEnd(0x2c000000); //cmpwi, r0, 0
 }
 

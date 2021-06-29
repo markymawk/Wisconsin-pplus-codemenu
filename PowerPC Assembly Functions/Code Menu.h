@@ -60,6 +60,7 @@ extern int CROWD_CHEER_TOGGLE_INDEX;
 extern int RANDOM_ANGLE_TOGGLE_INDEX;
 extern int BIG_HEAD_TOGGLE_INDEX;
 extern int STAGELIST_INDEX;
+extern int ALL_CHARS_WALLJUMP_INDEX;
 //extern int SCALE_MODIFIER_TOGGLE_INDEX;
 
 struct ConstantPair {
@@ -206,7 +207,9 @@ static const int BIG_HEAD_TOGGLE_LOC = RANDOM_ANGLE_TOGGLE_LOC + 4; //4
 
 static const int STAGELIST_LOC = BIG_HEAD_TOGGLE_LOC + 4; //4
 
-static const int DRAW_SETTINGS_BUFFER_LOC = STAGELIST_LOC + 4; //0x200
+static const int ALL_CHARS_WALLJUMP_LOC = STAGELIST_LOC + 4; //4
+
+static const int DRAW_SETTINGS_BUFFER_LOC = ALL_CHARS_WALLJUMP_LOC + 4; //0x200
 
 static const int START_OF_CODE_MENU = DRAW_SETTINGS_BUFFER_LOC + 0x200;
 
