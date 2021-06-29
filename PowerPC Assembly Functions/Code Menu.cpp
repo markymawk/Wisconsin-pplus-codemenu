@@ -59,6 +59,7 @@ int CROWD_CHEER_TOGGLE_INDEX = -1;
 int STALING_TOGGLE_INDEX = -1;
 int RANDOM_ANGLE_TOGGLE_INDEX = -1;
 int BIG_HEAD_TOGGLE_INDEX = -1;
+int STAGELIST_INDEX = -1;
 //int SCALE_MODIFIER_INDEX = -1;
 
 //constant overrides
@@ -304,6 +305,7 @@ void CodeMenu()
 	//MainLines.push_back(new Toggle("Save Previous Replay", false, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Comment(""));
+	MainLines.push_back(new Selection("Stagelist", { "Default", "WI Singles", "WI Doubles" }, 0, STAGELIST_INDEX));
 	MainLines.push_back(&SpecialSettingsPage.CalledFromLine);
 	MainLines.push_back(&PlayerCodes.CalledFromLine);
 	MainLines.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
@@ -840,6 +842,9 @@ void CreateMenu(Page MainPage)
 	//Scale Modifier
 	//AddValueToByteArray(SCALE_MODIFIER_INDEX, Header);
 	
+	//Stagelist Looter
+	AddValueToByteArray(STAGELIST_INDEX, Header);
+
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);
 	DSB[0x4 / 4] = 0xFFFFFFFF;
