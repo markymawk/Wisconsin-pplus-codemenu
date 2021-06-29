@@ -10,7 +10,7 @@ Fork of Fracture's code menu as used in Project+ 2.2.
 * Start-alts replace Y-alts in random Alternate Stages
 * Universal Walljumping - brand-new toggle which enables walljumps for all characters
 * Big Head Mode and Random Angle Mode toggles incorporated
-* Includes Eon's fixes from P+ 2.26 onward for debug overlay flickers
+* Includes Eon's fixes from P+ 2.27 onward for debug overlay flickers
 
 #### Credits and thanks to the legends that made this fork possible at all:  
 \* **Fracture** for the base code menu architecture as it appears in Legacy TE and Project+, as well as all the great base tech that comes with it.  
