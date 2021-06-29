@@ -1,6 +1,6 @@
 # Wisconsin-pplus-codemenu
 
-Fork of Fracture's code menu as used in Project+ 2.2. Special thanks to Eon and DesiacX whose modding contributions contributed greatly to this!
+Fork of Fracture's code menu as used in Project+ 2.2.
 
 # Changes:
 * Various options re-arranged or re-worded for organization, brevity, and user-friendliness
@@ -12,8 +12,8 @@ Fork of Fracture's code menu as used in Project+ 2.2. Special thanks to Eon and 
 * Big Head Mode and Random Angle Mode toggles incorporated
 * Includes Eon's fixes from P+ 2.26 onward for debug overlay flickers
 
-Credits and thanks to the legends that made this fork possible at all:  
-\* Fracture for the base code menu architecture as it appeared in Legacy TE and P+, as well as all the base tech that come with it.  
-\* DesiacX for the helpful guides and implementations of adding external toggle codes, especially the Stagelist toggle configuration.  
-\* Eon for providing the 2.27 debug overlay fix code, character walljump write address and parameters, and base codes for Big Head and Random Angle modes.  
-\* DukeItOut for designing the GCTRM format which streamlines the gecko coding process start-to-finish, along with the flexible STEX file system which makes the Stagelist toggle possible.
+#### Credits and thanks to the legends that made this fork possible at all:  
+\* **Fracture** for the base code menu architecture as it appears in Legacy TE and Project+, as well as all the great base tech that comes with it.  
+\* **DesiacX** for the helpful guides and implementations of adding external toggle codes, especially the Stagelist toggle configuration.  
+\* **Eon** for providing the 2.27 debug overlay fix code, character walljump write address and parameters, and creating Big Head and Random Angle modes.  
+\* **DukeItOut** for designing the GCTRM format which streamlines the gecko coding process start-to-finish, along with the flexible STEX file system which makes the Stagelist toggle possible.
