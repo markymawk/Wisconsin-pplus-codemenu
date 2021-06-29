@@ -3,14 +3,14 @@
 Fork of Fracture's code menu as used in Project+ 2.2.
 
 # Changes:
-* Various options re-arranged or re-worded for organization, brevity, and user-friendliness
-* Unselected options are now an off-white color, with the currently-selected line remaining yellow regardless of value change
+* Various options re-arranged for organization and user-friendliness
+* Unchanged lines are now a slight grey color, with the currently-selected line remaining yellow regardless of value change
 * Custom stagelist toggle includes Wisco and PMBR stagelist options
-* Gameplay Modifiers and Flight Mode are re-grouped and re-sorted into their own sub-menus, with properly capped values
+* Gameplay Modifiers and Flight Mode are re-sorted into their own sub-menus with properly capped values
 * Start-alts replace Y-alts in random Alternate Stages
 * Universal Walljumping - brand-new toggle which enables walljumps for all characters
-* Big Head Mode and Random Angle Mode toggles incorporated
-* Includes Eon's fixes from P+ 2.27 onward for debug overlay flickers
+* Big Head Mode and Random Angle Mode toggles implemented
+* Includes Eon's fixes from P+ 2.27 onward for debug overlay flickers, and other stability fixes
 
 #### Credits and thanks to the legends that made this fork possible at all:  
 \* **Fracture** for the base code menu architecture as it appears in Legacy TE and Project+, as well as all the great base tech that comes with it.  
