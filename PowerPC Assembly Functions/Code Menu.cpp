@@ -589,11 +589,8 @@ void ActualCodes()
 			STH(Reg1, Reg2, 0);
 		} Else(); If(Reg1, EQUAL_I, 1); //random
 		{
-#if BUILD_TYPE == PROJECT_PLUS
 			vector<int> alts = { 0, BUTTON_L, BUTTON_R, BUTTON_Z, BUTTON_START };
-#else
-			vector<int> alts = { 0, BUTTON_L, BUTTON_Z, BUTTON_START };
-#endif
+
 			LoadWordToReg(Reg1, Reg2, RANDOM_ALTS_MATCH_START_FLAG);
 			If(Reg1, EQUAL_I, 1); {
 				//set new rng value and clear flag
@@ -616,18 +613,6 @@ void ActualCodes()
 					SetRegister(Reg4, alts[i]);
 				} EndIf();
 			}
-			/*If(Reg3, EQUAL_I, 1);
-			{
-				SetRegister(Reg3, BUTTON_L);
-			} EndIf();
-			If(Reg3, EQUAL_I, 2);
-			{
-				SetRegister(Reg3, BUTTON_START);
-			} EndIf();
-			If(Reg3, EQUAL_I, 3);
-			{
-				SetRegister(Reg3, BUTTON_Z);
-			} EndIf();*/
 			SetRegister(Reg2, 0x800B9EA2);
 			STH(Reg4, Reg2, 0);
 			SetRegister(Reg2, ALT_STAGE_VAL_LOC);
@@ -635,12 +620,7 @@ void ActualCodes()
 		} EndIf(); EndIf();
 
 		RestoreRegisters();
-#if BUILD_TYPE == PROJECT_PLUS
 		ASMEnd(0x7cbd2b78); //mr r29, r5
-#else
-		ASMEnd(0x7fe3fb78); //mr r3, r31
-#endif
-		//ASMEnd(0x809d0038); //lwz r4, r29, 0x38
 	}
 
 	if (CROWD_CHEER_TOGGLE_INDEX != -1) {
