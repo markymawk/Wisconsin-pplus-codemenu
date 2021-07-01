@@ -79,6 +79,7 @@ int SHIELD_SIZE_MULTIPLIER_INDEX = -1;
 int SHIELD_TILT_MULTIPLIER_INDEX = -1;
 int KNOCKBACK_DECAY_MULTIPLIER_INDEX = -1;
 int WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX = -1;
+int CROUCH_KNOCKBACK_INDEX = -1; //new WI
 
 
 int SHIELD_RED_1 = -1;
@@ -232,6 +233,8 @@ void CodeMenu()
 	constantOverrides.emplace_back(0x80B88358, ASDI_DISTANCE_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Knockback Decay Rate", -0.051, 0.102, 0.051, .003, KNOCKBACK_DECAY_MULTIPLIER_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B88534, KNOCKBACK_DECAY_MULTIPLIER_INDEX);
+	GameplayConstantsLines.push_back(new Floating("Crouch Knockback Multiplier", 0, 3, 0.666666686535, 0.0833333358169, CROUCH_KNOCKBACK_INDEX, "%.2fx"));
+	constantOverrides.emplace_back(0x80B88348, CROUCH_KNOCKBACK_INDEX);
 	GameplayConstantsLines.push_back(new Comment("Shield mechanics"));
 	GameplayConstantsLines.push_back(new Floating("Minimum Shield Size", -1, 1, 0.15, .02, MINIMUM_SHIELD_SIZE_SCALING_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88444, MINIMUM_SHIELD_SIZE_SCALING_INDEX);
