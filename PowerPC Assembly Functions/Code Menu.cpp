@@ -208,7 +208,6 @@ void CodeMenu()
 	vector<Line*> FlightModeLines;
 	FlightModeLines.push_back(new Comment("Flight mode settings"));
 	FlightModeLines.push_back(new Comment(""));
-	//FlightModeLines.push_back(new Toggle("Flight Mode", false, DBZ_MODE_INDEX));
 	FlightModeLines.push_back(new Comment(""));
 	FlightModeLines.push_back(new Floating("Max Horizontal Speed", 0, 100, 2, .05, DBZ_MODE_MAX_SPEED_X_INDEX, "%.2f"));
 	FlightModeLines.push_back(new Floating("Max Vertical Speed", 0, 100, 2, .05, DBZ_MODE_MAX_SPEED_Y_INDEX, "%.2f"));
@@ -227,35 +226,35 @@ void CodeMenu()
 	constantOverrides.emplace_back(0x80B87AEC, HITLAG_MULTIPLIER_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Hitlag Maximum", 0, 100, 30, 1, HITLAG_MAXIMUM_INDEX, "%.0f"));
 	constantOverrides.emplace_back(0x80B87AE8, HITLAG_MAXIMUM_INDEX);
-	//GameplayConstantsLines.push_back(new Floating("Electric Hitlag Multiplier", 0, 999, 1.5, .1, ELECTRIC_HITLAG_MULTIPLIER_INDEX, "%.1fx"));
-	//constantOverrides.emplace_back(0x80B87B10, ELECTRIC_HITLAG_MULTIPLIER_INDEX);
 	GameplayConstantsLines.push_back(new Floating("SDI Distance", -100, 100, 6, .5, SDI_DISTANCE_INDEX, "%.1f"));
 	constantOverrides.emplace_back(0x80B88354, SDI_DISTANCE_INDEX);
 	GameplayConstantsLines.push_back(new Floating("ASDI Distance", -100, 100, 3, .5, ASDI_DISTANCE_INDEX, "%.1f"));
 	constantOverrides.emplace_back(0x80B88358, ASDI_DISTANCE_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Knockback Decay Rate", -0.051, 0.102, 0.051, .003, KNOCKBACK_DECAY_MULTIPLIER_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B88534, KNOCKBACK_DECAY_MULTIPLIER_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Crouch Knockback Multiplier", 0, 3, 0.666666686535, 0.0833333358169, CROUCH_KNOCKBACK_INDEX, "%.2fx"));
+	GameplayConstantsLines.push_back(new Floating("Crouch Knockback Multiplier", 0, 3, (2. / 3.) , (1. / 12.), CROUCH_KNOCKBACK_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88348, CROUCH_KNOCKBACK_INDEX);
+	//GameplayConstantsLines.push_back(new Floating("Electric Hitlag Multiplier", 0, 999, 1.5, .1, ELECTRIC_HITLAG_MULTIPLIER_INDEX, "%.1fx"));
+	//constantOverrides.emplace_back(0x80B87B10, ELECTRIC_HITLAG_MULTIPLIER_INDEX);
+
 	GameplayConstantsLines.push_back(new Comment("Shield mechanics"));
 	GameplayConstantsLines.push_back(new Floating("Minimum Shield Size", -1, 1, 0.15, .03, MINIMUM_SHIELD_SIZE_SCALING_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88444, MINIMUM_SHIELD_SIZE_SCALING_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Maximum Shield Size", 0, 5, 1, .05, SHIELD_SIZE_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88478, SHIELD_SIZE_MULTIPLIER_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Shield Decay Rate", -1, 1, 0.280000001192, .04, SHIELD_DECAY_INDEX, "%.2fx"));
+	GameplayConstantsLines.push_back(new Floating("Shield Decay Rate", -1, 2, 0.280000001192, .04, SHIELD_DECAY_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88450, SHIELD_DECAY_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Shield Regen Rate", 0, 1, 0.07, .01, SHIELD_REGEN_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88454, SHIELD_REGEN_INDEX);
-	//GameplayConstantsLines.push_back(new Floating("Base Shield Damage", -100, 100, 0, 1, SHIELD_BASE_DAMAGE_INDEX, "%.0f"));
-	//constantOverrides.emplace_back(0x80B88460, SHIELD_BASE_DAMAGE_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Shield Damage Multiplier", -4, 4, 1, .05, SHIELD_DAMAGE_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B8845C, SHIELD_DAMAGE_MULTIPLIER_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Shield Tilt Multiplier", 0, 1.95, 0.5, .05, SHIELD_TILT_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88484, SHIELD_TILT_MULTIPLIER_INDEX);
+	//GameplayConstantsLines.push_back(new Floating("Base Shield Damage", -100, 100, 0, 1, SHIELD_BASE_DAMAGE_INDEX, "%.0f"));
+	//constantOverrides.emplace_back(0x80B88460, SHIELD_BASE_DAMAGE_INDEX);
+
 	GameplayConstantsLines.push_back(new Comment("Other"));
-	//ValueLines.push_back(new Floating("Attacker Shield Pushback Friction Multiplier", -999, 999, 1.1, .05, SDI_DISTANCE_INDEX, "%.3f"));
-	//GameplayConstantsLines.push_back(new Floating("Character Size", 0.1, 3, 1, 0.1, SCALE_MODIFIER_INDEX, "%.1fx"));
-	GameplayConstantsLines.push_back(new Toggle("Universal Walljumps", false, ALL_CHARS_WALLJUMP_INDEX));
+	GameplayConstantsLines.push_back(new Toggle("Universal Walljumps", false, ALL_CHARS_WALLJUMP_INDEX)); //new WI
 	GameplayConstantsLines.push_back(new Floating("Walljump Horizontal Multiplier", -1, 5, 0.9, .05, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88420, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Wall Bounce Knockback Multiplier", -1, 5, 0.80, .05, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX, "%.2fx"));
@@ -276,7 +275,8 @@ void CodeMenu()
 	SpecialSettings.push_back(new Toggle("Random Angle Mode", false, RANDOM_ANGLE_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Selection("Big Head Mode", {"OFF", "ON (1x)", "ON (2x)"}, 0, BIG_HEAD_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
-	SpecialSettings.push_back(new Selection("Move Staling", { "ON (Versus)", "ON (Versus + Solo)", "OFF" }, 0, STALING_TOGGLE_INDEX));
+	// Move Staling: Wording implies that "Damage Stales in Training Mode" is disabled.
+	SpecialSettings.push_back(new Selection("Move Staling", { "ON (Versus)", "ON (All Modes)", "OFF" }, 0, STALING_TOGGLE_INDEX));
 	Page SpecialSettingsPage("Special Settings", SpecialSettings);
 
 
@@ -285,10 +285,8 @@ void CodeMenu()
 	vector<Line*> MainLines;
 #if DOLPHIN_BUILD
 	MainLines.push_back(new Comment("WI Netplay Code Menu (P+ 2.28)", &MENU_TITLE_CHECK_LOCATION));
-#elif BUILD_TYPE == PROJECT_PLUS
-	MainLines.push_back(new Comment("WI Code Menu (P+ 2.28)", &MENU_TITLE_CHECK_LOCATION));
 #else
-	MainLines.push_back(new Comment("Legacy TE 2.5 Code Menu", &MENU_TITLE_CHECK_LOCATION));
+	MainLines.push_back(new Comment("WI Code Menu (P+ 2.28)", &MENU_TITLE_CHECK_LOCATION));
 #endif
 	MainLines.push_back(new Comment("X = Reset Selection | Y = Reset Page"));
 	MainLines.push_back(new Comment("Hold Z = Scroll Faster"));

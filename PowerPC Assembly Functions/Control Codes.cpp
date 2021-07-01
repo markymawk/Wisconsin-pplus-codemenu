@@ -453,7 +453,7 @@ void EndMatch()
 					JumpToLabel(Skip);
 				}EndIf();
 
-				LWZ(reg4, reg3, 0); //keep hold to puase flag
+				LWZ(reg4, reg3, 0); //keep hold to pause flag
 
 				SetRegister(reg1, 1);
 				SetRegister(reg2, INFINITE_FRIENDLIES_FLAG_LOC);
