@@ -88,6 +88,8 @@ extern int KNOCKBACK_DECAY_MULTIPLIER_INDEX;
 extern int WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX;
 extern int STALING_TOGGLE_INDEX;
 extern int CROUCH_KNOCKBACK_INDEX;
+extern int SHIELD_DECAY_INDEX;
+extern int SHIELD_REGEN_INDEX;
 
 extern vector<int> Defaults;
 

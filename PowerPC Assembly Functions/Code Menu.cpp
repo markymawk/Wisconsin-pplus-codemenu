@@ -80,6 +80,8 @@ int SHIELD_TILT_MULTIPLIER_INDEX = -1;
 int KNOCKBACK_DECAY_MULTIPLIER_INDEX = -1;
 int WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX = -1;
 int CROUCH_KNOCKBACK_INDEX = -1; //new WI
+int SHIELD_DECAY_INDEX = -1; //new WI
+int SHIELD_REGEN_INDEX = -1; //new WI
 
 
 int SHIELD_RED_1 = -1;
@@ -236,13 +238,17 @@ void CodeMenu()
 	GameplayConstantsLines.push_back(new Floating("Crouch Knockback Multiplier", 0, 3, 0.666666686535, 0.0833333358169, CROUCH_KNOCKBACK_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88348, CROUCH_KNOCKBACK_INDEX);
 	GameplayConstantsLines.push_back(new Comment("Shield mechanics"));
-	GameplayConstantsLines.push_back(new Floating("Minimum Shield Size", -1, 1, 0.15, .02, MINIMUM_SHIELD_SIZE_SCALING_INDEX, "%.2fx"));
+	GameplayConstantsLines.push_back(new Floating("Minimum Shield Size", -1, 1, 0.15, .03, MINIMUM_SHIELD_SIZE_SCALING_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88444, MINIMUM_SHIELD_SIZE_SCALING_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Maximum Shield Size", 0, 5, 1, .05, SHIELD_SIZE_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88478, SHIELD_SIZE_MULTIPLIER_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Base Shield Damage", -100, 100, 0, 1, SHIELD_BASE_DAMAGE_INDEX, "%.0f"));
-	constantOverrides.emplace_back(0x80B88460, SHIELD_BASE_DAMAGE_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Shield Damage Multiplier", -4, 4, 1, .02, SHIELD_DAMAGE_MULTIPLIER_INDEX, "%.2fx"));
+	GameplayConstantsLines.push_back(new Floating("Shield Decay Rate", -1, 1, 0.280000001192, .04, SHIELD_DECAY_INDEX, "%.2fx"));
+	constantOverrides.emplace_back(0x80B88450, SHIELD_DECAY_INDEX);
+	GameplayConstantsLines.push_back(new Floating("Shield Regen Rate", 0, 1, 0.07, .01, SHIELD_REGEN_INDEX, "%.2fx"));
+	constantOverrides.emplace_back(0x80B88454, SHIELD_REGEN_INDEX);
+	//GameplayConstantsLines.push_back(new Floating("Base Shield Damage", -100, 100, 0, 1, SHIELD_BASE_DAMAGE_INDEX, "%.0f"));
+	//constantOverrides.emplace_back(0x80B88460, SHIELD_BASE_DAMAGE_INDEX);
+	GameplayConstantsLines.push_back(new Floating("Shield Damage Multiplier", -4, 4, 1, .05, SHIELD_DAMAGE_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B8845C, SHIELD_DAMAGE_MULTIPLIER_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Shield Tilt Multiplier", 0, 1.95, 0.5, .05, SHIELD_TILT_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88484, SHIELD_TILT_MULTIPLIER_INDEX);
