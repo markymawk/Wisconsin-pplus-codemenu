@@ -61,6 +61,7 @@ int RANDOM_ANGLE_TOGGLE_INDEX = -1;
 int BIG_HEAD_TOGGLE_INDEX = -1;
 int STAGELIST_INDEX = -1;
 int ALL_CHARS_WALLJUMP_INDEX = -1;
+int BALLOON_STOCK_INDEX = -1;
 //int SCALE_MODIFIER_INDEX = -1;
 
 //constant overrides
@@ -242,9 +243,9 @@ void CodeMenu()
 	constantOverrides.emplace_back(0x80B88444, MINIMUM_SHIELD_SIZE_SCALING_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Maximum Shield Size", 0, 5, 1, .05, SHIELD_SIZE_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88478, SHIELD_SIZE_MULTIPLIER_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Shield Decay Rate", -1, 2, 0.280000001192, .04, SHIELD_DECAY_INDEX, "%.2fx"));
+	GameplayConstantsLines.push_back(new Floating("Shield Decay Rate", -1, 2, 0.280000001192, .04, SHIELD_DECAY_INDEX, "%.2f"));
 	constantOverrides.emplace_back(0x80B88450, SHIELD_DECAY_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Shield Regen Rate", 0, 1, 0.07, .01, SHIELD_REGEN_INDEX, "%.2fx"));
+	GameplayConstantsLines.push_back(new Floating("Shield Regen Rate", 0, 1, 0.07, .01, SHIELD_REGEN_INDEX, "%.2f"));
 	constantOverrides.emplace_back(0x80B88454, SHIELD_REGEN_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Shield Damage Multiplier", -4, 4, 1, .05, SHIELD_DAMAGE_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B8845C, SHIELD_DAMAGE_MULTIPLIER_INDEX);
@@ -274,8 +275,9 @@ void CodeMenu()
 	SpecialSettings.push_back(new Comment(""));
 	SpecialSettings.push_back(new Toggle("Random Angle Mode", false, RANDOM_ANGLE_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Selection("Big Head Mode", {"OFF", "ON (1x)", "ON (2x)"}, 0, BIG_HEAD_TOGGLE_INDEX));
+	SpecialSettings.push_back(new Selection("Balloon Hit Behavior", { "None", "Gain Stock", "Lose Stock" }, 0, BALLOON_STOCK_INDEX));
 	SpecialSettings.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
-	// Move Staling: Wording implies that "Damage Stales in Training Mode" is disabled.
+	// Move Staling: Wording implies that "Damage Stales in Training Mode" is disabled. By default in P+, the code is NOT disabled.
 	SpecialSettings.push_back(new Selection("Move Staling", { "ON (Versus)", "ON (All Modes)", "OFF" }, 0, STALING_TOGGLE_INDEX));
 	Page SpecialSettingsPage("Special Settings", SpecialSettings);
 
@@ -836,6 +838,9 @@ void CreateMenu(Page MainPage)
 
 	//Universal walljump
 	AddValueToByteArray(ALL_CHARS_WALLJUMP_INDEX, Header);
+
+	//Balloon stocks
+	AddValueToByteArray(BALLOON_STOCK_INDEX, Header);
 
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);
