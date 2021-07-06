@@ -62,6 +62,10 @@ int BIG_HEAD_TOGGLE_INDEX = -1;
 int STAGELIST_INDEX = -1;
 int ALL_CHARS_WALLJUMP_INDEX = -1;
 int BALLOON_STOCK_INDEX = -1;
+int LCANCEL_MISS_P1_INDEX = -1;
+int LCANCEL_MISS_P2_INDEX = -1;
+int LCANCEL_MISS_P3_INDEX = -1;
+int LCANCEL_MISS_P4_INDEX = -1;
 //int SCALE_MODIFIER_INDEX = -1;
 
 //constant overrides
@@ -131,6 +135,8 @@ void CodeMenu()
 	P1Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P1_INDEX, "%.0f%%"));
 	P1Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P1_INDEX));
 	P1Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P1_INDEX));
+	P1Lines.push_back(new Comment(""));
+	P1Lines.push_back(new Toggle("Flash on Missed L-Cancel", false, LCANCEL_MISS_P1_INDEX));
 	
 	//for (auto x : P1Lines) {
 	//	cout << x->Text << endl;
@@ -148,6 +154,8 @@ void CodeMenu()
 	P2Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P2_INDEX, "%.0f%%"));
 	P2Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P2_INDEX));
 	P2Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P2_INDEX));
+	P2Lines.push_back(new Comment(""));
+	P2Lines.push_back(new Toggle("Flash on Missed L-Cancel", false, LCANCEL_MISS_P2_INDEX));
 
 	Page P2("Player 2 Codes", P2Lines);
 
@@ -162,6 +170,8 @@ void CodeMenu()
 	P3Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P3_INDEX, "%.0f%%"));
 	P3Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P3_INDEX));
 	P3Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P3_INDEX));
+	P3Lines.push_back(new Comment(""));
+	P3Lines.push_back(new Toggle("Flash on Missed L-Cancel", false, LCANCEL_MISS_P3_INDEX));
 
 	Page P3("Player 3 Codes", P3Lines);
 
@@ -176,6 +186,8 @@ void CodeMenu()
 	P4Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P4_INDEX, "%.0f%%"));
 	P4Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P4_INDEX));
 	P4Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P4_INDEX));
+	P4Lines.push_back(new Comment(""));
+	P4Lines.push_back(new Toggle("Flash on Missed L-Cancel", false, LCANCEL_MISS_P4_INDEX));
 
 	Page P4("Player 4 Codes", P4Lines);
 
@@ -841,6 +853,10 @@ void CreateMenu(Page MainPage)
 
 	//Balloon stocks
 	AddValueToByteArray(BALLOON_STOCK_INDEX, Header);
+	AddValueToByteArray(LCANCEL_MISS_P1_INDEX, Header);
+	AddValueToByteArray(LCANCEL_MISS_P2_INDEX, Header);
+	AddValueToByteArray(LCANCEL_MISS_P3_INDEX, Header);
+	AddValueToByteArray(LCANCEL_MISS_P4_INDEX, Header);
 
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);
@@ -983,20 +999,12 @@ void ControlCodeMenu()
 	int NotLoaded = GetNextLabel();
 
 	//prevents Code Menu from booting if it doesn't match a specified string (lol)
-#if BUILD_TYPE == PROJECT_PLUS
 	LoadHalfToReg(Reg1, MENU_TITLE_CHECK_LOCATION + Line::COMMENT_LINE_TEXT_START);
 	//If(Reg1, NOT_EQUAL_I_L, 0x2B20); //+
 	If(Reg1, NOT_EQUAL_I_L, 0x5749); //WI
 	{
 		JumpToLabel(NotLoaded);
 	}EndIf();
-#else
-	LoadHalfToReg(Reg1, MENU_TITLE_CHECK_LOCATION + 7 + Line::COMMENT_LINE_TEXT_START);
-	If(Reg1, NOT_EQUAL_I_L, 0x5445); //TE
-	{
-		JumpToLabel(NotLoaded);
-	}EndIf();
-#endif
 
 	LoadWordToReg(Reg4, HUD_DISPLAY_INDEX + Line::VALUE);
 	If(Reg4, EQUAL_I, 0);
