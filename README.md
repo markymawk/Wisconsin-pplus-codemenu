@@ -11,12 +11,13 @@ Fork of Fracture's code menu as used in Project+ 2.2.
 
 Added options:
 * Stagelist (by Desi, with custom 5-stagelist implementation)
-* Universal Walljumping (original, credit to Eon for the address + parameters)
-* Balloon Hit Behavior (original, credit to Eon for the base code)
+* Universal Walljumping (address + parameters thanks to Eon)
+* Balloon Hit Behavior (base code thanks to Eon)
 * Big Head Mode (by Eon, format by Desi)
 * Random Angle Mode (by Eon, format by Desi)
-* Crouch Knockback Multiplier (address thanks to Magus)
-* Shield Decay and Regen Rate (addresses thanks to Snoe)
+* Flash on Missed L-Cancel (by PMDT, modified from Desi's variant)
+* Gameplay Modifier: Crouch Knockback Multiplier (address thanks to Magus)
+* Gameplay Modifier: Shield Decay and Regen Rate (addresses thanks to Snoe)
 
 #### Credits and thanks to the legends that made this fork possible at all:  
 \* **Fracture** for the base code menu architecture as it appears in Legacy TE and Project+, as well as all the great tech that comes with it.  
