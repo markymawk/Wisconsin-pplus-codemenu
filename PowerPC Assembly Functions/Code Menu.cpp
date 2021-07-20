@@ -999,12 +999,19 @@ void ControlCodeMenu()
 	int NotLoaded = GetNextLabel();
 
 	//prevents Code Menu from booting if it doesn't match a specified string (lol)
-	LoadHalfToReg(Reg1, MENU_TITLE_CHECK_LOCATION + Line::COMMENT_LINE_TEXT_START);
+	LoadHalfToReg(Reg1, MENU_TITLE_CHECK_LOCATION + 7 + Line::COMMENT_LINE_TEXT_START);
 	//If(Reg1, NOT_EQUAL_I_L, 0x2B20); //+
-	If(Reg1, NOT_EQUAL_I_L, 0x5749); //WI
+	#if DOLPHIN_BUILD
+	If(Reg1, NOT_EQUAL_I_L, 0x6C61); // la
 	{
 		JumpToLabel(NotLoaded);
 	}EndIf();
+	#else
+	If(Reg1, NOT_EQUAL_I_L, 0x204D); // (space) M
+	{
+		JumpToLabel(NotLoaded);
+	}EndIf();
+	#endif
 
 	LoadWordToReg(Reg4, HUD_DISPLAY_INDEX + Line::VALUE);
 	If(Reg4, EQUAL_I, 0);
