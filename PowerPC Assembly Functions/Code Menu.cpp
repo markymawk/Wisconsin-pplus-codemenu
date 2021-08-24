@@ -298,9 +298,9 @@ void CodeMenu()
 	//main page
 	vector<Line*> MainLines;
 #if DOLPHIN_BUILD
-	MainLines.push_back(new Comment("WI Netplay Code Menu (P+ 2.28)", &MENU_TITLE_CHECK_LOCATION));
+	MainLines.push_back(new Comment("WI Netplay Code Menu (P+ 2.29)", &MENU_TITLE_CHECK_LOCATION));
 #else
-	MainLines.push_back(new Comment("WI Code Menu (P+ 2.28)", &MENU_TITLE_CHECK_LOCATION));
+	MainLines.push_back(new Comment("WI Code Menu (P+ 2.29)", &MENU_TITLE_CHECK_LOCATION));
 #endif
 	MainLines.push_back(new Comment("X = Reset Selection | Y = Reset Page"));
 	MainLines.push_back(new Comment("Hold Z = Scroll Faster"));
