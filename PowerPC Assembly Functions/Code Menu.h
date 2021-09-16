@@ -66,6 +66,7 @@ extern int LCANCEL_MISS_P1_INDEX;
 extern int LCANCEL_MISS_P2_INDEX;
 extern int LCANCEL_MISS_P3_INDEX;
 extern int LCANCEL_MISS_P4_INDEX;
+extern int TEAMS_ROTATE_TOGGLE_INDEX;
 //extern int SCALE_MODIFIER_TOGGLE_INDEX;
 
 struct ConstantPair {
@@ -221,7 +222,9 @@ static const int LCANCEL_MISS_P2_LOC = LCANCEL_MISS_P1_LOC + 4; //4
 static const int LCANCEL_MISS_P3_LOC = LCANCEL_MISS_P2_LOC + 4; //4
 static const int LCANCEL_MISS_P4_LOC = LCANCEL_MISS_P3_LOC + 4; //4
 
-static const int DRAW_SETTINGS_BUFFER_LOC = LCANCEL_MISS_P4_LOC + 4; //0x200
+static const int TEAMS_ROTATE_TOGGLE_LOC = LCANCEL_MISS_P4_LOC + 4; //4
+
+static const int DRAW_SETTINGS_BUFFER_LOC = TEAMS_ROTATE_TOGGLE_LOC + 4; //0x200
 
 static const int START_OF_CODE_MENU = DRAW_SETTINGS_BUFFER_LOC + 0x200;
 

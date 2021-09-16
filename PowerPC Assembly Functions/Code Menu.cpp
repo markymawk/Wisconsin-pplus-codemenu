@@ -66,6 +66,7 @@ int LCANCEL_MISS_P1_INDEX = -1;
 int LCANCEL_MISS_P2_INDEX = -1;
 int LCANCEL_MISS_P3_INDEX = -1;
 int LCANCEL_MISS_P4_INDEX = -1;
+int TEAMS_ROTATE_TOGGLE_INDEX = -1;
 //int SCALE_MODIFIER_INDEX = -1;
 
 //constant overrides
@@ -285,6 +286,7 @@ void CodeMenu()
 	SpecialSettings.push_back(new Toggle("Flight Mode", false, DBZ_MODE_INDEX));
 	SpecialSettings.push_back(&FlightModePage.CalledFromLine);
 	SpecialSettings.push_back(new Comment(""));
+	SpecialSettings.push_back(new Toggle("Teams Rotation", false, TEAMS_ROTATE_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Toggle("Random Angle Mode", false, RANDOM_ANGLE_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Selection("Big Head Mode", {"OFF", "ON (1x)", "ON (2x)"}, 0, BIG_HEAD_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Selection("Balloon Hit Behavior", { "None", "Gain Stock", "Lose Stock" }, 0, BALLOON_STOCK_INDEX));
@@ -857,6 +859,8 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(LCANCEL_MISS_P2_INDEX, Header);
 	AddValueToByteArray(LCANCEL_MISS_P3_INDEX, Header);
 	AddValueToByteArray(LCANCEL_MISS_P4_INDEX, Header);
+
+	AddValueToByteArray(TEAMS_ROTATE_TOGGLE_INDEX, Header);
 
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);
