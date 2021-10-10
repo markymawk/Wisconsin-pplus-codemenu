@@ -862,6 +862,8 @@ void CreateMenu(Page MainPage)
 
 	AddValueToByteArray(TEAMS_ROTATE_TOGGLE_INDEX, Header);
 
+	AddValueToByteArray(BUTTON_A | BUTTON_B, Header); //salty runback ALTERNATE COMBO
+
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);
 	DSB[0x4 / 4] = 0xFFFFFFFF;
