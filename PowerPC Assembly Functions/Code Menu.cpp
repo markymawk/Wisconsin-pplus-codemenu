@@ -67,6 +67,7 @@ int LCANCEL_MISS_P2_INDEX = -1;
 int LCANCEL_MISS_P3_INDEX = -1;
 int LCANCEL_MISS_P4_INDEX = -1;
 int TEAMS_ROTATE_TOGGLE_INDEX = -1;
+int HITFALLING_TOGGLE_INDEX = -1;
 //int SCALE_MODIFIER_INDEX = -1;
 
 //constant overrides
@@ -234,6 +235,9 @@ void CodeMenu()
 	GameplayConstantsLines.push_back(new Comment("Modify core game mechanics"));
 	GameplayConstantsLines.push_back(new Comment(""));
 	GameplayConstantsLines.push_back(new Comment("On-hit behavior"));
+	GameplayConstantsLines.push_back(new Toggle("Random Knockback Angle", false, RANDOM_ANGLE_TOGGLE_INDEX));
+	GameplayConstantsLines.push_back(new Selection("Balloon Hit Behavior", { "None", "Gain Stock", "Lose Stock" }, 0, BALLOON_STOCK_INDEX));
+	GameplayConstantsLines.push_back(new Toggle("Hitfalling", false, HITFALLING_TOGGLE_INDEX));
 	GameplayConstantsLines.push_back(new Floating("Hitstun Multiplier", 0, 20, 0.4, .02, HITSTUN_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B87AA8, HITSTUN_MULTIPLIER_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Hitlag Multiplier", 0, 20, 1. / 3., .02, HITLAG_MULTIPLIER_INDEX, "%.2fx"));
@@ -287,9 +291,7 @@ void CodeMenu()
 	SpecialSettings.push_back(&FlightModePage.CalledFromLine);
 	SpecialSettings.push_back(new Comment(""));
 	SpecialSettings.push_back(new Toggle("Teams Rotation", false, TEAMS_ROTATE_TOGGLE_INDEX));
-	SpecialSettings.push_back(new Toggle("Random Angle Mode", false, RANDOM_ANGLE_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Selection("Big Head Mode", {"OFF", "ON (1x)", "ON (2x)"}, 0, BIG_HEAD_TOGGLE_INDEX));
-	SpecialSettings.push_back(new Selection("Balloon Hit Behavior", { "None", "Gain Stock", "Lose Stock" }, 0, BALLOON_STOCK_INDEX));
 	SpecialSettings.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
 	// Move Staling: Wording implies that "Damage Stales in Training Mode" is disabled. By default in P+, the code is NOT disabled.
 	SpecialSettings.push_back(new Selection("Move Staling", { "ON (Versus)", "ON (All Modes)", "OFF" }, 0, STALING_TOGGLE_INDEX));
@@ -860,7 +862,11 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(LCANCEL_MISS_P3_INDEX, Header);
 	AddValueToByteArray(LCANCEL_MISS_P4_INDEX, Header);
 
+	//Teams Rotation toggle
 	AddValueToByteArray(TEAMS_ROTATE_TOGGLE_INDEX, Header);
+
+	//Hitfalling toggle
+	AddValueToByteArray(HITFALLING_TOGGLE_INDEX, Header);
 
 	AddValueToByteArray(BUTTON_A | BUTTON_B, Header); //salty runback ALTERNATE COMBO
 
