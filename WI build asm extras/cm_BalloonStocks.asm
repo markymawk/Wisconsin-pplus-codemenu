@@ -67,7 +67,6 @@ HOOK @ $80979BE4 #at the `return True` of `onDamage/[ykDamageModuleImpl]/yk_dama
     #attackerOwner.setStockCount(prevStockCount+1)
     AddStock:
       addi r4, r3, 1
-      b return
     
     return:
       mr r3, r30
