@@ -68,6 +68,7 @@ int LCANCEL_MISS_P3_INDEX = -1;
 int LCANCEL_MISS_P4_INDEX = -1;
 int TEAMS_ROTATE_TOGGLE_INDEX = -1;
 int HITFALLING_TOGGLE_INDEX = -1;
+int GRABS_TRADE_INDEX = -1;
 //int SCALE_MODIFIER_INDEX = -1;
 
 //constant overrides
@@ -221,7 +222,7 @@ void CodeMenu()
 
 	//Flight Mode page
 	vector<Line*> FlightModeLines;
-	FlightModeLines.push_back(new Comment("Flight mode settings"));
+	FlightModeLines.push_back(new Comment("Take flight!"));
 	FlightModeLines.push_back(new Comment(""));
 	FlightModeLines.push_back(new Comment(""));
 	FlightModeLines.push_back(new Floating("Max Horizontal Speed", 0, 100, 2, .05, DBZ_MODE_MAX_SPEED_X_INDEX, "%.2f"));
@@ -272,6 +273,7 @@ void CodeMenu()
 	//constantOverrides.emplace_back(0x80B88460, SHIELD_BASE_DAMAGE_INDEX);
 
 	GameplayConstantsLines.push_back(new Comment("Other"));
+	
 	GameplayConstantsLines.push_back(new Toggle("Universal Walljumps", false, ALL_CHARS_WALLJUMP_INDEX)); //new WI
 	GameplayConstantsLines.push_back(new Floating("Walljump Horizontal Multiplier", -1, 5, 0.9, .05, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88420, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX);
@@ -290,6 +292,7 @@ void CodeMenu()
 	SpecialSettings.push_back(new Toggle("Flight Mode", false, DBZ_MODE_INDEX));
 	SpecialSettings.push_back(&FlightModePage.CalledFromLine);
 	SpecialSettings.push_back(new Comment(""));
+	SpecialSettings.push_back(new Selection("Grab Trade Behavior", { "Default", "Recoil", "Heart Swap" }, 0, GRABS_TRADE_INDEX));
 	SpecialSettings.push_back(new Toggle("Teams Rotation", false, TEAMS_ROTATE_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Selection("Big Head Mode", {"OFF", "ON (1x)", "ON (2x)"}, 0, BIG_HEAD_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
@@ -865,10 +868,14 @@ void CreateMenu(Page MainPage)
 	//Teams Rotation toggle
 	AddValueToByteArray(TEAMS_ROTATE_TOGGLE_INDEX, Header);
 
+	//salty runback ALTERNATE COMBO
+	AddValueToByteArray(BUTTON_A | BUTTON_B, Header); 
+
 	//Hitfalling toggle
 	AddValueToByteArray(HITFALLING_TOGGLE_INDEX, Header);
 
-	AddValueToByteArray(BUTTON_A | BUTTON_B, Header); //salty runback ALTERNATE COMBO
+	//Grabs trade behavior toggle
+	AddValueToByteArray(GRABS_TRADE_INDEX, Header);
 
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);
