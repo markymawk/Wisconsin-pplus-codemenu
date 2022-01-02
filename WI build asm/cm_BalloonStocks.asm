@@ -50,25 +50,25 @@ HOOK @ $80979BE4 #at the `return True` of `onDamage/[ykDamageModuleImpl]/yk_dama
     ori r12, r12, 0xC540
     mtctr r12
     bctrl
-    
-    lis r12, CodeMenuStart          #
-    ori r12, r12, CodeMenuHeader    # Load Code Menu Header
-    lwz r12, 0 (r12)
-    lbz r12, 0xB(r12)
-    cmpwi r12, 0                    # If (CodeMenuVar == 0), don't affect stocks
-    beq end 
-    
-    cmpwi r12, 1                    # Else if (CodeMenuVar == 1), add a stock to attacker
-    beq AddStock
-    
-    subi r4, r3, 1                  # Else, subtract a stock
-    b return
-    
+	
+	lis r12, CodeMenuStart			#
+	ori r12, r12, CodeMenuHeader	# Load Code Menu Header
+	lwz r12, 0 (r12)
+	lbz r12, 0xB(r12)
+	cmpwi r12, 0					# If (CodeMenuVar == 0), don't affect stocks
+	beq end	
+	
+	cmpwi r12, 1					# Else if (CodeMenuVar == 1), add a stock to attacker
+	beq AddStock
+	
+	subi r4, r3, 1					# Else, subtract a stock
+	b return
+	
     #attackerOwner.setStockCount(prevStockCount+1)
-    AddStock:
+	AddStock:
       addi r4, r3, 1
-    
-    return:
+	
+	return:
       mr r3, r30
       lis r12, 0x8081
       ori r12, r12, 0xC528

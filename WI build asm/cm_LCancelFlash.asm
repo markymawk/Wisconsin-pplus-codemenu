@@ -11,19 +11,19 @@ L-Cancel Landing Lag and Success Rate and Score Display is Auto L-Cancel Option 
 
 HOOK @ $80874850 
 {
-    cmpwi r3, 0x5
-    mr r31, r3
-    bne end
-    #soColorBlendModule
-    lwz r3, 0xD8(r28)
-    lwz r3, 0xAC(r3)
-    li r4, 1
-    lwz r12, 0(r3)
-    lwz r12, 0x20(r12)
-    mtctr r12
-    bctrl
+	cmpwi r3, 0x5
+	mr r31, r3
+	bne end
+	#soColorBlendModule
+	lwz r3, 0xD8(r28)
+	lwz r3, 0xAC(r3)
+	li r4, 1
+	lwz r12, 0(r3)
+	lwz r12, 0x20(r12)
+	mtctr r12
+	bctrl
 end:
-    lwz r4, 0xD8(r28)
+	lwz r4, 0xD8(r28)
 }
 
 # Land and detect L-cancel state, set flash and stat appropriately
@@ -46,20 +46,20 @@ loc_0x0:
 
 trueLcancel:
   #Set R0 to White, branch to Apply Flash
-  lis r0, 0xFFFF            # RGBA (255, 255, 255, 220)
-  ori r0, r0, 0xFFDC    
-  bl 0x4                    #set LR
-  mflr r11                  #Store Link Register in R11
-  addi r11, r11, 0xC    
-  bl applyFlash 
-  li r6, 1                  # count as success for stats
-  lfs f0, -23448(r2)        # load 0.5
+  lis r0, 0xFFFF			# RGBA (255, 255, 255, 220)
+  ori r0, r0, 0xFFDC	
+  bl 0x4  					#set LR
+  mflr r11 					#Store Link Register in R11
+  addi r11, r11, 0xC	
+  bl applyFlash	
+  li r6, 1					# count as success for stats
+  lfs f0, -23448(r2)		# load 0.5
   fmuls f30, f30, f0
   b calcStat
 
 missedLCancel: 
-  lis r11, 0x9017           # \ Check if universal ALC toggle is on,
-  ori r11, r11, 0xF36B      # / and skip red flash check if so
+  lis r11, 0x9017			# \ Check if universal ALC toggle is on,
+  ori r11, r11, 0xF36B		# / and skip red flash check if so
   lbz r11, 0(r11)
   cmpwi r11, 1
   beq applyLcancelALC
@@ -72,23 +72,23 @@ missedLCancel:
   ori r6, r6, CodeMenuHeader    #Load Code Menu Header
   lwzx r6, r6, r11
   lbz r11, 0xB(r6)
-  cmpwi r11, 1              # If (CodeMenuVar == 1), apply red flash on miss
+  cmpwi r11, 1				# If (CodeMenuVar == 1), apply red flash on miss
   beq applyNoCancelRedFlash
-  li r6, 0                  # Else: missed L-Cancel, no flash
-  b calcStat                
+  li r6, 0 					# Else: missed L-Cancel, no flash
+  b calcStat				
 
 applyNoCancelRedFlash:
-  lis r0, 0xFF00            # \ Red Flash
-  ori r0, r0, 0x00D0        # / RGBA (255, 0, 0, 208)
-  bl 0x4                    # set LR
-  mflr r11                  # Store Link Register in r11
+  lis r0, 0xFF00			# \ Red Flash
+  ori r0, r0, 0x00D0		# / RGBA (255, 0, 0, 208)
+  bl 0x4  					# set LR
+  mflr r11 					# Store Link Register in r11
   addi r11, r11, 0xC
   bl applyFlash
   li r6, 0
   b calcStat
 
 applyLcancelALC:
-  lfs f0, -23448(r2)        # load 0.5
+  lfs f0, -23448(r2)		# load 0.5
   fmuls f30, f30, f0
   lwz r11, 28(r31)          # \ Begin code menu check here.
   lwz r11, 40(r11)          # | Obtain player ID
@@ -99,16 +99,16 @@ applyLcancelALC:
   ori r6, r6, CodeMenuHeader    #Load Code Menu Header
   lwzx r6, r6, r11
   lbz r11, 0xB(r6)
-  cmpwi r11, 1              # If (CodeMenuVar == 1), apply purple flash on miss
+  cmpwi r11, 1				# If (CodeMenuVar == 1), apply purple flash on miss
   beq applyNoCancelPurpleFlash
-  li r6, 0                  # Else, missed L-Cancel, no flash
+  li r6, 0 					# Else, missed L-Cancel, no flash
   b calcStat
 
 applyNoCancelPurpleFlash:
-  lis r0, 0x7000            # \ Purple Flash
-  ori r0, r0, 0xFFD0        # / RGBA (112, 0, 255, 208)
-  bl 0x4                    # set LR
-  mflr r11                  # Store Link Register in r11
+  lis r0, 0x7000			# \ Purple Flash
+  ori r0, r0, 0xFFD0		# / RGBA (112, 0, 255, 208)
+  bl 0x4  					# set LR
+  mflr r11 					# Store Link Register in r11
   addi r11, r11, 0xC
   bl applyFlash
   li r6, 0
@@ -117,7 +117,7 @@ applyNoCancelPurpleFlash:
 #everything past this point is for the stat
 calcStat:
 #add one to total aerial count
-  cmpwi r6, 0x0             # Check for L-cancel to branch later
+  cmpwi r6, 0x0				# Check for L-cancel to branch later
   lis r6, 0x80B8
   ori r6, r6, 0x8394
   lfs f6, 0(r6)
@@ -142,9 +142,9 @@ calcStat:
   add r5, r5, r6
   lwz r5, 40(r5)
   addi r5, r5, 0x850
-  ble stats_noLcancel   # If r6 == 0 above
+  ble stats_noLcancel	# If r6 == 0 above
   
-  lis r6, 0x80B8        # else, successful LC
+  lis r6, 0x80B8		# else, successful LC
   ori r6, r6, 0x8394
   lfs f6, 0(r6)
   lfs f4, 572(r4)
@@ -199,7 +199,7 @@ applyFlash:
   lis r0, 0x40C0
   stw r0, 0x18(r1)
   lfs f1, 0x18(r1)
-  lis r0, 0xFFFF          #target color of transition
+  lis r0, 0xFFFF		  #target color of transition
   ori r0, r0, 0xFF00
   addi r4, r1, 0x18
   stw r0, 0(r4)

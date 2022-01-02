@@ -3,7 +3,7 @@ Enable fastfall on aerial hit [Eon]
 ###########################################################
 # Code menu variant by mawwwk, with format by Desi
 .alias CodeMenuStart = 0x804E
-.alias CodeMenuHeader = 0x02D0
+.alias CodeMenuHeader = 0x02D4
 .alias fallFrameBuffer = 4
 
 HOOK @ $8077e8d4                # "First hook is innocuous on its own"
