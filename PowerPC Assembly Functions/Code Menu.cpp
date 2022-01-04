@@ -69,6 +69,7 @@ int LCANCEL_MISS_P4_INDEX = -1;
 int TEAMS_ROTATE_TOGGLE_INDEX = -1;
 int HITFALLING_TOGGLE_INDEX = -1;
 int GRABS_TRADE_INDEX = -1;
+int GROUNDED_ASDI_DOWN_INDEX = -1;
 //int SCALE_MODIFIER_INDEX = -1;
 
 //constant overrides
@@ -239,6 +240,7 @@ void CodeMenu()
 	GameplayConstantsLines.push_back(new Toggle("Random Knockback Angle", false, RANDOM_ANGLE_TOGGLE_INDEX));
 	GameplayConstantsLines.push_back(new Selection("Balloon Hit Behavior", { "None", "Gain Stock", "Lose Stock" }, 0, BALLOON_STOCK_INDEX));
 	GameplayConstantsLines.push_back(new Toggle("Hitfalling", false, HITFALLING_TOGGLE_INDEX));
+	GameplayConstantsLines.push_back(new Toggle("Grounded ASDI Down", true, GROUNDED_ASDI_DOWN_INDEX));
 	GameplayConstantsLines.push_back(new Floating("Hitstun Multiplier", 0, 20, 0.4, .02, HITSTUN_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B87AA8, HITSTUN_MULTIPLIER_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Hitlag Multiplier", 0, 20, 1. / 3., .02, HITLAG_MULTIPLIER_INDEX, "%.2fx"));
@@ -876,6 +878,8 @@ void CreateMenu(Page MainPage)
 
 	//Grabs trade behavior toggle
 	AddValueToByteArray(GRABS_TRADE_INDEX, Header);
+
+	AddValueToByteArray(GROUNDED_ASDI_DOWN_INDEX, Header);
 
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);
