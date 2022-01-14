@@ -4,8 +4,8 @@ Fork of Fracture's code menu as used in Project+ 2.2.
 
 # Changes:
 - Various options re-arranged for organization and user-friendliness
-- Salty Runback button combination includes A+B, in addition to L+R+Y
 - Unchanged lines are now a slight grey color, with the currently-selected line remaining yellow regardless of value change
+- Salty Runback button combination includes A+B, in addition to L+R+Y
 - Gameplay Modifiers and Flight Mode are re-sorted into their own sub-menus with properly capped values
 - Start-alts replace Y-alts in random Alternate Stages
 - Includes Eon's fixes from P+ 2.27 onward for debug overlay flickers, and other stability fixes
