@@ -12,7 +12,7 @@ Fork of Fracture's code menu as used in Project+ 2.2.
 
 Added options:
 - Stagelist (by Desi, with custom 5-stagelist implementation)
-- Balloon Hit Behavior (base code thanks to Eon)
+- Balloon Hit Behavior (by Eon)
 - Big Head Mode (by Eon, format by Desi)
 - Grab Trade Behavior - Default, Recoil (clank), Heart Swap (Manaphy Pokeball effect). by Eon
 - Player Codes: Flash on Missed L-Cancel (by PMDT, modified from Desi's variant)
