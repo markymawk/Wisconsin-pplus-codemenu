@@ -70,6 +70,7 @@ int TEAMS_ROTATE_TOGGLE_INDEX = -1;
 int HITFALLING_TOGGLE_INDEX = -1;
 int GRABS_TRADE_INDEX = -1;
 int GROUNDED_ASDI_DOWN_INDEX = -1;
+int DI_RANGE_INDEX = -1;
 //int SCALE_MODIFIER_INDEX = -1;
 
 //constant overrides
@@ -241,6 +242,7 @@ void CodeMenu()
 	GameplayConstantsLines.push_back(new Selection("Balloon Hit Behavior", { "None", "Gain Stock", "Lose Stock" }, 0, BALLOON_STOCK_INDEX));
 	GameplayConstantsLines.push_back(new Toggle("Hitfalling", false, HITFALLING_TOGGLE_INDEX));
 	GameplayConstantsLines.push_back(new Toggle("Grounded ASDI Down", true, GROUNDED_ASDI_DOWN_INDEX));
+	GameplayConstantsLines.push_back(new Selection("DI Range", {"0x", "0.5x", "1x", "5x", "10x", "Full"}, 2, DI_RANGE_INDEX));
 	GameplayConstantsLines.push_back(new Floating("Hitstun Multiplier", 0, 20, 0.4, .02, HITSTUN_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B87AA8, HITSTUN_MULTIPLIER_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Hitlag Multiplier", 0, 20, 1. / 3., .02, HITLAG_MULTIPLIER_INDEX, "%.2fx"));
@@ -879,7 +881,11 @@ void CreateMenu(Page MainPage)
 	//Grabs trade behavior toggle
 	AddValueToByteArray(GRABS_TRADE_INDEX, Header);
 
+	//Grounded ASDI down toggle
 	AddValueToByteArray(GROUNDED_ASDI_DOWN_INDEX, Header);
+
+	//DI range
+	AddValueToByteArray(DI_RANGE_INDEX, Header);
 
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);
@@ -922,7 +928,7 @@ void constantOverride() {
 	// Universal walljumping - works, but match must be restarted. Attempted writing to 0x80FC15C0 and 0x80FC15D8, but got same result
 	LoadWordToReg(reg1, ALL_CHARS_WALLJUMP_INDEX + Line::VALUE);
 	SetRegister(reg2, 0x80FAA9A0); //walljump comparison
-	// Universal Walljump: If set, write 1
+	// Universal Walljump toggle: If set, write 1
 	If(reg1, GREATER_I, 0); {
 		SetRegister(reg1, 1);	// word 1 @ $80FAA9A0, everyone can walljump
 	}
@@ -932,6 +938,34 @@ void constantOverride() {
 	} EndIf();
 	STW(reg1, reg2, 0);
 	
+	// DI range setting - multiply the internal value to pi to manipulate the DI range
+	// "pi" in this case means pi/10, or 0.314159
+	LoadWordToReg(reg1, DI_RANGE_INDEX + Line::VALUE);
+	SetRegister(reg2, 0x80B88524); //Addr of pi value for DI calculations
+	// DI range toggle: If 2 (default), write default range of pi
+	If(reg1, EQUAL_I, 2); {
+		SetRegister(reg1, 0x3EA0D97C);
+	}
+	Else(); {
+		If(reg1, EQUAL_I, 0); {
+			SetRegister(reg1, 0);
+		} EndIf();
+		If(reg1, EQUAL_I, 1); {
+			SetRegister(reg1, 0x3e20d973); // pi/2
+		} EndIf();
+		If(reg1, EQUAL_I, 3); {
+			SetRegister(reg1, 0x3fc90fd0); // pi * 5
+		} EndIf();
+		If(reg1, EQUAL_I, 4); {
+			SetRegister(reg1, 0x40490fdb); // pi * 10 (3.14...)
+		} EndIf();
+		If(reg1, EQUAL_I, 5); {
+			SetRegister(reg1, 0x40c90fd0); // pi * 20 (full range)
+		} EndIf();
+	}
+	EndIf();
+	STW(reg1, reg2, 0);
+
 	ASMEnd(0x2c000000); //cmpwi, r0, 0
 }
 
