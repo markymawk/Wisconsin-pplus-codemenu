@@ -118,7 +118,6 @@ void CodeMenu()
 #if EON_DEBUG_BUILD
 	//testing page
 	vector<Line*> TestLines;
-	//P2Lines.push_back(new Selection("P2 Identity Crisis", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P2_INDEX));
 	cout << "Debug Toggles:\n";
 	int toggleLocations[16];
 	for(int i = 0; i < 16; i++)
@@ -290,22 +289,18 @@ void CodeMenu()
 	//Gameplay Modifiers ("Special Settings") setting
 	vector<Line*> SpecialSettings;
 	SpecialSettings.push_back(new Comment("Toggle for-fun modes"));
-	SpecialSettings.push_back(new Comment("and modify core game mechanics"));
 	SpecialSettings.push_back(new Comment(""));
 	SpecialSettings.push_back(&GameplayConstantsPage.CalledFromLine);
 	SpecialSettings.push_back(new Comment(""));
 	SpecialSettings.push_back(new Toggle("Flight Mode", false, DBZ_MODE_INDEX));
 	SpecialSettings.push_back(&FlightModePage.CalledFromLine);
 	SpecialSettings.push_back(new Comment(""));
-	
 	SpecialSettings.push_back(new Toggle("Teams Rotation", false, TEAMS_ROTATE_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Selection("Big Head Mode", {"OFF", "ON (1x)", "ON (2x)"}, 0, BIG_HEAD_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
 	// Move Staling: Wording implies that "Damage Stales in Training Mode" is disabled. By default in P+, the code is NOT disabled.
 	SpecialSettings.push_back(new Selection("Move Staling", { "ON (Versus)", "ON (All Modes)", "OFF" }, 0, STALING_TOGGLE_INDEX));
 	Page SpecialSettingsPage("Special Settings", SpecialSettings);
-
-
 
 	//main page
 	vector<Line*> MainLines;
@@ -926,7 +921,7 @@ void constantOverride() {
 		STW(reg1, reg2, 0);
 	}
 
-	// Universal walljumping - works, but match must be restarted. Attempted writing to 0x80FC15C0 and 0x80FC15D8, but got same result
+	// Universal walljumping - if in a match, must restart. Attempted writing to 0x80FC15C0 and 0x80FC15D8, but got same result
 	LoadWordToReg(reg1, ALL_CHARS_WALLJUMP_INDEX + Line::VALUE);
 	SetRegister(reg2, 0x80FAA9A0); //walljump comparison
 	// Universal Walljump toggle: If set, write 1
@@ -940,7 +935,7 @@ void constantOverride() {
 	STW(reg1, reg2, 0);
 	
 	// DI range setting - multiply the internal value to pi to manipulate the DI range
-	// "pi" in this case means pi/10, or 0.314159
+	// "pi" in this case means pi/10, or 0.314159265
 	LoadWordToReg(reg1, DI_RANGE_INDEX + Line::VALUE);
 	SetRegister(reg2, 0x80B88524); //Addr of pi value for DI calculations
 	// DI range toggle: If 2 (default), write default range of pi
@@ -955,13 +950,13 @@ void constantOverride() {
 			SetRegister(reg1, 0x3e20d973); // 0.314159 / 2
 		} EndIf();
 		If(reg1, EQUAL_I, 3); {
-			SetRegister(reg1, 0x3f490fd0); // 0.314159 * 2.5 ("5x")
+			SetRegister(reg1, 0x3f490fd0); // 0.314159 * 2.5
 		} EndIf();
 		If(reg1, EQUAL_I, 4); {
-			SetRegister(reg1, 0x3fc90fd0); // 0.314159 * 5 ("10x")
+			SetRegister(reg1, 0x3fc90fd0); // 0.314159 * 5
 		} EndIf();
 		If(reg1, EQUAL_I, 5); {
-			SetRegister(reg1, 0x40490fd0); // 0.314159 * 10 (full range)
+			SetRegister(reg1, 0x40490fd0); // 0.314159 * 10
 		} EndIf();
 	}
 	EndIf();
@@ -1408,6 +1403,7 @@ void ControlCodeMenu()
 			While(CharacterBufferReg, NOT_EQUAL_I, 0); {
 				LWZ(Reg8, CharacterBufferReg, CHR_BUFFER_PORT_OFFSET);
 
+				// disable dpad
 				if (DISABLE_DPAD_P1_INDEX != -1) {
 					LWZ(Reg2, CharacterBufferReg, CHR_BUFFER_INFO_PTR_OFFSET);
 					RunIfPortToggle(DISABLE_DPAD_ACTIVATOR_ARRAY_LOC, Reg8); {
@@ -1420,6 +1416,7 @@ void ControlCodeMenu()
 					}EndIf(); EndIf(); EndIf();
 				}
 
+				// percent select
 				if (PERCENT_SELECT_ACTIVATOR_P1_INDEX != -1 && PERCENT_SELECT_VALUE_P1_INDEX != -1) {
 					GetArrayValueFromIndex(PERCENT_SELCTION_ACTIVATOR_ARRAY_LOC, Reg8, 0, 3); {
 						LWZ(5, 3, Line::VALUE); //get setting
@@ -1453,35 +1450,6 @@ void ControlCodeMenu()
 									CallBrawlFunc(0x8083ae24); //getOwner
 									LWZ(3, 3, 0);
 									STFS(1, 3, 0x24);
-
-
-									
-									/*LWZ(3, CharacterBufferReg, CHR_BUFFER_HEAD_OF_FIGHTER_OFFSET);
-									CallBrawlFunc(0x8083ae24); //getOwner
-									//SetRegister(4, 1);
-									ConvertFloatingRegToInt(1, Reg1, 0);
-									CallBrawlFunc(0x8081bdcc); //set damage
-
-									LoadWordToReg(Reg3, 0x805A02D0);
-									LBZ(Reg4, Reg2, 3); //player num
-									MULLI(Reg4, Reg4, 4);
-									ADD(Reg3, Reg3, Reg4);
-									LWZ(Reg3, Reg3, 0x4C);
-
-									ADDI(4, Reg1, 1);
-									If(Reg1, GREATER_I, 999); {
-										SetRegister(4, 998);
-									}EndIf();
-									MR(3, Reg3);
-									SetRegister(5, 0);
-									CallBrawlFunc(0x800e14a4); //updateDamageHP
-
-									MR(4, Reg1);
-									MR(3, Reg3);
-									SetRegister(5, 1);
-									CallBrawlFunc(0x800e14a4); //updateDamageHP*/
-
-
 									
 								}EndIf(); EndIf();
 							}EndIf();
@@ -1489,6 +1457,7 @@ void ControlCodeMenu()
 					}EndIf(); EndIf();
 				}
 
+				// character select
 				if (CHARACTER_SELECT_P1_INDEX != -1) {
 					If(OpenFlagReg, EQUAL_I, CODE_MENU_CLOSING); {
 						GetArrayValueFromIndex(CHARACTER_SWITCHER_ARRAY_LOC, Reg8, 0, 3); {
@@ -1518,8 +1487,9 @@ void ControlCodeMenu()
 					}EndIf();
 				}
 
+				// infinite shields
 				if (INFINITE_SHIELDS_P1_INDEX != -1) {
-					GetArrayValueFromIndex(INIFINITE_SHIELDS_ARRAY_LOC, Reg8, 0, 3); {
+					GetArrayValueFromIndex(INFINITE_SHIELDS_ARRAY_LOC, Reg8, 0, 3); {
 						LWZ(3, 3, Line::VALUE);
 						If(3, EQUAL_I, 1); {
 							LWZ(Reg1, CharacterBufferReg, CHR_BUFFER_VARIABLES_ADDRESS_OFFSET);
