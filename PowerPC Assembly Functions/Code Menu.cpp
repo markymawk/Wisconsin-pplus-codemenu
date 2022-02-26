@@ -239,10 +239,8 @@ void CodeMenu()
 	GameplayConstantsLines.push_back(new Comment(""));
 	GameplayConstantsLines.push_back(new Comment("On-hit behavior"));
 	GameplayConstantsLines.push_back(new Toggle("Random Knockback Angle", false, RANDOM_ANGLE_TOGGLE_INDEX));
-	GameplayConstantsLines.push_back(new Selection("Balloon Hit Behavior", { "None", "Gain Stock", "Lose Stock" }, 0, BALLOON_STOCK_INDEX));
+	GameplayConstantsLines.push_back(new Selection("DI Amplitude", { "0x", "0.5x", "1x", "2.5x", "5x", "10x" }, 2, DI_RANGE_INDEX));
 	GameplayConstantsLines.push_back(new Toggle("Hitfalling", false, HITFALLING_TOGGLE_INDEX));
-	GameplayConstantsLines.push_back(new Toggle("Grounded ASDI Down", true, GROUNDED_ASDI_DOWN_INDEX));
-	GameplayConstantsLines.push_back(new Selection("DI Range", {"0x", "0.5x", "1x", "5x", "10x", "Full"}, 2, DI_RANGE_INDEX));
 	GameplayConstantsLines.push_back(new Floating("Hitstun Multiplier", 0, 20, 0.4, .02, HITSTUN_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B87AA8, HITSTUN_MULTIPLIER_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Hitlag Multiplier", 0, 20, 1. / 3., .02, HITLAG_MULTIPLIER_INDEX, "%.2fx"));
@@ -253,10 +251,11 @@ void CodeMenu()
 	constantOverrides.emplace_back(0x80B88354, SDI_DISTANCE_INDEX);
 	GameplayConstantsLines.push_back(new Floating("ASDI Distance", -100, 100, 3, .5, ASDI_DISTANCE_INDEX, "%.1f"));
 	constantOverrides.emplace_back(0x80B88358, ASDI_DISTANCE_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Knockback Decay Rate", -0.051, 0.102, 0.051, .003, KNOCKBACK_DECAY_MULTIPLIER_INDEX, "%.3f"));
+	GameplayConstantsLines.push_back(new Floating("Knockback Decay Rate", -0.051, 0.201, 0.051, .003, KNOCKBACK_DECAY_MULTIPLIER_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B88534, KNOCKBACK_DECAY_MULTIPLIER_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Crouch Knockback Multiplier", 0, 3, (2. / 3.) , (1. / 12.), CROUCH_KNOCKBACK_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88348, CROUCH_KNOCKBACK_INDEX);
+	GameplayConstantsLines.push_back(new Toggle("Grounded ASDI Down", true, GROUNDED_ASDI_DOWN_INDEX));
 	//GameplayConstantsLines.push_back(new Floating("Electric Hitlag Multiplier", 0, 999, 1.5, .1, ELECTRIC_HITLAG_MULTIPLIER_INDEX, "%.1fx"));
 	//constantOverrides.emplace_back(0x80B87B10, ELECTRIC_HITLAG_MULTIPLIER_INDEX);
 
@@ -277,12 +276,14 @@ void CodeMenu()
 	//constantOverrides.emplace_back(0x80B88460, SHIELD_BASE_DAMAGE_INDEX);
 
 	GameplayConstantsLines.push_back(new Comment("Other"));
-	
-	GameplayConstantsLines.push_back(new Toggle("Universal Walljumps", false, ALL_CHARS_WALLJUMP_INDEX)); //new WI
+	GameplayConstantsLines.push_back(new Selection("Grab Trade Behavior", { "Default", "Recoil", "Heart Swap" }, 0, GRABS_TRADE_INDEX));
+	GameplayConstantsLines.push_back(new Selection("Balloon Hit Behavior", { "None", "Gain Stock", "Lose Stock" }, 0, BALLOON_STOCK_INDEX));
+	GameplayConstantsLines.push_back(new Toggle("Universal Walljumps", false, ALL_CHARS_WALLJUMP_INDEX));
 	GameplayConstantsLines.push_back(new Floating("Walljump Horizontal Multiplier", -1, 5, 0.9, .05, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88420, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX);
 	GameplayConstantsLines.push_back(new Floating("Wall Bounce Knockback Multiplier", -1, 5, 0.80, .05, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88510, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX);
+
 
 	Page GameplayConstantsPage("Gameplay Modifiers", GameplayConstantsLines);
 
@@ -296,7 +297,7 @@ void CodeMenu()
 	SpecialSettings.push_back(new Toggle("Flight Mode", false, DBZ_MODE_INDEX));
 	SpecialSettings.push_back(&FlightModePage.CalledFromLine);
 	SpecialSettings.push_back(new Comment(""));
-	SpecialSettings.push_back(new Selection("Grab Trade Behavior", { "Default", "Recoil", "Heart Swap" }, 0, GRABS_TRADE_INDEX));
+	
 	SpecialSettings.push_back(new Toggle("Teams Rotation", false, TEAMS_ROTATE_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Selection("Big Head Mode", {"OFF", "ON (1x)", "ON (2x)"}, 0, BIG_HEAD_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
@@ -951,16 +952,16 @@ void constantOverride() {
 			SetRegister(reg1, 0);
 		} EndIf();
 		If(reg1, EQUAL_I, 1); {
-			SetRegister(reg1, 0x3e20d973); // pi/2
+			SetRegister(reg1, 0x3e20d973); // 0.314159 / 2
 		} EndIf();
 		If(reg1, EQUAL_I, 3); {
-			SetRegister(reg1, 0x3fc90fd0); // pi * 5
+			SetRegister(reg1, 0x3f490fd0); // 0.314159 * 2.5 ("5x")
 		} EndIf();
 		If(reg1, EQUAL_I, 4); {
-			SetRegister(reg1, 0x40490fdb); // pi * 10 (3.14...)
+			SetRegister(reg1, 0x3fc90fd0); // 0.314159 * 5 ("10x")
 		} EndIf();
 		If(reg1, EQUAL_I, 5); {
-			SetRegister(reg1, 0x40c90fd0); // pi * 20 (full range)
+			SetRegister(reg1, 0x40490fd0); // 0.314159 * 10 (full range)
 		} EndIf();
 	}
 	EndIf();
