@@ -722,8 +722,8 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(BUTTON_L | BUTTON_R | BUTTON_Y , Header); //salty runback
 	AddValueToByteArray(BUTTON_L | BUTTON_R | BUTTON_X, Header); //skip results
 	//line colors
-	AddValueToByteArray(MENU_TEXT_GRAY, Header); //unhighlighted line color, prev WHITE
-	AddValueToByteArray(MENU_TEXT_YELLOW, Header); //highlighted line color, prev YELLOW
+	AddValueToByteArray(MENU_TEXT_UNSELECTED, Header); //unhighlighted line color, prev WHITE
+	AddValueToByteArray(MENU_TEXT_SELECTED, Header); //highlighted line color, prev YELLOW
 	AddValueToByteArray(MENU_TEXT_MODIFIED_UNSELECTED, Header); //changed line color
 	AddValueToByteArray(MENU_TEXT_MODIFIED_SELECTED, Header); //changed and highlighted line color
 	AddValueToByteArray(GREEN, Header); //comment line color
