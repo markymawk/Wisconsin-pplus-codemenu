@@ -219,19 +219,20 @@ void CodeMenu()
 	DebugLines.push_back(new Toggle("Show HUD", true, HUD_DISPLAY_INDEX));
 	DebugLines.push_back(new Toggle("Camera Lock", false, CAMERA_LOCK_INDEX));
 	DebugLines.push_back(new Toggle("FPS Display", false, FPS_DISPLAY_INDEX));
+	DebugLines.push_back(new Selection("Code Menu", { "Enabled", "Debug", "Disabled" }, 0, CODE_MENU_ACTIVATION_SETTING_INDEX));
 	Page DebugMode("Debug Mode Settings", DebugLines);
 
 	//Flight Mode page
 	vector<Line*> FlightModeLines;
 	FlightModeLines.push_back(new Comment("Take flight!"));
 	FlightModeLines.push_back(new Comment(""));
-	FlightModeLines.push_back(new Comment(""));
+	FlightModeLines.push_back(new Toggle("Flight Mode", false, DBZ_MODE_INDEX));
 	FlightModeLines.push_back(new Floating("Max Horizontal Speed", 0, 100, 2, .05, DBZ_MODE_MAX_SPEED_X_INDEX, "%.2f"));
 	FlightModeLines.push_back(new Floating("Max Vertical Speed", 0, 100, 2, .05, DBZ_MODE_MAX_SPEED_Y_INDEX, "%.2f"));
 	FlightModeLines.push_back(new Comment(""));
 	FlightModeLines.push_back(new Floating("Horizontal Acceleration", -100, 100, 1, .05, DBZ_MODE_ACCEL_X_INDEX, "%.2f"));
 	FlightModeLines.push_back(new Floating("Vertical Acceleration", -100, 100, 1, .05, DBZ_MODE_ACCEL_Y_INDEX, "%.2f"));
-	Page FlightModePage("Flight Mode Settings", FlightModeLines);
+	Page FlightModePage("Flight Mode", FlightModeLines);
 
 	vector<Line*> GameplayConstantsLines;
 	GameplayConstantsLines.push_back(new Comment("Modify core game mechanics"));
@@ -292,14 +293,15 @@ void CodeMenu()
 	SpecialSettings.push_back(new Comment(""));
 	SpecialSettings.push_back(&GameplayConstantsPage.CalledFromLine);
 	SpecialSettings.push_back(new Comment(""));
-	SpecialSettings.push_back(new Toggle("Flight Mode", false, DBZ_MODE_INDEX));
+	
 	SpecialSettings.push_back(&FlightModePage.CalledFromLine);
 	SpecialSettings.push_back(new Comment(""));
-	SpecialSettings.push_back(new Toggle("Teams Rotation", false, TEAMS_ROTATE_TOGGLE_INDEX));
+	// Move Staling: Wording implies that "Damage Stales in Training Mode" is disabled, which is the case in WI but NOT in vanilla P+
+	SpecialSettings.push_back(new Selection("Move Staling", { "ON (Versus)", "ON (All Modes)", "OFF" }, 0, STALING_TOGGLE_INDEX));
+	SpecialSettings.push_back(new Toggle("Random Teams", false, TEAMS_ROTATE_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Selection("Big Head Mode", {"OFF", "ON (1x)", "ON (2x)"}, 0, BIG_HEAD_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
-	// Move Staling: Wording implies that "Damage Stales in Training Mode" is disabled. By default in P+, the code is NOT disabled.
-	SpecialSettings.push_back(new Selection("Move Staling", { "ON (Versus)", "ON (All Modes)", "OFF" }, 0, STALING_TOGGLE_INDEX));
+	SpecialSettings.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
 	Page SpecialSettingsPage("Special Settings", SpecialSettings);
 
 	//main page
@@ -309,7 +311,7 @@ void CodeMenu()
 #else
 	MainLines.push_back(new Comment("WI Code Menu (P+ 2.29)", &MENU_TITLE_CHECK_LOCATION));
 #endif
-	MainLines.push_back(new Comment("X = Reset Selection | Y = Reset Page"));
+	MainLines.push_back(new Comment("X = Reset Line | Y = Reset Page"));
 	MainLines.push_back(new Comment("Hold Z = Scroll Faster"));
 	MainLines.push_back(new Comment(""));
 
@@ -318,32 +320,24 @@ void CodeMenu()
 #endif
 	
 	MainLines.push_back(&DebugMode.CalledFromLine);
-	//	MainLines.push_back(new Selection("Endless Friendlies", { "OFF", "Same Stage", "Random Stage", "Round Robin" }, 0, INFINITE_FRIENDLIES_INDEX));
-//	MainLines.push_back(new Selection("Endless Friendlies Mode", { "OFF", "All Stay", "Winner Stays", "Loser Stays", "Rotation"}, 0, ENDLESS_FRIENDLIES_MODE_INDEX));
 	MainLines.push_back(new Selection("Endless Friendlies", { "OFF", "ON", "ON (1v1)"}, 0, ENDLESS_FRIENDLIES_MODE_INDEX));
-//	MainLines.push_back(new Selection("Endless Friendlies Stage Selection", { "Random", "Same" }, 0, ENDLESS_FRIENDLIES_STAGE_SELECTION_INDEX));
-#if TOURNAMENT_ADDITION_BUILD
-	MainLines.push_back(new Selection("Random 1-1", { "OFF", "ON" }, 0, RANDOM_1_TO_1_INDEX));
-#endif
 	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
 	MainLines.push_back(new Toggle("Skip Results Screen", false, AUTO_SKIP_TO_CSS_INDEX));
+	MainLines.push_back(new Comment(""));
 #if DOLPHIN_BUILD
 	MainLines.push_back(new Toggle("Autosave Replays", true, AUTO_SAVE_REPLAY_INDEX));
 #else
 	MainLines.push_back(new Toggle("Autosave Replays", false, AUTO_SAVE_REPLAY_INDEX));
 #endif
-	//MainLines.push_back(new Toggle("Save Previous Replay", false, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
+
 	MainLines.push_back(new Comment(""));
-	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (WI)", "Doubles (WI)",  "Singles (PMBR)", "Doubles (PMBR)"}, 0, STAGELIST_INDEX));
+	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (WI)", "Doubles (WI)",  "Singles (PMBR)", "Doubles (PMBR)" }, 0, STAGELIST_INDEX));
 	MainLines.push_back(&SpecialSettingsPage.CalledFromLine);
 	MainLines.push_back(&PlayerCodes.CalledFromLine);
-	MainLines.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
-	MainLines.push_back(new Selection("Code Menu Activation", { "Enabled", "Debug", "Disabled" }, 0, CODE_MENU_ACTIVATION_SETTING_INDEX));
+	
 
-	
 	//MainLines.push_back(new Print("%s", {&tets}));
-	
 	
 	/*MainLines.push_back(new Integer("P1 1st Shield Red", 0, 0xFF, 0, 1, SHIELD_RED_1));
 	MainLines.push_back(new Integer("P1 1st Shield Green", 0, 0xFF, 0, 1, SHIELD_GREEN_1));
@@ -361,8 +355,6 @@ void CodeMenu()
 	MainLines.push_back(new Integer("P1 4th Shield Green", 0, 0xFF, 0, 1, SHIELD_GREEN_4));
 	MainLines.push_back(new Integer("P1 4th Shield Blue", 0, 0xFF, 0, 1, SHIELD_BLUE_4));
 	MainLines.push_back(new Integer("P1 4th Shield Alpha", 0, 0xFF, 0, 1, SHIELD_ALPHA_4));*/
-
-
 
 	Page Main("Main", MainLines);
 	
