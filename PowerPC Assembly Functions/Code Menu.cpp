@@ -320,9 +320,9 @@ void CodeMenu()
 #endif
 	
 	MainLines.push_back(&DebugMode.CalledFromLine);
-	MainLines.push_back(new Toggle("Skip Results Screen", false, AUTO_SKIP_TO_CSS_INDEX));
 	MainLines.push_back(new Selection("Endless Friendlies", { "OFF", "ON", "ON (1v1)"}, 0, ENDLESS_FRIENDLIES_MODE_INDEX));
 	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
+	MainLines.push_back(new Toggle("Skip Results", false, AUTO_SKIP_TO_CSS_INDEX));
 	MainLines.push_back(new Comment(""));
 #if DOLPHIN_BUILD
 	MainLines.push_back(new Toggle("Autosave Replays", true, AUTO_SAVE_REPLAY_INDEX));
