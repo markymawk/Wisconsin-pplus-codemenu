@@ -133,14 +133,14 @@ void CodeMenu()
 	P1Lines.push_back(new Print("Tag Hex: %s", { &P1_TAG_STRING_INDEX }));
 	P1Lines.push_back(new Comment(""));
 	P1Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P1_INDEX));
-	P1Lines.push_back(new Comment(""));
+	//P1Lines.push_back(new Comment(""));
 	P1Lines.push_back(new Selection("P1 Character Select", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P1_INDEX));
 	P1Lines.push_back(new Comment(""));
 	P1Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P1_INDEX, "%.0f%%"));
 	P1Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P1_INDEX));
 	P1Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P1_INDEX));
 	P1Lines.push_back(new Comment(""));
-	P1Lines.push_back(new Toggle("Flash on Missed L-Cancel", false, LCANCEL_MISS_P1_INDEX));
+	P1Lines.push_back(new Toggle("Missed L-Cancel Flash", false, LCANCEL_MISS_P1_INDEX));
 	
 	//for (auto x : P1Lines) {
 	//	cout << x->Text << endl;
@@ -152,14 +152,14 @@ void CodeMenu()
 	P2Lines.push_back(new Print("Tag Hex: %s", { &P2_TAG_STRING_INDEX }));
 	P2Lines.push_back(new Comment(""));
 	P2Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P2_INDEX));
-	P2Lines.push_back(new Comment(""));
+	//P2Lines.push_back(new Comment(""));
 	P2Lines.push_back(new Selection("P2 Character Select", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P2_INDEX));
 	P2Lines.push_back(new Comment(""));
 	P2Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P2_INDEX, "%.0f%%"));
 	P2Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P2_INDEX));
 	P2Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P2_INDEX));
 	P2Lines.push_back(new Comment(""));
-	P2Lines.push_back(new Toggle("Flash on Missed L-Cancel", false, LCANCEL_MISS_P2_INDEX));
+	P2Lines.push_back(new Toggle("Missed L-Cancel Flash", false, LCANCEL_MISS_P2_INDEX));
 
 	Page P2("Player 2 Codes", P2Lines);
 
@@ -168,14 +168,14 @@ void CodeMenu()
 	P3Lines.push_back(new Print("Tag Hex: %s", { &P3_TAG_STRING_INDEX }));
 	P3Lines.push_back(new Comment(""));
 	P3Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P3_INDEX));
-	P3Lines.push_back(new Comment(""));
+	//P3Lines.push_back(new Comment(""));
 	P3Lines.push_back(new Selection("P3 Character Select", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P3_INDEX));
 	P3Lines.push_back(new Comment(""));
 	P3Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P3_INDEX, "%.0f%%"));
 	P3Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P3_INDEX));
 	P3Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P3_INDEX));
 	P3Lines.push_back(new Comment(""));
-	P3Lines.push_back(new Toggle("Flash on Missed L-Cancel", false, LCANCEL_MISS_P3_INDEX));
+	P3Lines.push_back(new Toggle("Missed L-Cancel Flash", false, LCANCEL_MISS_P3_INDEX));
 
 	Page P3("Player 3 Codes", P3Lines);
 
@@ -184,14 +184,14 @@ void CodeMenu()
 	P4Lines.push_back(new Print("Tag Hex: %s", { &P4_TAG_STRING_INDEX }));
 	P4Lines.push_back(new Comment(""));
 	P4Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P4_INDEX));
-	P4Lines.push_back(new Comment(""));
+	//P4Lines.push_back(new Comment(""));
 	P4Lines.push_back(new Selection("P4 Character Select", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P4_INDEX));
 	P4Lines.push_back(new Comment(""));
 	P4Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P4_INDEX, "%.0f%%"));
 	P4Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P4_INDEX));
 	P4Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P4_INDEX));
 	P4Lines.push_back(new Comment(""));
-	P4Lines.push_back(new Toggle("Flash on Missed L-Cancel", false, LCANCEL_MISS_P4_INDEX));
+	P4Lines.push_back(new Toggle("Missed L-Cancel Flash", false, LCANCEL_MISS_P4_INDEX));
 
 	Page P4("Player 4 Codes", P4Lines);
 
@@ -206,21 +206,23 @@ void CodeMenu()
 
 	//debug mode page
 	vector<Line*> DebugLines;
-	DebugLines.push_back(new Comment("Debug Mode Commands:"));
-	DebugLines.push_back(new Comment("Start = Toggle Frame Advance"));
-	DebugLines.push_back(new Comment("Z = Frame Advance | Hold Z = Slow Motion"));
+	//DebugLines.push_back(new Comment("Debug Mode Commands:"));
+	DebugLines.push_back(new Comment("With Frame Advance ON:"));
+	DebugLines.push_back(new Comment("Start = Pause | Z = Adv Frame"));
+	DebugLines.push_back(new Comment("X+Dpad Up = Normal Pause"));
+	//DebugLines.push_back(new Comment("Z = Frame Advance | Hold Z = Slow Motion"));
 	DebugLines.push_back(new Comment(""));
-	DebugLines.push_back(new Toggle("Debug Mode", false, DEBUG_MODE_INDEX));
-	DebugLines.push_back(new Selection("Hitbox Display", { "OFF", "ON", "ON (Hide Characters)" }, 0, DISPLAY_HITBOXES_INDEX));
-	DebugLines.push_back(new Toggle("Draw DI", false, DI_DRAW_INDEX));
-	DebugLines.push_back(new Toggle("ECB Display", false, DISPLAY_COLLISION_INDEX));
-	DebugLines.push_back(new Selection("Stage Collisions", { "OFF", "ON", "ON (Hide Stage)" }, 0, DISPLAY_LEDGEGRAB_INDEX));
+	DebugLines.push_back(new Toggle("Frame Advance", false, DEBUG_MODE_INDEX));
+	DebugLines.push_back(new Selection("Show Hitboxes", { "OFF", "ON", "ON (Hide Characters)" }, 0, DISPLAY_HITBOXES_INDEX));
+	DebugLines.push_back(new Toggle("Show DI", false, DI_DRAW_INDEX));
+	DebugLines.push_back(new Toggle("Show ECB", false, DISPLAY_COLLISION_INDEX));
+	DebugLines.push_back(new Selection("Show Collisions", { "OFF", "ON", "ON (Hide Stage)" }, 0, DISPLAY_LEDGEGRAB_INDEX));
 	DebugLines.push_back(new Comment(""));
+	DebugLines.push_back(new Toggle("Lock Camera", false, CAMERA_LOCK_INDEX));
 	DebugLines.push_back(new Toggle("Show HUD", true, HUD_DISPLAY_INDEX));
-	DebugLines.push_back(new Toggle("Camera Lock", false, CAMERA_LOCK_INDEX));
-	DebugLines.push_back(new Toggle("FPS Display", false, FPS_DISPLAY_INDEX));
-	DebugLines.push_back(new Selection("Code Menu", { "Enabled", "Debug", "Disabled" }, 0, CODE_MENU_ACTIVATION_SETTING_INDEX));
-	Page DebugMode("Debug Mode Settings", DebugLines);
+	DebugLines.push_back(new Toggle("Show FPS", false, FPS_DISPLAY_INDEX));
+	DebugLines.push_back(new Selection("Code Menu", { "ON", "OFF (Debug)", "OFF" }, 0, CODE_MENU_ACTIVATION_SETTING_INDEX));
+	Page DebugMode("Debug Settings", DebugLines);
 
 	//Flight Mode page
 	vector<Line*> FlightModeLines;
@@ -292,8 +294,6 @@ void CodeMenu()
 	SpecialSettings.push_back(new Comment("Toggle for-fun modes"));
 	SpecialSettings.push_back(new Comment(""));
 	SpecialSettings.push_back(&GameplayConstantsPage.CalledFromLine);
-	SpecialSettings.push_back(new Comment(""));
-	
 	SpecialSettings.push_back(&FlightModePage.CalledFromLine);
 	SpecialSettings.push_back(new Comment(""));
 	// Move Staling: Wording implies that "Damage Stales in Training Mode" is disabled, which is the case in WI but NOT in vanilla P+
@@ -307,12 +307,12 @@ void CodeMenu()
 	//main page
 	vector<Line*> MainLines;
 #if DOLPHIN_BUILD
-	MainLines.push_back(new Comment("WI Netplay Code Menu (P+ 2.29)", &MENU_TITLE_CHECK_LOCATION));
+	MainLines.push_back(new Comment("WI Netplay Code Menu (P+ 2.3)", &MENU_TITLE_CHECK_LOCATION));
 #else
-	MainLines.push_back(new Comment("WI Code Menu (P+ 2.29)", &MENU_TITLE_CHECK_LOCATION));
+	MainLines.push_back(new Comment("WI Code Menu (P+ 2.3)", &MENU_TITLE_CHECK_LOCATION));
 #endif
-	MainLines.push_back(new Comment("X = Reset Line | Y = Reset Page"));
-	MainLines.push_back(new Comment("Hold Z = Scroll Faster"));
+	//MainLines.push_back(new Comment("X = Reset Line | Y = Reset Page"));
+	//MainLines.push_back(new Comment("Hold Z = Scroll Faster"));
 	MainLines.push_back(new Comment(""));
 
 #if EON_DEBUG_BUILD
@@ -320,9 +320,9 @@ void CodeMenu()
 #endif
 	
 	MainLines.push_back(&DebugMode.CalledFromLine);
+	MainLines.push_back(new Toggle("Skip Results Screen", false, AUTO_SKIP_TO_CSS_INDEX));
 	MainLines.push_back(new Selection("Endless Friendlies", { "OFF", "ON", "ON (1v1)"}, 0, ENDLESS_FRIENDLIES_MODE_INDEX));
 	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
-	MainLines.push_back(new Toggle("Skip Results Screen", false, AUTO_SKIP_TO_CSS_INDEX));
 	MainLines.push_back(new Comment(""));
 #if DOLPHIN_BUILD
 	MainLines.push_back(new Toggle("Autosave Replays", true, AUTO_SAVE_REPLAY_INDEX));
