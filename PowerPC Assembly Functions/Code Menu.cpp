@@ -71,6 +71,7 @@ int HITFALLING_TOGGLE_INDEX = -1;
 int GRABS_TRADE_INDEX = -1;
 int GROUNDED_ASDI_DOWN_INDEX = -1;
 int DI_RANGE_INDEX = -1;
+int THEME_INDEX = -1;
 //int SCALE_MODIFIER_INDEX = -1;
 
 //constant overrides
@@ -333,6 +334,7 @@ void CodeMenu()
 
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (WI)", "Doubles (WI)",  "Singles (PMBR)", "Doubles (PMBR)" }, 0, STAGELIST_INDEX));
+	MainLines.push_back(new Selection("Theme", { "WI", "Construct", "Invincible" }, 0, THEME_INDEX));
 	MainLines.push_back(&SpecialSettingsPage.CalledFromLine);
 	MainLines.push_back(&PlayerCodes.CalledFromLine);
 	
@@ -874,6 +876,9 @@ void CreateMenu(Page MainPage)
 
 	//DI range
 	AddValueToByteArray(DI_RANGE_INDEX, Header);
+
+	//Theme toggle
+	AddValueToByteArray(THEME_INDEX, Header);
 
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);
