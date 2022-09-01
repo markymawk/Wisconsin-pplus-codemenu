@@ -333,7 +333,7 @@ void CodeMenu()
 	MainLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
 
 	MainLines.push_back(new Comment(""));
-	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (WI)", "Doubles (WI)",  "Singles (PMBR)", "Doubles (PMBR)" }, 0, STAGELIST_INDEX));
+	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (WI)", "Doubles (WI)",  "Singles (PMBR)", "Doubles (PMBR)", "Singles (Theatre)", "Doubles (Theatre)" }, 0, STAGELIST_INDEX));
 	MainLines.push_back(new Selection("Theme", { "WI", "Construct", "Invincible" }, 0, THEME_INDEX));
 	MainLines.push_back(&SpecialSettingsPage.CalledFromLine);
 	MainLines.push_back(&PlayerCodes.CalledFromLine);
