@@ -1,6 +1,6 @@
 TABLE_STAGES:
 # Table of icon<->stage slot associations
-half[67] |	# Stage Count + 2
+half[67] |  # Stage Count + 2
 | # OLD SLOTS
 0x0101, 0x0202, 0x0303, 0x0404, | # Battlefield, Final Destination, Delfino's Secret, Luigi's Mansion
 0x0505, 0x0606, 0x0707, 0x0808, | # Metal Cavern, Bowser's Castle, Kongo Jungle, Rumble Falls
@@ -14,15 +14,15 @@ half[67] |	# Stage Count + 2
 0x2F37, 0x3038, 0x3139, 0x323A, | # Rainbow Cruise, Corneria, Big Blue, Zebes
 0x2E3B, 0xFF64, 0xFF64, 0x373C, | # Pokemon Stadium 2, NOTHING, NOTHING, Training Room
 | # NEW SLOTS
-0x4023, 0x4124, 0x4225, 0x251F, | # Dracula's Castle, Bob-omb[41, 36], Bridge of Eldin [42, 37], Hanenbow
-0x4427, 0x4528, 0x4629, 0x2B34, | # Dead Line, Dinosaur Land, Temple Tempest [46, 41], Jungle Japes
-0x482B, 0x0B0B, 0x4A12, 0x4B2E, | # Bell Tower, Norfair, Port Town (SWAPPED WITH HAMMER EXPRESS), Chamber of Giants [4B, 46]
-0x4C2F, 0x4D30, 0x4E31, 		| # Mushroom Kingdom, WarioWare, Subspace
-0x5121, | # Tower of Heaven  [asl 51, selmap 33] 
-0x5022,	| # Poke Floats 	 [asl 50, selmap 34]
-0x4F3D, | # Rainbow Cruise 	 [asl 4F, selmap 61]
-0x523E, | # Fourside 		 [asl 52, selmap 62]
-0x533F,	| # Mute City 		 [asl 53, selmap 63]
+0x4023, 0x4124, 0x4225, 0x251F, | # Dracula's Castle, Bob-omb, Bridge of Eldin, Hanenbow
+0x4427, 0x4528, 0x4629, 0x2B34, | # Dead Line, Dinosaur Land, Temple Tempest, Jungle Japes
+0x482B, 0x0B0B, 0x4A12, 0x4B2E, | # Sprout Tower, Norfair, Port Town, Chamber of Giants
+0x4C2F, 0x4D30, 0x4E31,         | # Mushroom Kingdom, WarioWare, Subspace
+0x5121, | # Delfino Plaza    [asl 51, selmap 33]
+0x5022, | # Poke Floats      [asl 50, selmap 34]
+0x4F3D, | # Rainbow Cruise   [asl 4F, selmap 61]
+0x523E, | # Fourside         [asl 52, selmap 62]
+0x533F, | # Mute City        [asl 53, selmap 63]
 0x9241, | # Highrise Rooftop [asl 92, selmap 65]
 0x6042, | # Oil Drum Alley   [asl 60, selmap 66] 
 0x3E43    # Homerun Stadium  [asl 3E, selmap 67]

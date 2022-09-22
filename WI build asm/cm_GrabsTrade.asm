@@ -12,7 +12,8 @@ HOOK @ $8077055c
   lwz r31, 0(r31)
   lbz r31, 0xB(r31)
   cmpwi r31, 0                  # /
-  bne grabsClank				# Default behavior if codemenuVar = 0. Go to clank behavior otherwise
+  beq defaultGrab 				# Default behavior if codemenuVar = 0
+  bne grabsClank				# Go to clank behavior otherwise
   
 defaultGrab:		
   lis r31, 0x8079				# \ original op: bl 0x807977c8
