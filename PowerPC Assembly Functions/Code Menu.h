@@ -302,9 +302,9 @@ static int CurrentOffset = START_OF_CODE_MENU;
 
 static vector<int> Defaults;
 #if BUILD_TYPE == PROJECT_PLUS && DOLPHIN_BUILD == true
-static fstream MenuFile("C:\\Users\\m\\Desktop\\Wisco PM\\wisco build P+\\build\\Project+\\pf\\menu3\\dnet.cmnu", fstream::out | fstream::binary);
+static fstream MenuFile("G:\\Files\\Wisco PM\\wisco build P+\\build\\Project+\\pf\\menu3\\dnet.cmnu", fstream::out | fstream::binary);
 #elif BUILD_TYPE == PROJECT_PLUS && DOLPHIN_BUILD == false
-static fstream MenuFile("C:\\Users\\m\\Desktop\\Wisco PM\\wisco build P+\\build\\Project+\\pf\\menu3\\data.cmnu", fstream::out | fstream::binary);
+static fstream MenuFile("G:\\Files\\Wisco PM\\wisco build P+\\build\\Project+\\pf\\menu3\\data.cmnu", fstream::out | fstream::binary);
 #endif
 
 class Page;

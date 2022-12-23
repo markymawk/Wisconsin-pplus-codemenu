@@ -22,7 +22,7 @@ using namespace std;
 
 int main()
 {
-	string OutputTextPath = "C:\\Users\\m\\Desktop\\Wisco PM\\wisco build P+\\asm.txt";
+	string OutputTextPath = "G:\\Files\\Wisco PM\\wisco build P+\\asm.txt";
 	
 	CodeStart(OutputTextPath);
 
