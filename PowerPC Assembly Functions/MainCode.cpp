@@ -22,8 +22,12 @@ using namespace std;
 
 int main()
 {
+	#if DOLPHIN_BUILD
+	string OutputTextPath = "G:\\Files\\Wisco PM\\wisco build P+\\asm-net.txt";
+	#else
 	string OutputTextPath = "G:\\Files\\Wisco PM\\wisco build P+\\asm.txt";
-	
+	#endif
+
 	CodeStart(OutputTextPath);
 
 	CodeMenu(); tagBasedCostumes();
