@@ -467,7 +467,7 @@ void EndMatch()
 
 		SetRegister(reg2, PLAY_BUTTON_LOC_START - BUTTON_PORT_OFFSET);
 		LoadHalfToReg(reg6, SALTY_RUNBACK_BUTTON_COMBO_LOC + 2);
-		LoadHalfToReg(reg4, SALTY_RUNBACK_BUTTON_COMBO_ALT_LOC + 2);
+		//LoadHalfToReg(reg4, SALTY_RUNBACK_BUTTON_COMBO_ALT_LOC + 2);
 		LoadHalfToReg(reg7, SKIP_RESULTS_BUTTON_COMBO_LOC + 2);
 		SetRegister(reg9, 0);
 		CounterLoop(reg1, 0, 8, 1); {
@@ -478,10 +478,10 @@ void EndMatch()
 				SetRegister(reg9, 0x10);
 			}EndIf();
 			//salty runback A+B
-			AND(reg8, reg5, reg4);
-			If(reg8, EQUAL, reg4); {
-				SetRegister(reg9, 0x10);
-			}EndIf();
+			//AND(reg8, reg5, reg4);
+			//If(reg8, EQUAL, reg4); {
+			//	SetRegister(reg9, 0x10);
+			//}EndIf();
 			//skip to CSS
 			AND(reg8, reg5, reg7);
 			If(reg8, EQUAL, reg7); {

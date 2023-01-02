@@ -713,7 +713,7 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(START_OF_CODE_MENU, Header); //current page ptr
 	AddValueToByteArray(START_OF_CODE_MENU, Header); //main page ptr
 	//button combos
-	AddValueToByteArray(BUTTON_L | BUTTON_R | BUTTON_Y , Header); //salty runback
+	AddValueToByteArray(BUTTON_R | BUTTON_Y , Header); //salty runback
 	AddValueToByteArray(BUTTON_R | BUTTON_X, Header); //skip results
 	//line colors
 	AddValueToByteArray(MENU_TEXT_UNSELECTED, Header); //unhighlighted line color, prev WHITE
@@ -863,7 +863,7 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(TEAMS_ROTATE_TOGGLE_INDEX, Header);
 
 	//salty runback ALTERNATE COMBO
-	AddValueToByteArray(BUTTON_A | BUTTON_B, Header); 
+	//AddValueToByteArray(BUTTON_A | BUTTON_B, Header); 
 
 	//Hitfalling toggle
 	AddValueToByteArray(HITFALLING_TOGGLE_INDEX, Header);
