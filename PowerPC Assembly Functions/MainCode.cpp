@@ -23,9 +23,9 @@ using namespace std;
 int main()
 {
 	#if DOLPHIN_BUILD
-	string OutputTextPath = "G:\\Files\\Wisco PM\\wisco build P+\\asm-net.txt";
+	string OutputTextPath = "G:\\Files\\Wisco PM\\Code menu repos\\asm-net.txt";
 	#else
-	string OutputTextPath = "G:\\Files\\Wisco PM\\wisco build P+\\asm.txt";
+	string OutputTextPath = "G:\\Files\\Wisco PM\\Code menu repos\\asm.txt";
 	#endif
 
 	CodeStart(OutputTextPath);
