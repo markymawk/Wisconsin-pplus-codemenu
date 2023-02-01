@@ -288,7 +288,6 @@ void CodeMenu()
 	GameplayConstantsLines.push_back(new Floating("Wall Bounce Knockback Multiplier", -1, 5, 0.80, .05, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88510, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX);
 
-
 	Page GameplayConstantsPage("Gameplay Modifiers", GameplayConstantsLines);
 
 	//Gameplay Modifiers ("Special Settings") setting
@@ -314,8 +313,7 @@ void CodeMenu()
 #else
 	MainLines.push_back(new Comment("WI Code Menu (P+ 2.3.2)", &MENU_TITLE_CHECK_LOCATION));
 #endif
-	//MainLines.push_back(new Comment("X = Reset Line | Y = Reset Page"));
-	//MainLines.push_back(new Comment("Hold Z = Scroll Faster"));
+
 	MainLines.push_back(new Comment(""));
 
 #if EON_DEBUG_BUILD
@@ -340,7 +338,6 @@ void CodeMenu()
 	MainLines.push_back(&SpecialSettingsPage.CalledFromLine);
 	MainLines.push_back(&PlayerCodes.CalledFromLine);
 	
-
 	//MainLines.push_back(new Print("%s", {&tets}));
 	
 	/*MainLines.push_back(new Integer("P1 1st Shield Red", 0, 0xFF, 0, 1, SHIELD_RED_1));
@@ -386,10 +383,6 @@ void CodeMenu()
 	}
 	cout << endl;
 #endif
-	
-	//printf("%X", P1_TAG_STRING_INDEX);
-
-	//printf("%0Xu\n", KnucklesTemp + 8);
 
 	MenuFile.close();
 }
@@ -946,6 +939,7 @@ void constantOverride() {
 	} EndIf();
 	
 	Label(ThemeSet);
+
 	for (int i = 0; i < 4; i++) {
 		SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
 		STH(reg1, reg2, 0);
@@ -953,7 +947,8 @@ void constantOverride() {
 
 	// Universal walljumping - if in a match, must restart. Attempted writing to 0x80FC15C0 and 0x80FC15D8, but got same result
 	LoadWordToReg(reg1, ALL_CHARS_WALLJUMP_INDEX + Line::VALUE);
-	SetRegister(reg2, 0x80FAA9A0); //walljump comparison
+	SetRegister(reg2, 0x80FAA9A0); //walljump comparison addr
+
 	// Universal Walljump toggle: If set, write 1
 	If(reg1, GREATER_I, 0); {
 		SetRegister(reg1, 1);	// word 1 @ $80FAA9A0, everyone can walljump
@@ -964,7 +959,7 @@ void constantOverride() {
 	} EndIf();
 	STW(reg1, reg2, 0);
 	
-	// DI range setting - multiply the internal value to pi to manipulate the DI range
+	// DI amplitude - multiply the internal value to pi to manipulate the DI range
 	// "pi" in this case means pi/10, or 0.314159265
 	LoadWordToReg(reg1, DI_RANGE_INDEX + Line::VALUE);
 	SetRegister(reg2, 0x80B88524); //Addr of pi value for DI calculations
