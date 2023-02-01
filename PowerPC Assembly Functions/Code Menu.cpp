@@ -93,6 +93,7 @@ int WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX = -1;
 int CROUCH_KNOCKBACK_INDEX = -1; //new WI
 int SHIELD_DECAY_INDEX = -1; //new WI
 int SHIELD_REGEN_INDEX = -1; //new WI
+int SCREEN_SHAKE_INDEX = -1; //new WI
 
 
 int SHIELD_RED_1 = -1;
@@ -302,6 +303,7 @@ void CodeMenu()
 	SpecialSettings.push_back(new Toggle("Random Teams", false, TEAMS_ROTATE_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Selection("Big Head Mode", {"OFF", "ON (1x)", "ON (2x)"}, 0, BIG_HEAD_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
+	SpecialSettings.push_back(new Toggle("Screen Shake", true, SCREEN_SHAKE_INDEX));
 	SpecialSettings.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
 	Page SpecialSettingsPage("Special Settings", SpecialSettings);
 
@@ -879,6 +881,9 @@ void CreateMenu(Page MainPage)
 
 	//Theme toggle
 	AddValueToByteArray(THEME_INDEX, Header);
+
+	//Screen shake toggle
+	AddValueToByteArray(SCREEN_SHAKE_INDEX, Header);
 
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);

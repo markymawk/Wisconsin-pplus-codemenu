@@ -72,6 +72,7 @@ extern int GRABS_TRADE_INDEX;
 extern int GROUNDED_ASDI_DOWN_INDEX;
 extern int DI_RANGE_INDEX;
 extern int THEME_INDEX;
+extern int SCREEN_SHAKE_INDEX;
 //extern int SCALE_MODIFIER_TOGGLE_INDEX;
 
 struct ConstantPair {
@@ -241,7 +242,9 @@ static const int DI_RANGE_INDEX_LOC = GROUNDED_ASDI_DOWN_INDEX_LOC + 4; //4
 
 static const int THEME_INDEX_LOC = DI_RANGE_INDEX_LOC + 4; //4
 
-static const int DRAW_SETTINGS_BUFFER_LOC = THEME_INDEX_LOC + 4; //0x200
+static const int SCREEN_SHAKE_INDEX_LOC = THEME_INDEX_LOC + 4; //4
+
+static const int DRAW_SETTINGS_BUFFER_LOC = SCREEN_SHAKE_INDEX_LOC + 4; //0x200
 
 static const int START_OF_CODE_MENU = DRAW_SETTINGS_BUFFER_LOC + 0x200;
 
