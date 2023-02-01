@@ -923,6 +923,34 @@ void constantOverride() {
 		STW(reg1, reg2, 0);
 	}
 
+
+	// Themes
+	int ThemeSet = GetNextLabel();
+	int MENU_PREFIX_ADDRESSES[4] = { 0x806FF2F3, 0x817F6365, 0x806FF30F, 0x817F634D };
+	LoadWordToReg(reg1, THEME_INDEX + Line::VALUE);
+	If(reg1, EQUAL_I, 0); {
+		SetRegister(reg1, 0x7363); //sc
+		JumpToLabel(ThemeSet);
+	} EndIf();
+	If(reg1, EQUAL_I, 1); {
+		SetRegister(reg1, 0x6378); //cx
+		JumpToLabel(ThemeSet);
+	} EndIf();
+	If(reg1, EQUAL_I, 2); {
+		SetRegister(reg1, 0x7776); //wv
+		JumpToLabel(ThemeSet);
+	} EndIf();
+	If(reg1, EQUAL_I, 3); {
+		SetRegister(reg1, 0x696E); //in
+		JumpToLabel(ThemeSet);
+	} EndIf();
+	
+	Label(ThemeSet);
+	for (int i = 0; i < 4; i++) {
+		SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
+		STH(reg1, reg2, 0);
+	}
+
 	// Universal walljumping - if in a match, must restart. Attempted writing to 0x80FC15C0 and 0x80FC15D8, but got same result
 	LoadWordToReg(reg1, ALL_CHARS_WALLJUMP_INDEX + Line::VALUE);
 	SetRegister(reg2, 0x80FAA9A0); //walljump comparison
