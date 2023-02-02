@@ -120,28 +120,18 @@ void CodeMenu()
 	P1Lines.push_back(new Comment("Player 1 Codes"));
 	P1Lines.push_back(new Print("Tag Hex: %s", { &P1_TAG_STRING_INDEX }));
 	P1Lines.push_back(new Comment(""));
-	//P1Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P1_INDEX));
-	//P1Lines.push_back(new Comment(""));
-
 	P1Lines.push_back(new Comment(""));
 	P1Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P1_INDEX, "%.0f%%"));
 	P1Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P1_INDEX));
 	P1Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P1_INDEX));
 	P1Lines.push_back(new Comment(""));
 	P1Lines.push_back(new Toggle("Missed L-Cancel Flash", false, LCANCEL_MISS_P1_INDEX));
-	
-	//for (auto x : P1Lines) {
-	//	cout << x->Text << endl;
-	//}
 	Page P1("Player 1 Codes", P1Lines);
 
 	vector<Line*> P2Lines;
 	P2Lines.push_back(new Comment("Player 2 Codes"));
 	P2Lines.push_back(new Print("Tag Hex: %s", { &P2_TAG_STRING_INDEX }));
 	P2Lines.push_back(new Comment(""));
-	//P2Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P2_INDEX));
-	//P2Lines.push_back(new Comment(""));
-
 	P2Lines.push_back(new Comment(""));
 	P2Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P2_INDEX, "%.0f%%"));
 	P2Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P2_INDEX));
@@ -154,9 +144,6 @@ void CodeMenu()
 	P3Lines.push_back(new Comment("Player 3 Codes"));
 	P3Lines.push_back(new Print("Tag Hex: %s", { &P3_TAG_STRING_INDEX }));
 	P3Lines.push_back(new Comment(""));
-	//P3Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P3_INDEX));
-	//P3Lines.push_back(new Comment(""));
-
 	P3Lines.push_back(new Comment(""));
 	P3Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P3_INDEX, "%.0f%%"));
 	P3Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P3_INDEX));
@@ -169,8 +156,6 @@ void CodeMenu()
 	P4Lines.push_back(new Comment("Player 4 Codes"));
 	P4Lines.push_back(new Print("Tag Hex: %s", { &P4_TAG_STRING_INDEX }));
 	P4Lines.push_back(new Comment(""));
-	//P4Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P4_INDEX));
-	//P4Lines.push_back(new Comment(""));
 	P4Lines.push_back(new Comment(""));
 	P4Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P4_INDEX, "%.0f%%"));
 	P4Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P4_INDEX));
@@ -179,6 +164,7 @@ void CodeMenu()
 	P4Lines.push_back(new Toggle("Missed L-Cancel Flash", false, LCANCEL_MISS_P4_INDEX));
 	Page P4("Player 4 Codes", P4Lines);
 
+	// Shield Colors page
 	vector<Line*> ShieldColorsLines;
 	ShieldColorsLines.push_back(new Comment("Select custom shield colors"));
 	ShieldColorsLines.push_back(new Comment(""));
@@ -188,6 +174,7 @@ void CodeMenu()
 	ShieldColorsLines.push_back(new Selection("P4 Shield Color", { "Red", "Blue", "Yellow", "Green", "Cyan", "Purple", "Gray" }, 3, SHIELD_COLOR_P4_INDEX));
 	Page ShieldColorsPage("Shield Colors", ShieldColorsLines);
 
+	// Player Codes page
 	vector<Line*> PlayerCodesLines;
 	PlayerCodesLines.push_back(new Comment("Toggle per-port settings"));
 	PlayerCodesLines.push_back(new Comment(""));
@@ -203,16 +190,14 @@ void CodeMenu()
 	PlayerCodesLines.push_back(&P2.CalledFromLine);
 	PlayerCodesLines.push_back(&P3.CalledFromLine);
 	PlayerCodesLines.push_back(&P4.CalledFromLine);
-	
+	PlayerCodesLines.push_back(&TagHexPage.CalledFromLine);
 	Page PlayerCodes("Player Codes", PlayerCodesLines);
 
-	//debug mode page
+	//Gebug Settings page
 	vector<Line*> DebugLines;
-	//DebugLines.push_back(new Comment("Debug Mode Commands:"));
 	DebugLines.push_back(new Comment("With Frame Advance ON:"));
 	DebugLines.push_back(new Comment("Start = Pause | Z = Adv Frame"));
 	DebugLines.push_back(new Comment("X+Dpad Up = Normal Pause"));
-	//DebugLines.push_back(new Comment("Z = Frame Advance | Hold Z = Slow Motion"));
 	DebugLines.push_back(new Comment(""));
 	DebugLines.push_back(new Toggle("Frame Advance", false, DEBUG_MODE_INDEX));
 	DebugLines.push_back(new Selection("Show Hitboxes", { "OFF", "ON", "ON (Hide Characters)" }, 0, DISPLAY_HITBOXES_INDEX));
@@ -238,65 +223,64 @@ void CodeMenu()
 	FlightModeLines.push_back(new Floating("Vertical Acceleration", -100, 100, 1, .05, DBZ_MODE_ACCEL_Y_INDEX, "%.2f"));
 	Page FlightModePage("Flight Mode", FlightModeLines);
 
-	vector<Line*> GameplayConstantsLines;
-	GameplayConstantsLines.push_back(new Comment("Modify core game mechanics"));
-	GameplayConstantsLines.push_back(new Comment(""));
-	GameplayConstantsLines.push_back(new Comment("On-hit behavior"));
-	GameplayConstantsLines.push_back(new Toggle("Random Knockback Angle", false, RANDOM_ANGLE_TOGGLE_INDEX));
-	GameplayConstantsLines.push_back(new Selection("DI Amplitude", { "0x", "0.5x", "1x", "2.5x", "5x", "10x" }, 2, DI_RANGE_INDEX));
-	GameplayConstantsLines.push_back(new Toggle("Hitfalling", false, HITFALLING_TOGGLE_INDEX));
-	GameplayConstantsLines.push_back(new Floating("Hitstun Multiplier", 0, 20, 0.4, .02, HITSTUN_MULTIPLIER_INDEX, "%.2fx"));
+	//Gameplay Modifiers page
+	vector<Line*> GameplayModifiersLines;
+	GameplayModifiersLines.push_back(new Comment("Modify core game mechanics"));
+	GameplayModifiersLines.push_back(new Comment(""));
+	GameplayModifiersLines.push_back(new Comment("On-hit behavior"));
+	GameplayModifiersLines.push_back(new Toggle("Random Knockback Angle", false, RANDOM_ANGLE_TOGGLE_INDEX));
+	GameplayModifiersLines.push_back(new Selection("DI Amplitude", { "0x", "0.5x", "1x", "2.5x", "5x", "10x" }, 2, DI_RANGE_INDEX));
+	GameplayModifiersLines.push_back(new Toggle("Hitfalling", false, HITFALLING_TOGGLE_INDEX));
+	GameplayModifiersLines.push_back(new Floating("Hitstun Multiplier", 0, 20, 0.4, .02, HITSTUN_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B87AA8, HITSTUN_MULTIPLIER_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Hitlag Multiplier", 0, 20, 1. / 3., .02, HITLAG_MULTIPLIER_INDEX, "%.2fx"));
+	GameplayModifiersLines.push_back(new Floating("Hitlag Multiplier", 0, 20, 1. / 3., .02, HITLAG_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B87AEC, HITLAG_MULTIPLIER_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Hitlag Maximum", 0, 100, 30, 1, HITLAG_MAXIMUM_INDEX, "%.0f"));
+	GameplayModifiersLines.push_back(new Floating("Hitlag Maximum", 0, 100, 30, 1, HITLAG_MAXIMUM_INDEX, "%.0f"));
 	constantOverrides.emplace_back(0x80B87AE8, HITLAG_MAXIMUM_INDEX);
-	GameplayConstantsLines.push_back(new Floating("SDI Distance", -100, 100, 6, .5, SDI_DISTANCE_INDEX, "%.1f"));
+	GameplayModifiersLines.push_back(new Floating("SDI Distance", -100, 100, 6, .5, SDI_DISTANCE_INDEX, "%.1f"));
 	constantOverrides.emplace_back(0x80B88354, SDI_DISTANCE_INDEX);
-	GameplayConstantsLines.push_back(new Floating("ASDI Distance", -100, 100, 3, .5, ASDI_DISTANCE_INDEX, "%.1f"));
+	GameplayModifiersLines.push_back(new Floating("ASDI Distance", -100, 100, 3, .5, ASDI_DISTANCE_INDEX, "%.1f"));
 	constantOverrides.emplace_back(0x80B88358, ASDI_DISTANCE_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Knockback Decay Rate", -0.051, 0.201, 0.051, .003, KNOCKBACK_DECAY_MULTIPLIER_INDEX, "%.3f"));
+	GameplayModifiersLines.push_back(new Floating("Knockback Decay Rate", -0.051, 0.201, 0.051, .003, KNOCKBACK_DECAY_MULTIPLIER_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B88534, KNOCKBACK_DECAY_MULTIPLIER_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Crouch Knockback Multiplier", 0, 3, (2. / 3.) , (1. / 12.), CROUCH_KNOCKBACK_INDEX, "%.2fx"));
+	GameplayModifiersLines.push_back(new Floating("Crouch Knockback Multiplier", 0, 3, (2. / 3.) , (1. / 12.), CROUCH_KNOCKBACK_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88348, CROUCH_KNOCKBACK_INDEX);
-	GameplayConstantsLines.push_back(new Toggle("Grounded ASDI Down", true, GROUNDED_ASDI_DOWN_INDEX));
+	GameplayModifiersLines.push_back(new Toggle("Grounded ASDI Down", true, GROUNDED_ASDI_DOWN_INDEX));
 	//GameplayConstantsLines.push_back(new Floating("Electric Hitlag Multiplier", 0, 999, 1.5, .1, ELECTRIC_HITLAG_MULTIPLIER_INDEX, "%.1fx"));
 	//constantOverrides.emplace_back(0x80B87B10, ELECTRIC_HITLAG_MULTIPLIER_INDEX);
 
-	GameplayConstantsLines.push_back(new Comment("Shield mechanics"));
-	GameplayConstantsLines.push_back(new Floating("Minimum Shield Size", -1, 1, 0.15, .03, MINIMUM_SHIELD_SIZE_SCALING_INDEX, "%.2fx"));
+	GameplayModifiersLines.push_back(new Comment("Shield mechanics"));
+	GameplayModifiersLines.push_back(new Floating("Minimum Shield Size", -1, 1, 0.15, .03, MINIMUM_SHIELD_SIZE_SCALING_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88444, MINIMUM_SHIELD_SIZE_SCALING_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Maximum Shield Size", 0, 5, 1, .05, SHIELD_SIZE_MULTIPLIER_INDEX, "%.2fx"));
+	GameplayModifiersLines.push_back(new Floating("Maximum Shield Size", 0, 5, 1, .05, SHIELD_SIZE_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88478, SHIELD_SIZE_MULTIPLIER_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Shield Decay Rate", -1, 2, 0.280000001192, .04, SHIELD_DECAY_INDEX, "%.2f"));
+	GameplayModifiersLines.push_back(new Floating("Shield Decay Rate", -1, 2, 0.280000001192, .04, SHIELD_DECAY_INDEX, "%.2f"));
 	constantOverrides.emplace_back(0x80B88450, SHIELD_DECAY_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Shield Regen Rate", 0, 1, 0.07, .01, SHIELD_REGEN_INDEX, "%.2f"));
+	GameplayModifiersLines.push_back(new Floating("Shield Regen Rate", 0, 1, 0.07, .01, SHIELD_REGEN_INDEX, "%.2f"));
 	constantOverrides.emplace_back(0x80B88454, SHIELD_REGEN_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Shield Damage Multiplier", -4, 4, 1, .05, SHIELD_DAMAGE_MULTIPLIER_INDEX, "%.2fx"));
+	GameplayModifiersLines.push_back(new Floating("Shield Damage Multiplier", -4, 4, 1, .05, SHIELD_DAMAGE_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B8845C, SHIELD_DAMAGE_MULTIPLIER_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Shield Tilt Multiplier", 0, 1.95, 0.5, .05, SHIELD_TILT_MULTIPLIER_INDEX, "%.2fx"));
+	GameplayModifiersLines.push_back(new Floating("Shield Tilt Multiplier", 0, 1.95, 0.5, .05, SHIELD_TILT_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88484, SHIELD_TILT_MULTIPLIER_INDEX);
 	//GameplayConstantsLines.push_back(new Floating("Base Shield Damage", -100, 100, 0, 1, SHIELD_BASE_DAMAGE_INDEX, "%.0f"));
 	//constantOverrides.emplace_back(0x80B88460, SHIELD_BASE_DAMAGE_INDEX);
 
-	GameplayConstantsLines.push_back(new Comment("Other"));
-	GameplayConstantsLines.push_back(new Selection("Grab Trade Behavior", { "Default", "Recoil", "Heart Swap" }, 0, GRABS_TRADE_INDEX));
-	GameplayConstantsLines.push_back(new Selection("Balloon Hit Behavior", { "None", "Gain Stock", "Lose Stock" }, 0, BALLOON_STOCK_INDEX));
-	GameplayConstantsLines.push_back(new Toggle("Universal Walljumps", false, ALL_CHARS_WALLJUMP_INDEX));
-	GameplayConstantsLines.push_back(new Floating("Walljump Horizontal Multiplier", -1, 5, 0.9, .05, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX, "%.2fx"));
+	GameplayModifiersLines.push_back(new Comment("Other"));
+	GameplayModifiersLines.push_back(new Selection("Grab Trade Behavior", { "Default", "Recoil", "Heart Swap" }, 0, GRABS_TRADE_INDEX));
+	GameplayModifiersLines.push_back(new Selection("Balloon Hit Behavior", { "None", "Gain Stock", "Lose Stock" }, 0, BALLOON_STOCK_INDEX));
+	GameplayModifiersLines.push_back(new Toggle("Universal Walljumps", false, ALL_CHARS_WALLJUMP_INDEX));
+	GameplayModifiersLines.push_back(new Floating("Walljump Horizontal Multiplier", -1, 5, 0.9, .05, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88420, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX);
-	GameplayConstantsLines.push_back(new Floating("Wall Bounce Knockback Multiplier", -1, 5, 0.80, .05, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX, "%.2fx"));
+	GameplayModifiersLines.push_back(new Floating("Wall Bounce Knockback Multiplier", -1, 5, 0.80, .05, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88510, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX);
 
-	Page GameplayConstantsPage("Gameplay Modifiers", GameplayConstantsLines);
-
-
+	Page GameplayModifiersPage("Gameplay Modifiers", GameplayModifiersLines);
 
 	//Gameplay Modifiers ("Special Settings") setting
 	vector<Line*> SpecialSettings;
 	SpecialSettings.push_back(new Comment("Toggle for-fun modes"));
 	SpecialSettings.push_back(new Comment(""));
-	SpecialSettings.push_back(&GameplayConstantsPage.CalledFromLine);
+	SpecialSettings.push_back(&GameplayModifiersPage.CalledFromLine);
 	SpecialSettings.push_back(&FlightModePage.CalledFromLine);
 	SpecialSettings.push_back(new Comment(""));
 	// Move Staling: Wording implies that "Damage Stales in Training Mode" is disabled, which is the case in WI but NOT in vanilla P+
@@ -322,7 +306,6 @@ void CodeMenu()
 #if EON_DEBUG_BUILD
 	MainLines.push_back(&TestPage.CalledFromLine);
 #endif
-	
 	
 	MainLines.push_back(&DebugMode.CalledFromLine);
 	MainLines.push_back(new Selection("Endless Friendlies", { "OFF", "ON", "ON (1v1)"}, 0, ENDLESS_FRIENDLIES_MODE_INDEX));
