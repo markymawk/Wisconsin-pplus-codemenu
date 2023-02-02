@@ -32,7 +32,7 @@ int SAVE_REPLAY_ANYWHERE_INDEX = -1;
 int AUTO_SKIP_TO_CSS_INDEX = -1;
 int CODE_MENU_ACTIVATION_SETTING_INDEX = -1;
 int PERCENT_SELECT_VALUE_P1_INDEX = -1;
-int PERCENT_SELECT_ACTIVATOR_P1_INDEX = -1;
+int PERCENT_SELECT_ACTIVATOR_INDEX = -1;
 int PERCENT_SELECT_VALUE_P2_INDEX = -1;
 int PERCENT_SELECT_ACTIVATOR_P2_INDEX = -1;
 int PERCENT_SELECT_VALUE_P3_INDEX = -1;
@@ -76,7 +76,6 @@ int SHIELD_COLOR_P1_INDEX = -1;
 int SHIELD_COLOR_P2_INDEX = -1;
 int SHIELD_COLOR_P3_INDEX = -1;
 int SHIELD_COLOR_P4_INDEX = -1;
-//int SCALE_MODIFIER_INDEX = -1;
 
 //constant overrides
 vector<ConstantPair> constantOverrides;
@@ -115,11 +114,11 @@ void CodeMenu()
 	Page TestPage("Testing flags", TestLines);
 #endif
 
+	//Percent select page
 	vector<Line*> PercentSelectLines;
 	PercentSelectLines.push_back(new Comment("Set player percents using the dpad"));
-	//PercentSelectLines.push_back(new Comment("Dpad option must be changed to set"));
 	PercentSelectLines.push_back(new Comment(""));
-	PercentSelectLines.push_back(new Toggle("Set Percent", false, PERCENT_SELECT_ACTIVATOR_P1_INDEX));
+	PercentSelectLines.push_back(new Toggle("Set Percent", false, PERCENT_SELECT_ACTIVATOR_INDEX));
 	PercentSelectLines.push_back(new Comment(""));
 	PercentSelectLines.push_back(new Floating("P1 Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P1_INDEX, "%.0f%%"));
 	PercentSelectLines.push_back(new Toggle("P1 Dpad", true, DISABLE_DPAD_P1_INDEX));
@@ -134,6 +133,7 @@ void CodeMenu()
 	PercentSelectLines.push_back(new Toggle("P4 Dpad", true, DISABLE_DPAD_P4_INDEX));
 	Page PercentSelectPage("Percent Select", PercentSelectLines);
 
+	// L-cancel miss flash page
 	vector<Line*> LCancelFlashLines;
 	LCancelFlashLines.push_back(new Comment("Flash red on missed L-cancels"));
 	LCancelFlashLines.push_back(new Comment(""));
@@ -179,7 +179,7 @@ void CodeMenu()
 	//PlayerCodesLines.push_back(&TagHexPage.CalledFromLine);
 	Page PlayerCodes("Player Codes", PlayerCodesLines);
 
-	//Gebug Settings page
+	//Debug Settings page
 	vector<Line*> DebugLines;
 	DebugLines.push_back(new Comment("With Frame Advance ON:"));
 	DebugLines.push_back(new Comment("Start = Pause | Z = Adv Frame"));
@@ -259,10 +259,9 @@ void CodeMenu()
 	constantOverrides.emplace_back(0x80B88420, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX);
 	GameplayModifiersLines.push_back(new Floating("Wall Bounce Knockback Multiplier", -1, 5, 0.80, .05, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88510, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX);
-
 	Page GameplayModifiersPage("Gameplay Modifiers", GameplayModifiersLines);
 
-	//Gameplay Modifiers ("Special Settings") setting
+	//Special settings page
 	vector<Line*> SpecialSettings;
 	SpecialSettings.push_back(new Comment("Toggle for-fun modes"));
 	SpecialSettings.push_back(new Comment(""));
@@ -276,23 +275,19 @@ void CodeMenu()
 	SpecialSettings.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Toggle("Screen Shake", true, SCREEN_SHAKE_INDEX));
 	SpecialSettings.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
-	
 	Page SpecialSettingsPage("Special Settings", SpecialSettings);
 
 	//main page
 	vector<Line*> MainLines;
-#if DOLPHIN_BUILD
+#if EON_DEBUG_BUILD
+	MainLines.push_back(&TestPage.CalledFromLine);
+#elif DOLPHIN_BUILD
 	MainLines.push_back(new Comment("WI Netplay Code Menu (P+ 2.3.2)", &MENU_TITLE_CHECK_LOCATION));
 #else
 	MainLines.push_back(new Comment("WI Code Menu (P+ 2.3.2)", &MENU_TITLE_CHECK_LOCATION));
 #endif
 
 	MainLines.push_back(new Comment(""));
-
-#if EON_DEBUG_BUILD
-	MainLines.push_back(&TestPage.CalledFromLine);
-#endif
-	
 	MainLines.push_back(&DebugMode.CalledFromLine);
 	MainLines.push_back(new Selection("Endless Friendlies", { "OFF", "ON", "ON (1v1)"}, 0, ENDLESS_FRIENDLIES_MODE_INDEX));
 	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
@@ -304,7 +299,6 @@ void CodeMenu()
 	MainLines.push_back(new Toggle("Autosave Replays", false, AUTO_SAVE_REPLAY_INDEX));
 #endif
 	MainLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
-
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (WI)", "Doubles (WI)", "Starters (WI)", "Singles (PMBR)", "Doubles (PMBR)", "Singles (Theatre)", "Doubles (Theatre)" }, 0, STAGELIST_INDEX));
 	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Project Wave", "Invincible 6" }, 0, THEME_INDEX));
@@ -313,8 +307,6 @@ void CodeMenu()
 	
 	//MainLines.push_back(new Print("%s", {&tets}));
 	
-
-
 	Page Main("Main", MainLines);
 	
 	//Unclepunch fps code
@@ -325,13 +317,9 @@ void CodeMenu()
 	}
 
 	CreateMenu(Main);
-
 	PrintCodeMenu();
-
 	PrimeCodeMenu();
-
 	ControlCodeMenu();
-
 	ActualCodes();
 
 #if EON_DEBUG_BUILD
@@ -459,7 +447,6 @@ void endlessFriendlies() {
 	int reg5 = 27;
 	int reg6 = 26;
 	int flagReg = 25;
-
 	
 	SetRegister(flagReg, -1); //Doesn't do anything unless changed
 
@@ -505,7 +492,6 @@ void endlessFriendlies() {
 		ORI(reg3, reg3, 0x8); //set flag
 		STB(reg3, 3, 0x5D);
 	} EndIf();
-	
 
 	RestoreRegisters();
 	ASMEnd(0x8803005d); //lbz r0, 0x5D (r3)
@@ -719,7 +705,7 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(PERCENT_SELECT_VALUE_P3_INDEX, Header); //P3
 	AddValueToByteArray(PERCENT_SELECT_VALUE_P4_INDEX, Header); //P4
 	//percent selection activators
-	AddValueToByteArray(PERCENT_SELECT_ACTIVATOR_P1_INDEX, Header); //P1
+	AddValueToByteArray(PERCENT_SELECT_ACTIVATOR_INDEX, Header); //P1
 	AddValueToByteArray(PERCENT_SELECT_ACTIVATOR_P2_INDEX, Header); //P2
 	AddValueToByteArray(PERCENT_SELECT_ACTIVATOR_P3_INDEX, Header); //P3
 	AddValueToByteArray(PERCENT_SELECT_ACTIVATOR_P4_INDEX, Header); //P4
@@ -876,8 +862,6 @@ void constantOverride() {
 		STW(reg1, reg2, 0);
 	}
 
-	
-
 	// Themes
 	int ThemeSet = GetNextLabel();
 	int MENU_PREFIX_ADDRESSES[4] = { 0x806FF2F3, 0x817F6365, 0x806FF30F, 0x817F634D };
@@ -958,63 +942,6 @@ void ControlCodeMenu()
 	iota(FPRegs.begin(), FPRegs.end(), 0);
 	SaveRegisters(FPRegs);
 
-	//Original Fracture code
-	//if (SHIELD_RED_1 != -1) {
-	//	SetRegister(5, 0x80F5ACE0 + 0x88);
-	//	SetRegister(3, SHIELD_RED_1 + 8 + 3);
-	//	LBZ(4, 3, 0);
-	//	STB(4, 5, 0);
-	//	SetRegister(3, SHIELD_GREEN_1 + 8 + 3);
-	//	LBZ(4, 3, 0);
-	//	STB(4, 5, 1);
-	//	SetRegister(3, SHIELD_BLUE_1 + 8 + 3);
-	//	LBZ(4, 3, 0);
-	//	STB(4, 5, 2);
-	//	SetRegister(3, SHIELD_ALPHA_1 + 8 + 3);
-	//	LBZ(4, 3, 0);
-	//	STB(4, 5, 3);
-	//	SetRegister(5, 0x80F5ACE0 + 0x90);
-	//	SetRegister(3, SHIELD_RED_2 + 8 + 3);
-	//	LBZ(4, 3, 0);
-	//	STB(4, 5, 0);
-	//	SetRegister(3, SHIELD_GREEN_2 + 8 + 3);
-	//	LBZ(4, 3, 0);
-	//	STB(4, 5, 1);
-	//	SetRegister(3, SHIELD_BLUE_2 + 8 + 3);
-	//	LBZ(4, 3, 0);
-	//	STB(4, 5, 2);
-	//	SetRegister(3, SHIELD_ALPHA_2 + 8 + 3);
-	//	LBZ(4, 3, 0);
-	//	STB(4, 5, 3);
-	//	SetRegister(5, 0x80F5ACE0 + 0xA0);
-	//	SetRegister(3, SHIELD_RED_3 + 8 + 3);
-	//	LBZ(4, 3, 0);
-	//	STB(4, 5, 0);
-	//	SetRegister(3, SHIELD_GREEN_3 + 8 + 3);
-	//	LBZ(4, 3, 0);
-	//	STB(4, 5, 1);
-	//	SetRegister(3, SHIELD_BLUE_3 + 8 + 3);
-	//	LBZ(4, 3, 0);
-	//	STB(4, 5, 2);
-	//	SetRegister(3, SHIELD_ALPHA_3 + 8 + 3);
-	//	LBZ(4, 3, 0);
-	//	STB(4, 5, 3);
-	//	SetRegister(5, 0x80F5ACE0 + 0xA8);
-	//	SetRegister(3, SHIELD_RED_4 + 8 + 3);
-	//	LBZ(4, 3, 0);
-	//	STB(4, 5, 0);
-	//	SetRegister(3, SHIELD_GREEN_4 + 8 + 3);
-	//	LBZ(4, 3, 0);
-	//	STB(4, 5, 1);
-	//	SetRegister(3, SHIELD_BLUE_4 + 8 + 3);
-	//	LBZ(4, 3, 0);
-	//	STB(4, 5, 2);
-	//	SetRegister(3, SHIELD_ALPHA_4 + 8 + 3);
-	//	LBZ(4, 3, 0);
-	//	STB(4, 5, 3);
-	//}
-
-
 	printMenuSetters();
 
 	int Reg1 = 31;
@@ -1039,7 +966,7 @@ void ControlCodeMenu()
 
 	//prevents Code Menu from booting if it doesn't match a specified string (lol)
 	LoadHalfToReg(Reg1, MENU_TITLE_CHECK_LOCATION + 7 + Line::COMMENT_LINE_TEXT_START);
-	//If(Reg1, NOT_EQUAL_I_L, 0x2B20); //+
+
 	#if DOLPHIN_BUILD
 	If(Reg1, NOT_EQUAL_I_L, 0x6C61); // la
 	{
@@ -1391,7 +1318,7 @@ void ControlCodeMenu()
 		int PURPLE_SHIELD_COLORS[3] = { 0x6300FF00, 0x7700EF00, 0xA668ED00 };
 		int GRAY_SHIELD_COLORS[3] = { 0xF0E0FF00, 0x20102000, 0xFFFFFF00 };
 
-		int SHIELD_ADDR_P1_BASE = 0x80F5AD68; //add 0xCC for each port, add 0x8 for second color entry, add another 0x10 for third color entry
+		int SHIELD_ADDR_P1_BASE = 0x80F5AD68; //add 0xCC for each port, add 0x8 for second color entry, add 0x18 for third color entry
 		int SHIELD_INDEX[4] = { SHIELD_COLOR_P1_INDEX, SHIELD_COLOR_P2_INDEX, SHIELD_COLOR_P3_INDEX, SHIELD_COLOR_P4_INDEX };
 		
 		//Loop through ports
@@ -1455,10 +1382,10 @@ void ControlCodeMenu()
 				}
 
 				// percent select
-				if (PERCENT_SELECT_ACTIVATOR_P1_INDEX != -1 && PERCENT_SELECT_VALUE_P1_INDEX != -1) {
+				if (PERCENT_SELECT_ACTIVATOR_INDEX != -1 && PERCENT_SELECT_VALUE_P1_INDEX != -1) {
 					//GetArrayValueFromIndex(PERCENT_SELCTION_ACTIVATOR_ARRAY_LOC, Reg8, 0, 3); {
 					//	LWZ(5, 3, Line::VALUE); //get setting
-					LoadWordToReg(5, PERCENT_SELECT_ACTIVATOR_P1_INDEX + Line::VALUE);
+					LoadWordToReg(5, PERCENT_SELECT_ACTIVATOR_INDEX + Line::VALUE);
 						LWZ(Reg2, CharacterBufferReg, CHR_BUFFER_INFO_PTR_OFFSET);
 						If(5, EQUAL_I, 1); {
 							ANDI(Reg1, ButtonReg, 0xF);
@@ -1632,13 +1559,10 @@ void ControlCodeMenu()
 		} EndIf();
 	} EndIf();
 	
-
 	//can't trust register values after here
-	//need to change when save states are active again
 	if (SAVE_STATES_INDEX != -1) {
 		LoadWordToReg(Reg1, IS_IN_GAME_FLAG);
 		If(Reg1, EQUAL_I, 1); {
-			//LoadWordToReg(OpenFlagReg, CODE_MENU_CONTROL_FLAG);
 			If(OpenFlagReg, EQUAL_I, CODE_MENU_CLOSED); {
 				ANDI(Reg1, ButtonReg, BUTTON_DL);
 				If(Reg1, NOT_EQUAL_I, 0); {
@@ -1806,11 +1730,6 @@ void LeaveMenu(int PageReg, int TempReg1, int TempReg2, int TempReg3, int TempRe
 {
 	LWZ(TempReg1, PageReg, Page::PREV_PAGE);
 	If(TempReg1, EQUAL_I, 0); {
-		/*LoadWordToReg(TempReg1, TempReg2, PREV_CODE_MENU_CONTROL_FLAG);
-		STW(TempReg1, TempReg2, CODE_MENU_CONTROL_FLAG - PREV_CODE_MENU_CONTROL_FLAG);
-		LoadWordToReg(TempReg1, OLD_DEBUG_STATE_LOC);
-		SetRegister(TempReg2, IS_DEBUG_PAUSED);
-		STW(TempReg1, TempReg2, 0);*/
 		SetRegister(ActionReg, EXIT_MENU);
 	}Else(); {
 		ADD(TempReg2, PageReg, TempReg1);
