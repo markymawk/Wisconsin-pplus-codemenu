@@ -1405,62 +1405,44 @@ void ControlCodeMenu()
 	if (SHIELD_COLOR_P1_INDEX != -1) {
 		int SHIELD_ADDR_P1_BASE = 0x80F5AD68; //add 0xCC for each port, add 0x8 for second color entry, add another 0x10 for third color entry
 		int SHIELD_INDEX[4] = { SHIELD_COLOR_P1_INDEX, SHIELD_COLOR_P2_INDEX, SHIELD_COLOR_P3_INDEX, SHIELD_COLOR_P4_INDEX };
+
+		// A 4th color is used, but always set to 0 in vBrawl, so for consistency it isn't set here
 		int RED_SHIELD_COLORS[3] = { 0xFF3AB700, 0xFF000000, 0xFF000000 };
 		int BLUE_SHIELD_COLORS[3] = { 0x00FFFF00, 0x0000FF00, 0x0080FF00 };
 		int YELLOW_SHIELD_COLORS[3] = { 0xFAF9E100, 0xFFFF0000, 0xFFFF8000 };
 		int GREEN_SHIELD_COLORS[3] = { 0x88FCAE00, 0x00FF0000, 0x00C00000 };
-
 		int* COLOR_OPTIONS[4] = { RED_SHIELD_COLORS, BLUE_SHIELD_COLORS, YELLOW_SHIELD_COLORS, GREEN_SHIELD_COLORS };
 
-		//P1 Shield
-		int shieldAddr[3] = {SHIELD_ADDR_P1_BASE, SHIELD_ADDR_P1_BASE + 0x8, SHIELD_ADDR_P1_BASE + 0x18};
-		for (int j = 0; j < 3; j++) {
-			LoadWordToReg(Reg1, SHIELD_COLOR_P1_INDEX + Line::VALUE);
-			If(Reg1, EQUAL_I, 0); {
-				SetRegister(Reg1, RED_SHIELD_COLORS[j]);
-			}
-			Else(); {
-				If(Reg1, EQUAL_I, 1); {
-					SetRegister(Reg1, BLUE_SHIELD_COLORS[j]);
+		//Loop through ports
+		for (int i = 0; i < 4; i++) {
+			int portOffset = 0xCC * i;
+			int shieldAddr[3] = { SHIELD_ADDR_P1_BASE + portOffset, SHIELD_ADDR_P1_BASE + 0x8 + portOffset, SHIELD_ADDR_P1_BASE + 0x18 + portOffset };
+			
+			// Loop through colors
+			for (int j = 0; j < 3; j++) {
+				LoadWordToReg(Reg1, SHIELD_INDEX[i] + Line::VALUE);
+				If(Reg1, EQUAL_I, 0); {
+					SetRegister(Reg1, RED_SHIELD_COLORS[j]);
 				}
 				Else(); {
-					If(Reg1, EQUAL_I, 2); {
-						SetRegister(Reg1, YELLOW_SHIELD_COLORS[j]);
+					If(Reg1, EQUAL_I, 1); {
+						SetRegister(Reg1, BLUE_SHIELD_COLORS[j]);
 					}
 					Else(); {
-						SetRegister(Reg1, GREEN_SHIELD_COLORS[j]);
+						If(Reg1, EQUAL_I, 2); {
+							SetRegister(Reg1, YELLOW_SHIELD_COLORS[j]);
+						}
+						Else(); {
+							SetRegister(Reg1, GREEN_SHIELD_COLORS[j]);
+						} EndIf();
 					} EndIf();
 				} EndIf();
-			} EndIf();
-			SetRegister(Reg2, shieldAddr[j]);
-			printf("%0X\n", shieldAddr[j]);
-			STW(Reg1, Reg2, 0);
+
+				SetRegister(Reg2, shieldAddr[j]);
+				printf("%0X\n", shieldAddr[j]);
+				STW(Reg1, Reg2, 0);
+			}
 		}
-		//Loop thru player ports
-		//for (int i = 0; i < 4; i++) {
-		//	//int baseAddr = SHIELD_ADDR_P1_BASE + i * 0xCC;
-		//	int baseAddr = SHIELD_ADDR_P1_BASE;
-		//	int colorAddresses[3] = { baseAddr, baseAddr + 0x8, baseAddr + 0x18 };
-		//
-		//	//Check shield choice
-		//	LoadWordToReg(reg1, SHIELD_INDEX[i] + Line::VALUE);
-		//
-		//	//Loop thru color entries
-		//	for (int j = 0; j < 3; j++) {
-		//		//store color value into r4
-		//		If(3, EQUAL_I, 0); {
-		//			//SetRegister(4, RED_SHIELD_COLORS[j]);
-		//			SetRegister(reg2, 0xFFFFFFFF);
-		//		} EndIf();
-		//		If(3, EQUAL_I, 1); {
-		//			SetRegister(reg2, 0xEEEEEEEE);
-		//		} EndIf();
-		//
-		//		SetRegister(reg3, colorAddresses[j]); //load addr into reg3
-		//		STW(reg2, reg3, 0);
-		//	}
-		//
-		//}
 
 	}
 
