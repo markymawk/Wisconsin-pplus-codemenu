@@ -18,7 +18,7 @@ int CHARACTER_SELECT_P1_INDEX = -1;
 int CHARACTER_SELECT_P2_INDEX = -1;
 int CHARACTER_SELECT_P3_INDEX = -1;
 int CHARACTER_SELECT_P4_INDEX = -1;
-int INFINITE_SHIELDS_P1_INDEX = -1;
+int INFINITE_SHIELDS_INDEX = -1;
 int INFINITE_SHIELDS_P2_INDEX = -1;
 int INFINITE_SHIELDS_P3_INDEX = -1;
 int INFINITE_SHIELDS_P4_INDEX = -1;
@@ -120,9 +120,9 @@ void CodeMenu()
 	P1Lines.push_back(new Comment("Player 1 Codes"));
 	P1Lines.push_back(new Print("Tag Hex: %s", { &P1_TAG_STRING_INDEX }));
 	P1Lines.push_back(new Comment(""));
-	P1Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P1_INDEX));
+	//P1Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P1_INDEX));
 	//P1Lines.push_back(new Comment(""));
-	P1Lines.push_back(new Selection("P1 Character Select", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P1_INDEX));
+
 	P1Lines.push_back(new Comment(""));
 	P1Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P1_INDEX, "%.0f%%"));
 	P1Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P1_INDEX));
@@ -139,57 +139,71 @@ void CodeMenu()
 	P2Lines.push_back(new Comment("Player 2 Codes"));
 	P2Lines.push_back(new Print("Tag Hex: %s", { &P2_TAG_STRING_INDEX }));
 	P2Lines.push_back(new Comment(""));
-	P2Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P2_INDEX));
+	//P2Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P2_INDEX));
 	//P2Lines.push_back(new Comment(""));
-	P2Lines.push_back(new Selection("P2 Character Select", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P2_INDEX));
+
 	P2Lines.push_back(new Comment(""));
 	P2Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P2_INDEX, "%.0f%%"));
 	P2Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P2_INDEX));
 	P2Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P2_INDEX));
 	P2Lines.push_back(new Comment(""));
 	P2Lines.push_back(new Toggle("Missed L-Cancel Flash", false, LCANCEL_MISS_P2_INDEX));
-
 	Page P2("Player 2 Codes", P2Lines);
 
 	vector<Line*> P3Lines;
 	P3Lines.push_back(new Comment("Player 3 Codes"));
 	P3Lines.push_back(new Print("Tag Hex: %s", { &P3_TAG_STRING_INDEX }));
 	P3Lines.push_back(new Comment(""));
-	P3Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P3_INDEX));
+	//P3Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P3_INDEX));
 	//P3Lines.push_back(new Comment(""));
-	P3Lines.push_back(new Selection("P3 Character Select", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P3_INDEX));
+
 	P3Lines.push_back(new Comment(""));
 	P3Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P3_INDEX, "%.0f%%"));
 	P3Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P3_INDEX));
 	P3Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P3_INDEX));
 	P3Lines.push_back(new Comment(""));
 	P3Lines.push_back(new Toggle("Missed L-Cancel Flash", false, LCANCEL_MISS_P3_INDEX));
-
 	Page P3("Player 3 Codes", P3Lines);
 
 	vector<Line*> P4Lines;
 	P4Lines.push_back(new Comment("Player 4 Codes"));
 	P4Lines.push_back(new Print("Tag Hex: %s", { &P4_TAG_STRING_INDEX }));
 	P4Lines.push_back(new Comment(""));
-	P4Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P4_INDEX));
+	//P4Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P4_INDEX));
 	//P4Lines.push_back(new Comment(""));
-	P4Lines.push_back(new Selection("P4 Character Select", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P4_INDEX));
 	P4Lines.push_back(new Comment(""));
 	P4Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P4_INDEX, "%.0f%%"));
 	P4Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P4_INDEX));
 	P4Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P4_INDEX));
 	P4Lines.push_back(new Comment(""));
 	P4Lines.push_back(new Toggle("Missed L-Cancel Flash", false, LCANCEL_MISS_P4_INDEX));
-
 	Page P4("Player 4 Codes", P4Lines);
+
+	vector<Line*> ShieldColorsLines;
+	ShieldColorsLines.push_back(new Comment("Select custom shield colors"));
+	ShieldColorsLines.push_back(new Comment(""));
+	ShieldColorsLines.push_back(new Selection("P1 Shield Color", { "Red", "Blue", "Yellow", "Green", "Cyan", "Purple", "Gray" }, 0, SHIELD_COLOR_P1_INDEX));
+	ShieldColorsLines.push_back(new Selection("P2 Shield Color", { "Red", "Blue", "Yellow", "Green", "Cyan", "Purple", "Gray" }, 1, SHIELD_COLOR_P2_INDEX));
+	ShieldColorsLines.push_back(new Selection("P3 Shield Color", { "Red", "Blue", "Yellow", "Green", "Cyan", "Purple", "Gray" }, 2, SHIELD_COLOR_P3_INDEX));
+	ShieldColorsLines.push_back(new Selection("P4 Shield Color", { "Red", "Blue", "Yellow", "Green", "Cyan", "Purple", "Gray" }, 3, SHIELD_COLOR_P4_INDEX));
+	Page ShieldColorsPage("Shield Colors", ShieldColorsLines);
 
 	vector<Line*> PlayerCodesLines;
 	PlayerCodesLines.push_back(new Comment("Toggle per-port settings"));
+	PlayerCodesLines.push_back(new Comment(""));
+	PlayerCodesLines.push_back(&ShieldColorsPage.CalledFromLine);
+	PlayerCodesLines.push_back(new Toggle("Infinite Shields", false, INFINITE_SHIELDS_INDEX));
+	PlayerCodesLines.push_back(new Comment(""));
+	PlayerCodesLines.push_back(new Selection("P1 Character", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P1_INDEX));
+	PlayerCodesLines.push_back(new Selection("P2 Character", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P2_INDEX));
+	PlayerCodesLines.push_back(new Selection("P3 Character", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P3_INDEX));
+	PlayerCodesLines.push_back(new Selection("P4 Character", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P4_INDEX));
 	PlayerCodesLines.push_back(new Comment(""));
 	PlayerCodesLines.push_back(&P1.CalledFromLine);
 	PlayerCodesLines.push_back(&P2.CalledFromLine);
 	PlayerCodesLines.push_back(&P3.CalledFromLine);
 	PlayerCodesLines.push_back(&P4.CalledFromLine);
+	
 	Page PlayerCodes("Player Codes", PlayerCodesLines);
 
 	//debug mode page
@@ -276,12 +290,7 @@ void CodeMenu()
 
 	Page GameplayConstantsPage("Gameplay Modifiers", GameplayConstantsLines);
 
-	vector<Line*> ShieldColorsLines;
-	ShieldColorsLines.push_back(new Selection("P1 Shield Color", {"Red", "Blue", "Yellow", "Green", "Cyan", "Purple", "Gray" }, 0, SHIELD_COLOR_P1_INDEX));
-	ShieldColorsLines.push_back(new Selection("P2 Shield Color", {"Red", "Blue", "Yellow", "Green", "Cyan", "Purple", "Gray" }, 1, SHIELD_COLOR_P2_INDEX));
-	ShieldColorsLines.push_back(new Selection("P3 Shield Color", {"Red", "Blue", "Yellow", "Green", "Cyan", "Purple", "Gray" }, 2, SHIELD_COLOR_P3_INDEX));
-	ShieldColorsLines.push_back(new Selection("P4 Shield Color", {"Red", "Blue", "Yellow", "Green", "Cyan", "Purple", "Gray" }, 3, SHIELD_COLOR_P4_INDEX));
-	Page ShieldColorsPage("Shield Colors", ShieldColorsLines);
+
 
 	//Gameplay Modifiers ("Special Settings") setting
 	vector<Line*> SpecialSettings;
@@ -314,7 +323,7 @@ void CodeMenu()
 	MainLines.push_back(&TestPage.CalledFromLine);
 #endif
 	
-	MainLines.push_back(&ShieldColorsPage.CalledFromLine);
+	
 	MainLines.push_back(&DebugMode.CalledFromLine);
 	MainLines.push_back(new Selection("Endless Friendlies", { "OFF", "ON", "ON (1v1)"}, 0, ENDLESS_FRIENDLIES_MODE_INDEX));
 	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
@@ -730,8 +739,8 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(CHARACTER_SELECT_P2_INDEX, Header); //P2
 	AddValueToByteArray(CHARACTER_SELECT_P3_INDEX, Header); //P3
 	AddValueToByteArray(CHARACTER_SELECT_P4_INDEX, Header); //P4
-	//infinite shields
-	AddValueToByteArray(INFINITE_SHIELDS_P1_INDEX, Header); //P1
+	//infinite shields (WI: NOT USED but left for space)
+	AddValueToByteArray(INFINITE_SHIELDS_INDEX, Header); //P1
 	AddValueToByteArray(INFINITE_SHIELDS_P2_INDEX, Header); //P2
 	AddValueToByteArray(INFINITE_SHIELDS_P3_INDEX, Header); //P3
 	AddValueToByteArray(INFINITE_SHIELDS_P4_INDEX, Header); //P4
@@ -1446,7 +1455,7 @@ void ControlCodeMenu()
 					SetRegister(Reg1, GRAY_SHIELD_COLORS[j]);
 				} EndIf(); } EndIf(); } EndIf(); } EndIf(); } EndIf(); } EndIf();
 				
-				printf("%0X\n", shieldAddr[j]);
+				//printf("%0X\n", shieldAddr[j]);
 				SetRegister(Reg2, shieldAddr[j]);
 				STW(Reg1, Reg2, 0);
 			}
@@ -1548,15 +1557,15 @@ void ControlCodeMenu()
 				}
 
 				// infinite shields
-				if (INFINITE_SHIELDS_P1_INDEX != -1) {
-					GetArrayValueFromIndex(INFINITE_SHIELDS_ARRAY_LOC, Reg8, 0, 3); {
-						LWZ(3, 3, Line::VALUE);
-						If(3, EQUAL_I, 1); {
-							LWZ(Reg1, CharacterBufferReg, CHR_BUFFER_VARIABLES_ADDRESS_OFFSET);
-							SetRegister(Reg2, 0x42700000);
-							STW(Reg2, Reg1, 0x19C);
-						}EndIf();
-					}EndIf(); EndIf();
+				if (INFINITE_SHIELDS_INDEX != -1) {
+					LoadWordToReg(3, INFINITE_SHIELDS_INDEX + Line::VALUE);
+						//LWZ(3, 3, Line::VALUE);
+					If(3, EQUAL_I, 1); {
+						LWZ(Reg1, CharacterBufferReg, CHR_BUFFER_VARIABLES_ADDRESS_OFFSET);
+						printf("%0X\n", CHR_BUFFER_VARIABLES_ADDRESS_OFFSET);
+						SetRegister(Reg2, 0x42700000);
+						STW(Reg2, Reg1, 0x19C);
+					} EndIf();
 				}
 
 				LWZU(CharacterBufferReg, MainBufferReg, 8);
