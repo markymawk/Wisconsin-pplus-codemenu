@@ -114,51 +114,34 @@ void CodeMenu()
 	}
 	Page TestPage("Testing flags", TestLines);
 #endif
-	
-	//player pages
-	vector<Line*> P1Lines;
-	P1Lines.push_back(new Comment("Player 1 Codes"));
-	P1Lines.push_back(new Comment(""));
-	P1Lines.push_back(new Comment(""));
-	P1Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P1_INDEX, "%.0f%%"));
-	P1Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P1_INDEX));
-	P1Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P1_INDEX));
-	P1Lines.push_back(new Comment(""));
-	P1Lines.push_back(new Toggle("Missed L-Cancel Flash", false, LCANCEL_MISS_P1_INDEX));
-	Page P1("Player 1 Codes", P1Lines);
 
-	vector<Line*> P2Lines;
-	P2Lines.push_back(new Comment("Player 2 Codes"));
-	P2Lines.push_back(new Comment(""));
-	P2Lines.push_back(new Comment(""));
-	P2Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P2_INDEX, "%.0f%%"));
-	P2Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P2_INDEX));
-	P2Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P2_INDEX));
-	P2Lines.push_back(new Comment(""));
-	P2Lines.push_back(new Toggle("Missed L-Cancel Flash", false, LCANCEL_MISS_P2_INDEX));
-	Page P2("Player 2 Codes", P2Lines);
+	vector<Line*> PercentSelectLines;
+	PercentSelectLines.push_back(new Comment("Set player percents using the dpad"));
+	//PercentSelectLines.push_back(new Comment("Dpad option must be changed to set"));
+	PercentSelectLines.push_back(new Comment(""));
+	PercentSelectLines.push_back(new Toggle("Set Percent", false, PERCENT_SELECT_ACTIVATOR_P1_INDEX));
+	PercentSelectLines.push_back(new Comment(""));
+	PercentSelectLines.push_back(new Floating("P1 Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P1_INDEX, "%.0f%%"));
+	PercentSelectLines.push_back(new Toggle("P1 Dpad", true, DISABLE_DPAD_P1_INDEX));
+	PercentSelectLines.push_back(new Comment(""));
+	PercentSelectLines.push_back(new Floating("P2 Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P2_INDEX, "%.0f%%"));
+	PercentSelectLines.push_back(new Toggle("P2 Dpad", true, DISABLE_DPAD_P2_INDEX));
+	PercentSelectLines.push_back(new Comment(""));
+	PercentSelectLines.push_back(new Floating("P3 Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P3_INDEX, "%.0f%%"));
+	PercentSelectLines.push_back(new Toggle("P3 DPad", true, DISABLE_DPAD_P3_INDEX));
+	PercentSelectLines.push_back(new Comment(""));
+	PercentSelectLines.push_back(new Floating("P4 Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P4_INDEX, "%.0f%%"));
+	PercentSelectLines.push_back(new Toggle("P4 Dpad", true, DISABLE_DPAD_P4_INDEX));
+	Page PercentSelectPage("Percent Select", PercentSelectLines);
 
-	vector<Line*> P3Lines;
-	P3Lines.push_back(new Comment("Player 3 Codes"));
-	P3Lines.push_back(new Comment(""));
-	P3Lines.push_back(new Comment(""));
-	P3Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P3_INDEX, "%.0f%%"));
-	P3Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P3_INDEX));
-	P3Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P3_INDEX));
-	P3Lines.push_back(new Comment(""));
-	P3Lines.push_back(new Toggle("Missed L-Cancel Flash", false, LCANCEL_MISS_P3_INDEX));
-	Page P3("Player 3 Codes", P3Lines);
-
-	vector<Line*> P4Lines;
-	P4Lines.push_back(new Comment("Player 4 Codes"));
-	P4Lines.push_back(new Comment(""));
-	P4Lines.push_back(new Comment(""));
-	P4Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P4_INDEX, "%.0f%%"));
-	P4Lines.push_back(new Toggle("Press DPad to select percent", false, PERCENT_SELECT_ACTIVATOR_P4_INDEX));
-	P4Lines.push_back(new Toggle("Disable DPad", false, DISABLE_DPAD_P4_INDEX));
-	P4Lines.push_back(new Comment(""));
-	P4Lines.push_back(new Toggle("Missed L-Cancel Flash", false, LCANCEL_MISS_P4_INDEX));
-	Page P4("Player 4 Codes", P4Lines);
+	vector<Line*> LCancelFlashLines;
+	LCancelFlashLines.push_back(new Comment("Flash red on missed L-cancels"));
+	LCancelFlashLines.push_back(new Comment(""));
+	LCancelFlashLines.push_back(new Toggle("P1 Flash", false, LCANCEL_MISS_P1_INDEX));
+	LCancelFlashLines.push_back(new Toggle("P2 Flash", false, LCANCEL_MISS_P2_INDEX));
+	LCancelFlashLines.push_back(new Toggle("P3 Flash", false, LCANCEL_MISS_P3_INDEX));
+	LCancelFlashLines.push_back(new Toggle("P4 Flash", false, LCANCEL_MISS_P4_INDEX));
+	Page LCancelFlashPage("Missed L-Cancel Flash", LCancelFlashLines);
 
 	// Shield Colors page
 	vector<Line*> ShieldColorsLines;
@@ -190,10 +173,9 @@ void CodeMenu()
 	PlayerCodesLines.push_back(new Selection("P3 Character", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P3_INDEX));
 	PlayerCodesLines.push_back(new Selection("P4 Character", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P4_INDEX));
 	PlayerCodesLines.push_back(new Comment(""));
-	PlayerCodesLines.push_back(&P1.CalledFromLine);
-	PlayerCodesLines.push_back(&P2.CalledFromLine);
-	PlayerCodesLines.push_back(&P3.CalledFromLine);
-	PlayerCodesLines.push_back(&P4.CalledFromLine);
+	PlayerCodesLines.push_back(&PercentSelectPage.CalledFromLine);
+	PlayerCodesLines.push_back(&LCancelFlashPage.CalledFromLine);
+	PlayerCodesLines.push_back(new Comment(""));
 	PlayerCodesLines.push_back(&TagHexPage.CalledFromLine);
 	Page PlayerCodes("Player Codes", PlayerCodesLines);
 
@@ -1462,7 +1444,7 @@ void ControlCodeMenu()
 				// disable dpad
 				if (DISABLE_DPAD_P1_INDEX != -1) {
 					LWZ(Reg2, CharacterBufferReg, CHR_BUFFER_INFO_PTR_OFFSET);
-					RunIfPortToggle(DISABLE_DPAD_ACTIVATOR_ARRAY_LOC, Reg8); {
+					RunIfNotPortToggle(DISABLE_DPAD_ACTIVATOR_ARRAY_LOC, Reg8); {
 						LBZ(Reg2, Reg2, 7); //controller num
 						SetRegister(Reg3, PLAY_BUTTON_LOC_START - 0x40);
 						MULLI(Reg2, Reg2, BUTTON_PORT_OFFSET);
@@ -1474,8 +1456,9 @@ void ControlCodeMenu()
 
 				// percent select
 				if (PERCENT_SELECT_ACTIVATOR_P1_INDEX != -1 && PERCENT_SELECT_VALUE_P1_INDEX != -1) {
-					GetArrayValueFromIndex(PERCENT_SELCTION_ACTIVATOR_ARRAY_LOC, Reg8, 0, 3); {
-						LWZ(5, 3, Line::VALUE); //get setting
+					//GetArrayValueFromIndex(PERCENT_SELCTION_ACTIVATOR_ARRAY_LOC, Reg8, 0, 3); {
+					//	LWZ(5, 3, Line::VALUE); //get setting
+					LoadWordToReg(5, PERCENT_SELECT_ACTIVATOR_P1_INDEX + Line::VALUE);
 						LWZ(Reg2, CharacterBufferReg, CHR_BUFFER_INFO_PTR_OFFSET);
 						If(5, EQUAL_I, 1); {
 							ANDI(Reg1, ButtonReg, 0xF);
@@ -1510,7 +1493,7 @@ void ControlCodeMenu()
 								}EndIf(); EndIf();
 							}EndIf();
 						}EndIf();
-					}EndIf(); EndIf();
+					// }EndIf(); EndIf();
 				}
 
 				// character select
