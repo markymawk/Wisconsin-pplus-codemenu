@@ -118,7 +118,6 @@ void CodeMenu()
 	//player pages
 	vector<Line*> P1Lines;
 	P1Lines.push_back(new Comment("Player 1 Codes"));
-	P1Lines.push_back(new Print("Tag Hex: %s", { &P1_TAG_STRING_INDEX }));
 	P1Lines.push_back(new Comment(""));
 	P1Lines.push_back(new Comment(""));
 	P1Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P1_INDEX, "%.0f%%"));
@@ -130,7 +129,6 @@ void CodeMenu()
 
 	vector<Line*> P2Lines;
 	P2Lines.push_back(new Comment("Player 2 Codes"));
-	P2Lines.push_back(new Print("Tag Hex: %s", { &P2_TAG_STRING_INDEX }));
 	P2Lines.push_back(new Comment(""));
 	P2Lines.push_back(new Comment(""));
 	P2Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P2_INDEX, "%.0f%%"));
@@ -142,7 +140,6 @@ void CodeMenu()
 
 	vector<Line*> P3Lines;
 	P3Lines.push_back(new Comment("Player 3 Codes"));
-	P3Lines.push_back(new Print("Tag Hex: %s", { &P3_TAG_STRING_INDEX }));
 	P3Lines.push_back(new Comment(""));
 	P3Lines.push_back(new Comment(""));
 	P3Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P3_INDEX, "%.0f%%"));
@@ -154,7 +151,6 @@ void CodeMenu()
 
 	vector<Line*> P4Lines;
 	P4Lines.push_back(new Comment("Player 4 Codes"));
-	P4Lines.push_back(new Print("Tag Hex: %s", { &P4_TAG_STRING_INDEX }));
 	P4Lines.push_back(new Comment(""));
 	P4Lines.push_back(new Comment(""));
 	P4Lines.push_back(new Floating("Select Percent", 0, 999, 0, 1, PERCENT_SELECT_VALUE_P4_INDEX, "%.0f%%"));
@@ -173,6 +169,14 @@ void CodeMenu()
 	ShieldColorsLines.push_back(new Selection("P3 Shield Color", { "Red", "Blue", "Yellow", "Green", "Cyan", "Purple", "Gray" }, 2, SHIELD_COLOR_P3_INDEX));
 	ShieldColorsLines.push_back(new Selection("P4 Shield Color", { "Red", "Blue", "Yellow", "Green", "Cyan", "Purple", "Gray" }, 3, SHIELD_COLOR_P4_INDEX));
 	Page ShieldColorsPage("Shield Colors", ShieldColorsLines);
+
+	// Tag Hex page
+	vector<Line*> TagHexLines;
+	TagHexLines.push_back(new Print("P1 Tag Hex: %s", { &P1_TAG_STRING_INDEX }));
+	TagHexLines.push_back(new Print("P2 Tag Hex: %s", { &P2_TAG_STRING_INDEX }));
+	TagHexLines.push_back(new Print("P3 Tag Hex: %s", { &P3_TAG_STRING_INDEX }));
+	TagHexLines.push_back(new Print("P4 Tag Hex: %s", { &P4_TAG_STRING_INDEX }));
+	Page TagHexPage("Tag Hex", TagHexLines);
 
 	// Player Codes page
 	vector<Line*> PlayerCodesLines;
