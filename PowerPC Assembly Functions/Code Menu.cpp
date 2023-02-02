@@ -116,7 +116,7 @@ void CodeMenu()
 
 	//Percent select page
 	vector<Line*> PercentSelectLines;
-	PercentSelectLines.push_back(new Comment("Set player percents using the dpad"));
+	PercentSelectLines.push_back(new Comment("Change player percents via dpad press"));
 	PercentSelectLines.push_back(new Comment(""));
 	PercentSelectLines.push_back(new Toggle("Set Percent", false, PERCENT_SELECT_ACTIVATOR_INDEX));
 	PercentSelectLines.push_back(new Comment(""));
@@ -263,7 +263,7 @@ void CodeMenu()
 
 	//Special settings page
 	vector<Line*> SpecialSettings;
-	SpecialSettings.push_back(new Comment("Toggle for-fun modes"));
+	SpecialSettings.push_back(new Comment("Other toggles & for-fun modes"));
 	SpecialSettings.push_back(new Comment(""));
 	SpecialSettings.push_back(&GameplayModifiersPage.CalledFromLine);
 	SpecialSettings.push_back(&FlightModePage.CalledFromLine);
@@ -272,10 +272,11 @@ void CodeMenu()
 	SpecialSettings.push_back(new Selection("Move Staling", { "ON (Versus)", "ON (All Modes)", "OFF" }, 0, STALING_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Toggle("Random Teams", false, TEAMS_ROTATE_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Selection("Big Head Mode", {"OFF", "ON (1x)", "ON (2x)"}, 0, BIG_HEAD_TOGGLE_INDEX));
+	SpecialSettings.push_back(new Comment(""));
 	SpecialSettings.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Toggle("Screen Shake", true, SCREEN_SHAKE_INDEX));
 	SpecialSettings.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
-	Page SpecialSettingsPage("Special Settings", SpecialSettings);
+	Page SpecialSettingsPage("Other Settings", SpecialSettings);
 
 	//main page
 	vector<Line*> MainLines;
@@ -302,8 +303,9 @@ void CodeMenu()
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (WI)", "Doubles (WI)", "Starters (WI)", "Singles (PMBR)", "Doubles (PMBR)", "Singles (Theatre)", "Doubles (Theatre)" }, 0, STAGELIST_INDEX));
 	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Project Wave", "Invincible 6" }, 0, THEME_INDEX));
-	MainLines.push_back(&SpecialSettingsPage.CalledFromLine);
 	MainLines.push_back(&PlayerCodes.CalledFromLine);
+	MainLines.push_back(&SpecialSettingsPage.CalledFromLine);
+	
 	
 	//MainLines.push_back(new Print("%s", {&tets}));
 	
