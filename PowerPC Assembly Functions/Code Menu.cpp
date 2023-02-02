@@ -72,6 +72,10 @@ int GRABS_TRADE_INDEX = -1;
 int GROUNDED_ASDI_DOWN_INDEX = -1;
 int DI_RANGE_INDEX = -1;
 int THEME_INDEX = -1;
+int SHIELD_COLOR_P1_INDEX = -1;
+int SHIELD_COLOR_P2_INDEX = -1;
+int SHIELD_COLOR_P3_INDEX = -1;
+int SHIELD_COLOR_P4_INDEX = -1;
 //int SCALE_MODIFIER_INDEX = -1;
 
 //constant overrides
@@ -94,24 +98,6 @@ int CROUCH_KNOCKBACK_INDEX = -1; //new WI
 int SHIELD_DECAY_INDEX = -1; //new WI
 int SHIELD_REGEN_INDEX = -1; //new WI
 int SCREEN_SHAKE_INDEX = -1; //new WI
-
-
-int SHIELD_RED_1 = -1;
-int SHIELD_GREEN_1 = -1;
-int SHIELD_BLUE_1 = -1;
-int SHIELD_ALPHA_1 = -1;
-int SHIELD_RED_2 = -1;
-int SHIELD_GREEN_2 = -1;
-int SHIELD_BLUE_2 = -1;
-int SHIELD_ALPHA_2 = -1;
-int SHIELD_RED_3 = -1;
-int SHIELD_GREEN_3 = -1;
-int SHIELD_BLUE_3 = -1;
-int SHIELD_ALPHA_3 = -1;
-int SHIELD_RED_4 = -1;
-int SHIELD_GREEN_4 = -1;
-int SHIELD_BLUE_4 = -1;
-int SHIELD_ALPHA_4 = -1;
 
 int tets = 0x935fe30C;
 
@@ -290,6 +276,13 @@ void CodeMenu()
 
 	Page GameplayConstantsPage("Gameplay Modifiers", GameplayConstantsLines);
 
+	vector<Line*> ShieldColorsLines;
+	ShieldColorsLines.push_back(new Selection("P1 Shield Color", {"Red", "Blue", "Yellow", "Green" }, 0, SHIELD_COLOR_P1_INDEX));
+	ShieldColorsLines.push_back(new Selection("P2 Shield Color", {"Red", "Blue", "Yellow", "Green" }, 1, SHIELD_COLOR_P2_INDEX));
+	ShieldColorsLines.push_back(new Selection("P3 Shield Color", {"Red", "Blue", "Yellow", "Green" }, 2, SHIELD_COLOR_P3_INDEX));
+	ShieldColorsLines.push_back(new Selection("P4 Shield Color", {"Red", "Blue", "Yellow", "Green" }, 3, SHIELD_COLOR_P4_INDEX));
+	Page ShieldColorsPage("Shield Colors", ShieldColorsLines);
+
 	//Gameplay Modifiers ("Special Settings") setting
 	vector<Line*> SpecialSettings;
 	SpecialSettings.push_back(new Comment("Toggle for-fun modes"));
@@ -304,6 +297,7 @@ void CodeMenu()
 	SpecialSettings.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Toggle("Screen Shake", true, SCREEN_SHAKE_INDEX));
 	SpecialSettings.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
+	
 	Page SpecialSettingsPage("Special Settings", SpecialSettings);
 
 	//main page
@@ -320,6 +314,7 @@ void CodeMenu()
 	MainLines.push_back(&TestPage.CalledFromLine);
 #endif
 	
+	MainLines.push_back(&ShieldColorsPage.CalledFromLine);
 	MainLines.push_back(&DebugMode.CalledFromLine);
 	MainLines.push_back(new Selection("Endless Friendlies", { "OFF", "ON", "ON (1v1)"}, 0, ENDLESS_FRIENDLIES_MODE_INDEX));
 	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
@@ -340,22 +335,7 @@ void CodeMenu()
 	
 	//MainLines.push_back(new Print("%s", {&tets}));
 	
-	/*MainLines.push_back(new Integer("P1 1st Shield Red", 0, 0xFF, 0, 1, SHIELD_RED_1));
-	MainLines.push_back(new Integer("P1 1st Shield Green", 0, 0xFF, 0, 1, SHIELD_GREEN_1));
-	MainLines.push_back(new Integer("P1 1st Shield Blue", 0, 0xFF, 0, 1, SHIELD_BLUE_1));
-	MainLines.push_back(new Integer("P1 1st Shield Alpha", 0, 0xFF, 0, 1, SHIELD_ALPHA_1));
-	MainLines.push_back(new Integer("P1 2nd Shield Red", 0, 0xFF, 0, 1, SHIELD_RED_2));
-	MainLines.push_back(new Integer("P1 2nd Shield Green", 0, 0xFF, 0, 1, SHIELD_GREEN_2));
-	MainLines.push_back(new Integer("P1 2nd Shield Blue", 0, 0xFF, 0, 1, SHIELD_BLUE_2));
-	MainLines.push_back(new Integer("P1 2nd Shield Alpha", 0, 0xFF, 0, 1, SHIELD_ALPHA_2));
-	MainLines.push_back(new Integer("P1 3rd Shield Red", 0, 0xFF, 0, 1, SHIELD_RED_3));
-	MainLines.push_back(new Integer("P1 3rd Shield Green", 0, 0xFF, 0, 1, SHIELD_GREEN_3));
-	MainLines.push_back(new Integer("P1 3rd Shield Blue", 0, 0xFF, 0, 1, SHIELD_BLUE_3));
-	MainLines.push_back(new Integer("P1 3rd Shield Alpha", 0, 0xFF, 0, 1, SHIELD_ALPHA_3));
-	MainLines.push_back(new Integer("P1 4th Shield Red", 0, 0xFF, 0, 1, SHIELD_RED_4));
-	MainLines.push_back(new Integer("P1 4th Shield Green", 0, 0xFF, 0, 1, SHIELD_GREEN_4));
-	MainLines.push_back(new Integer("P1 4th Shield Blue", 0, 0xFF, 0, 1, SHIELD_BLUE_4));
-	MainLines.push_back(new Integer("P1 4th Shield Alpha", 0, 0xFF, 0, 1, SHIELD_ALPHA_4));*/
+
 
 	Page Main("Main", MainLines);
 	
@@ -665,8 +645,6 @@ void ActualCodes()
 		ASMEnd(0x5400efff); //rlwinm. r0, r0, 29, 31, 31
 	}
 
-	printf("%X\n", SHIELD_RED_1);
-
 	ControlCodes();
 }
 
@@ -857,9 +835,6 @@ void CreateMenu(Page MainPage)
 	//Teams Rotation toggle
 	AddValueToByteArray(TEAMS_ROTATE_TOGGLE_INDEX, Header);
 
-	//salty runback ALTERNATE COMBO
-	//AddValueToByteArray(BUTTON_A | BUTTON_B, Header); 
-
 	//Hitfalling toggle
 	AddValueToByteArray(HITFALLING_TOGGLE_INDEX, Header);
 
@@ -877,6 +852,12 @@ void CreateMenu(Page MainPage)
 
 	//Screen shake toggle
 	AddValueToByteArray(SCREEN_SHAKE_INDEX, Header);
+
+	//Player shield colors
+	AddValueToByteArray(SHIELD_COLOR_P1_INDEX, Header);
+	AddValueToByteArray(SHIELD_COLOR_P2_INDEX, Header);
+	AddValueToByteArray(SHIELD_COLOR_P3_INDEX, Header);
+	AddValueToByteArray(SHIELD_COLOR_P4_INDEX, Header);
 
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);
@@ -909,6 +890,7 @@ void constantOverride() {
 
 	int reg1 = 4;
 	int reg2 = 5;
+	int reg3 = 3;
 
 	for (auto& x : constantOverrides) {
 		LoadWordToReg(reg1, *x.index + Line::VALUE);
@@ -916,6 +898,7 @@ void constantOverride() {
 		STW(reg1, reg2, 0);
 	}
 
+	
 
 	// Themes
 	int ThemeSet = GetNextLabel();
@@ -997,61 +980,61 @@ void ControlCodeMenu()
 	iota(FPRegs.begin(), FPRegs.end(), 0);
 	SaveRegisters(FPRegs);
 
-	if (SHIELD_RED_1 != -1) {
-		SetRegister(5, 0x80f574c0 + 0x88);
-		SetRegister(3, SHIELD_RED_1 + 8 + 3);
-		LBZ(4, 3, 0);
-		STB(4, 5, 0);
-		SetRegister(3, SHIELD_GREEN_1 + 8 + 3);
-		LBZ(4, 3, 0);
-		STB(4, 5, 1);
-		SetRegister(3, SHIELD_BLUE_1 + 8 + 3);
-		LBZ(4, 3, 0);
-		STB(4, 5, 2);
-		SetRegister(3, SHIELD_ALPHA_1 + 8 + 3);
-		LBZ(4, 3, 0);
-		STB(4, 5, 3);
-		SetRegister(5, 0x80f574c0 + 0x90);
-		SetRegister(3, SHIELD_RED_2 + 8 + 3);
-		LBZ(4, 3, 0);
-		STB(4, 5, 0);
-		SetRegister(3, SHIELD_GREEN_2 + 8 + 3);
-		LBZ(4, 3, 0);
-		STB(4, 5, 1);
-		SetRegister(3, SHIELD_BLUE_2 + 8 + 3);
-		LBZ(4, 3, 0);
-		STB(4, 5, 2);
-		SetRegister(3, SHIELD_ALPHA_2 + 8 + 3);
-		LBZ(4, 3, 0);
-		STB(4, 5, 3);
-		SetRegister(5, 0x80f574c0 + 0xA0);
-		SetRegister(3, SHIELD_RED_3 + 8 + 3);
-		LBZ(4, 3, 0);
-		STB(4, 5, 0);
-		SetRegister(3, SHIELD_GREEN_3 + 8 + 3);
-		LBZ(4, 3, 0);
-		STB(4, 5, 1);
-		SetRegister(3, SHIELD_BLUE_3 + 8 + 3);
-		LBZ(4, 3, 0);
-		STB(4, 5, 2);
-		SetRegister(3, SHIELD_ALPHA_3 + 8 + 3);
-		LBZ(4, 3, 0);
-		STB(4, 5, 3);
-		SetRegister(5, 0x80f574c0 + 0xA8);
-		SetRegister(3, SHIELD_RED_4 + 8 + 3);
-		LBZ(4, 3, 0);
-		STB(4, 5, 0);
-		SetRegister(3, SHIELD_GREEN_4 + 8 + 3);
-		LBZ(4, 3, 0);
-		STB(4, 5, 1);
-		SetRegister(3, SHIELD_BLUE_4 + 8 + 3);
-		LBZ(4, 3, 0);
-		STB(4, 5, 2);
-		SetRegister(3, SHIELD_ALPHA_4 + 8 + 3);
-		LBZ(4, 3, 0);
-		STB(4, 5, 3);
-	}
-
+	//Original Fracture code
+	//if (SHIELD_RED_1 != -1) {
+	//	SetRegister(5, 0x80F5ACE0 + 0x88);
+	//	SetRegister(3, SHIELD_RED_1 + 8 + 3);
+	//	LBZ(4, 3, 0);
+	//	STB(4, 5, 0);
+	//	SetRegister(3, SHIELD_GREEN_1 + 8 + 3);
+	//	LBZ(4, 3, 0);
+	//	STB(4, 5, 1);
+	//	SetRegister(3, SHIELD_BLUE_1 + 8 + 3);
+	//	LBZ(4, 3, 0);
+	//	STB(4, 5, 2);
+	//	SetRegister(3, SHIELD_ALPHA_1 + 8 + 3);
+	//	LBZ(4, 3, 0);
+	//	STB(4, 5, 3);
+	//	SetRegister(5, 0x80F5ACE0 + 0x90);
+	//	SetRegister(3, SHIELD_RED_2 + 8 + 3);
+	//	LBZ(4, 3, 0);
+	//	STB(4, 5, 0);
+	//	SetRegister(3, SHIELD_GREEN_2 + 8 + 3);
+	//	LBZ(4, 3, 0);
+	//	STB(4, 5, 1);
+	//	SetRegister(3, SHIELD_BLUE_2 + 8 + 3);
+	//	LBZ(4, 3, 0);
+	//	STB(4, 5, 2);
+	//	SetRegister(3, SHIELD_ALPHA_2 + 8 + 3);
+	//	LBZ(4, 3, 0);
+	//	STB(4, 5, 3);
+	//	SetRegister(5, 0x80F5ACE0 + 0xA0);
+	//	SetRegister(3, SHIELD_RED_3 + 8 + 3);
+	//	LBZ(4, 3, 0);
+	//	STB(4, 5, 0);
+	//	SetRegister(3, SHIELD_GREEN_3 + 8 + 3);
+	//	LBZ(4, 3, 0);
+	//	STB(4, 5, 1);
+	//	SetRegister(3, SHIELD_BLUE_3 + 8 + 3);
+	//	LBZ(4, 3, 0);
+	//	STB(4, 5, 2);
+	//	SetRegister(3, SHIELD_ALPHA_3 + 8 + 3);
+	//	LBZ(4, 3, 0);
+	//	STB(4, 5, 3);
+	//	SetRegister(5, 0x80F5ACE0 + 0xA8);
+	//	SetRegister(3, SHIELD_RED_4 + 8 + 3);
+	//	LBZ(4, 3, 0);
+	//	STB(4, 5, 0);
+	//	SetRegister(3, SHIELD_GREEN_4 + 8 + 3);
+	//	LBZ(4, 3, 0);
+	//	STB(4, 5, 1);
+	//	SetRegister(3, SHIELD_BLUE_4 + 8 + 3);
+	//	LBZ(4, 3, 0);
+	//	STB(4, 5, 2);
+	//	SetRegister(3, SHIELD_ALPHA_4 + 8 + 3);
+	//	LBZ(4, 3, 0);
+	//	STB(4, 5, 3);
+	//}
 
 
 	printMenuSetters();
@@ -1416,6 +1399,69 @@ void ControlCodeMenu()
 				STB(7, Reg9, Line::COLOR);
 			}EndIf();
 		}EndIf();
+	}
+
+	// shield colors
+	if (SHIELD_COLOR_P1_INDEX != -1) {
+		int SHIELD_ADDR_P1_BASE = 0x80F5AD68; //add 0xCC for each port, add 0x8 for second color entry, add another 0x10 for third color entry
+		int SHIELD_INDEX[4] = { SHIELD_COLOR_P1_INDEX, SHIELD_COLOR_P2_INDEX, SHIELD_COLOR_P3_INDEX, SHIELD_COLOR_P4_INDEX };
+		int RED_SHIELD_COLORS[3] = { 0xFF3AB700, 0xFF000000, 0xFF000000 };
+		int BLUE_SHIELD_COLORS[3] = { 0x00FFFF00, 0x0000FF00, 0x0080FF00 };
+		int YELLOW_SHIELD_COLORS[3] = { 0xFAF9E100, 0xFFFF0000, 0xFFFF8000 };
+		int GREEN_SHIELD_COLORS[3] = { 0x88FCAE00, 0x00FF0000, 0x00C00000 };
+
+		int* COLOR_OPTIONS[4] = { RED_SHIELD_COLORS, BLUE_SHIELD_COLORS, YELLOW_SHIELD_COLORS, GREEN_SHIELD_COLORS };
+
+		//P1 Shield
+		int shieldAddr[3] = {SHIELD_ADDR_P1_BASE, SHIELD_ADDR_P1_BASE + 0x8, SHIELD_ADDR_P1_BASE + 0x18};
+		for (int j = 0; j < 3; j++) {
+			LoadWordToReg(Reg1, SHIELD_COLOR_P1_INDEX + Line::VALUE);
+			If(Reg1, EQUAL_I, 0); {
+				SetRegister(Reg1, RED_SHIELD_COLORS[j]);
+			}
+			Else(); {
+				If(Reg1, EQUAL_I, 1); {
+					SetRegister(Reg1, BLUE_SHIELD_COLORS[j]);
+				}
+				Else(); {
+					If(Reg1, EQUAL_I, 2); {
+						SetRegister(Reg1, YELLOW_SHIELD_COLORS[j]);
+					}
+					Else(); {
+						SetRegister(Reg1, GREEN_SHIELD_COLORS[j]);
+					} EndIf();
+				} EndIf();
+			} EndIf();
+			SetRegister(Reg2, shieldAddr[j]);
+			printf("%0X\n", shieldAddr[j]);
+			STW(Reg1, Reg2, 0);
+		}
+		//Loop thru player ports
+		//for (int i = 0; i < 4; i++) {
+		//	//int baseAddr = SHIELD_ADDR_P1_BASE + i * 0xCC;
+		//	int baseAddr = SHIELD_ADDR_P1_BASE;
+		//	int colorAddresses[3] = { baseAddr, baseAddr + 0x8, baseAddr + 0x18 };
+		//
+		//	//Check shield choice
+		//	LoadWordToReg(reg1, SHIELD_INDEX[i] + Line::VALUE);
+		//
+		//	//Loop thru color entries
+		//	for (int j = 0; j < 3; j++) {
+		//		//store color value into r4
+		//		If(3, EQUAL_I, 0); {
+		//			//SetRegister(4, RED_SHIELD_COLORS[j]);
+		//			SetRegister(reg2, 0xFFFFFFFF);
+		//		} EndIf();
+		//		If(3, EQUAL_I, 1); {
+		//			SetRegister(reg2, 0xEEEEEEEE);
+		//		} EndIf();
+		//
+		//		SetRegister(reg3, colorAddresses[j]); //load addr into reg3
+		//		STW(reg2, reg3, 0);
+		//	}
+		//
+		//}
+
 	}
 
 	//port based codes
