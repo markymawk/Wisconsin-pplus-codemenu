@@ -154,12 +154,12 @@ void CodeMenu()
 	Page ShieldColorsPage("Shield Colors", ShieldColorsLines);
 
 	// Tag Hex page
-	vector<Line*> TagHexLines;
-	TagHexLines.push_back(new Print("P1 Tag Hex: %s", { &P1_TAG_STRING_INDEX }));
-	TagHexLines.push_back(new Print("P2 Tag Hex: %s", { &P2_TAG_STRING_INDEX }));
-	TagHexLines.push_back(new Print("P3 Tag Hex: %s", { &P3_TAG_STRING_INDEX }));
-	TagHexLines.push_back(new Print("P4 Tag Hex: %s", { &P4_TAG_STRING_INDEX }));
-	Page TagHexPage("Tag Hex", TagHexLines);
+	//vector<Line*> TagHexLines;
+	//TagHexLines.push_back(new Print("P1 Tag Hex: %s", { &P1_TAG_STRING_INDEX }));
+	//TagHexLines.push_back(new Print("P2 Tag Hex: %s", { &P2_TAG_STRING_INDEX }));
+	//TagHexLines.push_back(new Print("P3 Tag Hex: %s", { &P3_TAG_STRING_INDEX }));
+	//TagHexLines.push_back(new Print("P4 Tag Hex: %s", { &P4_TAG_STRING_INDEX }));
+	//Page TagHexPage("Tag Hex", TagHexLines);
 
 	// Player Codes page
 	vector<Line*> PlayerCodesLines;
@@ -175,8 +175,8 @@ void CodeMenu()
 	PlayerCodesLines.push_back(new Comment(""));
 	PlayerCodesLines.push_back(&PercentSelectPage.CalledFromLine);
 	PlayerCodesLines.push_back(&LCancelFlashPage.CalledFromLine);
-	PlayerCodesLines.push_back(new Comment(""));
-	PlayerCodesLines.push_back(&TagHexPage.CalledFromLine);
+	//PlayerCodesLines.push_back(new Comment(""));
+	//PlayerCodesLines.push_back(&TagHexPage.CalledFromLine);
 	Page PlayerCodes("Player Codes", PlayerCodesLines);
 
 	//Gebug Settings page
