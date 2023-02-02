@@ -673,6 +673,7 @@ void SetControlStickAction(int StickValReg, int TimerLoc, int NumWaitFrames, int
 void ApplyMenuSetting(int Index, int Destination, int reg1, int reg2, int size = 4);
 void GetArrayValueFromIndex(int ArrayLoc, int IndexReg, int min, int max, int ResultReg = 3);
 void RunIfPortToggle(int ARRAY_LOC, int PortReg);
+void RunIfNotPortToggle(int ARRAY_LOC, int PortReg);
 void SaveReplay();
 void SetupPrintText(int SettingPtrReg);
 void SetTextPos(int XPosReg, int YPosReg, int SettingPtrReg);

@@ -108,7 +108,7 @@ void CodeMenu()
 	vector<Line*> TestLines;
 	cout << "Debug Toggles:\n";
 	int toggleLocations[16];
-	for(int i = 0; i < 16; i++)
+	for (int i = 0; i < 16; i++)
 	{
 		TestLines.push_back(new Integer(to_string(i), -10000, 10000, 0, 1, toggleLocations[i]));
 	}
@@ -2626,6 +2626,15 @@ void RunIfPortToggle(int ARRAY_LOC, int PortReg) {
 	GetArrayValueFromIndex(ARRAY_LOC, PortReg, 0, 3); {
 		LWZ(5, 3, Line::VALUE); //get setting
 		If(5, EQUAL_I, 1); {
+		}
+	}
+}
+//requires 3 endifs
+//r3 returns setting address
+void RunIfNotPortToggle(int ARRAY_LOC, int PortReg) {
+	GetArrayValueFromIndex(ARRAY_LOC, PortReg, 0, 3); {
+		LWZ(5, 3, Line::VALUE); //get setting
+		If(5, NOT_EQUAL_I, 1); {
 		}
 	}
 }
