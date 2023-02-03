@@ -307,10 +307,6 @@ void CodeMenu()
 	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Project Wave", "Invincible 6" }, 0, THEME_INDEX));
 	MainLines.push_back(&PlayerCodes.CalledFromLine);
 	MainLines.push_back(&SpecialSettingsPage.CalledFromLine);
-	
-	
-	//MainLines.push_back(new Print("%s", {&tets}));
-	
 	Page Main("Main", MainLines);
 	
 	//Unclepunch fps code
@@ -1325,6 +1321,7 @@ void ControlCodeMenu()
 		int GRAY_SHIELD_COLORS[3] = { 0xF0E0FF00, 0x20102000, 0xFFFFFF00 };
 
 		int SHIELD_ADDR_P1_BASE = 0x80F5AD68; //add 0xCC for each port, add 0x8 for second color entry, add 0x18 for third color entry
+		//These don't apply to team battles. nice
 		int SHIELD_INDEX[4] = { SHIELD_COLOR_P1_INDEX, SHIELD_COLOR_P2_INDEX, SHIELD_COLOR_P3_INDEX, SHIELD_COLOR_P4_INDEX };
 		
 		//Loop through ports
@@ -1338,24 +1335,24 @@ void ControlCodeMenu()
 				LoadWordToReg(Reg1, SHIELD_INDEX[i] + Line::VALUE);
 				If(Reg1, EQUAL_I, 0); {
 					SetRegister(Reg1, RED_SHIELD_COLORS[j]);
-				} Else(); {
+				} Else(); 
 				If(Reg1, EQUAL_I, 1); {
 					SetRegister(Reg1, BLUE_SHIELD_COLORS[j]);
-				} Else(); {
+				} Else();
 				If(Reg1, EQUAL_I, 2); {
 					SetRegister(Reg1, YELLOW_SHIELD_COLORS[j]);
-				} Else(); {
+				} Else();
 				If(Reg1, EQUAL_I, 3); {
 					SetRegister(Reg1, GREEN_SHIELD_COLORS[j]);
-				} Else(); {
+				} Else();
 				If(Reg1, EQUAL_I, 4); {
 					SetRegister(Reg1, CYAN_SHIELD_COLORS[j]);
-				} Else(); {
+				} Else();
 				If(Reg1, EQUAL_I, 5); {
 					SetRegister(Reg1, PURPLE_SHIELD_COLORS[j]);
 				} Else(); {
 					SetRegister(Reg1, GRAY_SHIELD_COLORS[j]);
-				} EndIf(); } EndIf(); } EndIf(); } EndIf(); } EndIf(); } EndIf();
+				} EndIf(); EndIf(); EndIf(); EndIf();  EndIf(); EndIf();
 				
 				//printf("%0X\n", shieldAddr[j]);
 				SetRegister(Reg2, shieldAddr[j]);
