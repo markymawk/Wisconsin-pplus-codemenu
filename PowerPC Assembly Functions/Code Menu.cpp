@@ -146,12 +146,14 @@ void CodeMenu()
 
 	// Shield Colors page
 	vector<Line*> ShieldColorsLines;
-	ShieldColorsLines.push_back(new Comment("Select custom shield colors"));
+	ShieldColorsLines.push_back(new Comment("Select from:"));
+	ShieldColorsLines.push_back(new Comment("Red, Blue, Yellow, Green, Pink,"));
+	ShieldColorsLines.push_back(new Comment("Orange, Cyan, Purple, Gray"));
 	ShieldColorsLines.push_back(new Comment(""));
-	ShieldColorsLines.push_back(new Selection("P1 Shield Color", { "Red", "Blue", "Yellow", "Green", "Cyan", "Purple", "Gray" }, 0, SHIELD_COLOR_P1_INDEX));
-	ShieldColorsLines.push_back(new Selection("P2 Shield Color", { "Red", "Blue", "Yellow", "Green", "Cyan", "Purple", "Gray" }, 1, SHIELD_COLOR_P2_INDEX));
-	ShieldColorsLines.push_back(new Selection("P3 Shield Color", { "Red", "Blue", "Yellow", "Green", "Cyan", "Purple", "Gray" }, 2, SHIELD_COLOR_P3_INDEX));
-	ShieldColorsLines.push_back(new Selection("P4 Shield Color", { "Red", "Blue", "Yellow", "Green", "Cyan", "Purple", "Gray" }, 3, SHIELD_COLOR_P4_INDEX));
+	ShieldColorsLines.push_back(new Selection("P1 Shield Color", { "Red", "Blue", "Yellow", "Green", "Pink", "Orange", "Cyan", "Purple", "Gray" }, 0, SHIELD_COLOR_P1_INDEX));
+	ShieldColorsLines.push_back(new Selection("P2 Shield Color", { "Red", "Blue", "Yellow", "Green", "Pink", "Orange", "Cyan", "Purple", "Gray" }, 1, SHIELD_COLOR_P2_INDEX));
+	ShieldColorsLines.push_back(new Selection("P3 Shield Color", { "Red", "Blue", "Yellow", "Green", "Pink", "Orange", "Cyan", "Purple", "Gray" }, 2, SHIELD_COLOR_P3_INDEX));
+	ShieldColorsLines.push_back(new Selection("P4 Shield Color", { "Red", "Blue", "Yellow", "Green", "Pink", "Orange", "Cyan", "Purple", "Gray" }, 3, SHIELD_COLOR_P4_INDEX));
 	Page ShieldColorsPage("Shield Colors", ShieldColorsLines);
 
 	// Tag Hex page
@@ -967,6 +969,7 @@ void ControlCodeMenu()
 	int NotLoaded = GetNextLabel();
 
 	//prevents Code Menu from booting if it doesn't match a specified string (lol)
+	//Tried deleting this and it seemed more likely to break HUD on console. Remove at your own risk
 	LoadHalfToReg(Reg1, MENU_TITLE_CHECK_LOCATION + 7 + Line::COMMENT_LINE_TEXT_START);
 
 	#if DOLPHIN_BUILD
@@ -1316,7 +1319,9 @@ void ControlCodeMenu()
 		int BLUE_SHIELD_COLORS[3] = { 0x00FFFF00, 0x0000FF00, 0x0080FF00 };
 		int YELLOW_SHIELD_COLORS[3] = { 0xFAF9E100, 0xFFFF0000, 0xFFFF8000 };
 		int GREEN_SHIELD_COLORS[3] = { 0x88FCAE00, 0x00FF0000, 0x00C00000 };
-		int CYAN_SHIELD_COLORS[3] = { 0xE5FF00, 0xC4FF00, 0xFFF300 };
+		int ORANGE_SHIELD_COLORS[3] = { 0xFF8900FF, 0xFF9900FF, 0xFF700000 };
+		int PINK_SHIELD_COLORS[3] = { 0xFF3AB700, 0xFF00AA00, 0xFF00AA00 };
+		int CYAN_SHIELD_COLORS[3] = { 0x4CFFF400, 0x3DFFF700, 0xFFD200 };
 		int PURPLE_SHIELD_COLORS[3] = { 0x6300FF00, 0x7700EF00, 0xA668ED00 };
 		int GRAY_SHIELD_COLORS[3] = { 0xF0E0FF00, 0x20102000, 0xFFFFFF00 };
 
@@ -1346,15 +1351,21 @@ void ControlCodeMenu()
 					SetRegister(Reg1, GREEN_SHIELD_COLORS[j]);
 				} Else();
 				If(Reg1, EQUAL_I, 4); {
-					SetRegister(Reg1, CYAN_SHIELD_COLORS[j]);
+					SetRegister(Reg1, ORANGE_SHIELD_COLORS[j]);
 				} Else();
 				If(Reg1, EQUAL_I, 5); {
+					SetRegister(Reg1, PINK_SHIELD_COLORS[j]);
+				} Else();
+				If(Reg1, EQUAL_I, 6); {
+					SetRegister(Reg1, CYAN_SHIELD_COLORS[j]);
+				} Else();
+				If(Reg1, EQUAL_I, 7); {
 					SetRegister(Reg1, PURPLE_SHIELD_COLORS[j]);
 				} Else(); {
 					SetRegister(Reg1, GRAY_SHIELD_COLORS[j]);
-				} EndIf(); EndIf(); EndIf(); EndIf();  EndIf(); EndIf();
+				} EndIf(); EndIf(); EndIf(); EndIf(); EndIf(); EndIf(); EndIf(); EndIf();
 				
-				//printf("%0X\n", shieldAddr[j]);
+				//printf("P%d: %0X\n", i+1, shieldAddr[j]);
 				SetRegister(Reg2, shieldAddr[j]);
 				STW(Reg1, Reg2, 0);
 			}
