@@ -1313,6 +1313,7 @@ void ControlCodeMenu()
 
 	//SHIELD_COLOR_P1_INDEX = -1;
 	// Shield colors
+	// These don't apply to team battles or CPUs
 	if (SHIELD_COLOR_P1_INDEX != -1) {
 
 		int RED_SHIELD_COLORS[3] = { 0xFF3AB700, 0xFF000000, 0xFF000000 };
@@ -1324,9 +1325,10 @@ void ControlCodeMenu()
 		int CYAN_SHIELD_COLORS[3] = { 0x4CFFF400, 0x3DFFF700, 0xFFD200 };
 		int PURPLE_SHIELD_COLORS[3] = { 0x6300FF00, 0x7700EF00, 0xA668ED00 };
 		int GRAY_SHIELD_COLORS[3] = { 0xF0E0FF00, 0x20102000, 0xFFFFFF00 };
+		int COLOR_OPTIONS_COUNT = 9;
 
 		int SHIELD_ADDR_P1_BASE = 0x80F5AD68; //add 0xCC for each port, add 0x8 for second color entry, add 0x18 for third color entry
-		//These don't apply to team battles. nice
+		
 		int SHIELD_INDEX[4] = { SHIELD_COLOR_P1_INDEX, SHIELD_COLOR_P2_INDEX, SHIELD_COLOR_P3_INDEX, SHIELD_COLOR_P4_INDEX };
 		
 		//Loop through ports
@@ -1338,32 +1340,28 @@ void ControlCodeMenu()
 			// Loop through color entries
 			for (int j = 0; j < 3; j++) {
 				LoadWordToReg(Reg1, SHIELD_INDEX[i] + Line::VALUE);
-				If(Reg1, EQUAL_I, 0); {
+				If(Reg1, EQUAL_I, 0); 
 					SetRegister(Reg1, RED_SHIELD_COLORS[j]);
-				} Else(); 
-				If(Reg1, EQUAL_I, 1); {
+				Else(); If(Reg1, EQUAL_I, 1);
 					SetRegister(Reg1, BLUE_SHIELD_COLORS[j]);
-				} Else();
-				If(Reg1, EQUAL_I, 2); {
+				Else(); If(Reg1, EQUAL_I, 2);
 					SetRegister(Reg1, YELLOW_SHIELD_COLORS[j]);
-				} Else();
-				If(Reg1, EQUAL_I, 3); {
+				Else(); If(Reg1, EQUAL_I, 3);
 					SetRegister(Reg1, GREEN_SHIELD_COLORS[j]);
-				} Else();
-				If(Reg1, EQUAL_I, 4); {
+				Else(); If(Reg1, EQUAL_I, 4);
 					SetRegister(Reg1, ORANGE_SHIELD_COLORS[j]);
-				} Else();
-				If(Reg1, EQUAL_I, 5); {
+				Else(); If(Reg1, EQUAL_I, 5);
 					SetRegister(Reg1, PINK_SHIELD_COLORS[j]);
-				} Else();
-				If(Reg1, EQUAL_I, 6); {
+				Else(); If(Reg1, EQUAL_I, 6);
 					SetRegister(Reg1, CYAN_SHIELD_COLORS[j]);
-				} Else();
-				If(Reg1, EQUAL_I, 7); {
+				Else(); If(Reg1, EQUAL_I, 7);
 					SetRegister(Reg1, PURPLE_SHIELD_COLORS[j]);
-				} Else(); {
+				Else();
 					SetRegister(Reg1, GRAY_SHIELD_COLORS[j]);
-				} EndIf(); EndIf(); EndIf(); EndIf(); EndIf(); EndIf(); EndIf(); EndIf();
+
+				for (int k = 0; k < COLOR_OPTIONS_COUNT-1; k++) {
+					EndIf();
+				}
 				
 				//printf("P%d: %0X\n", i+1, shieldAddr[j]);
 				SetRegister(Reg2, shieldAddr[j]);
