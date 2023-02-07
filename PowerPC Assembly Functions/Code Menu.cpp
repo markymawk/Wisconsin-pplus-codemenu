@@ -97,7 +97,7 @@ int CROUCH_KNOCKBACK_INDEX = -1; //new WI
 int SHIELD_DECAY_INDEX = -1; //new WI
 int SHIELD_REGEN_INDEX = -1; //new WI
 int SCREEN_SHAKE_INDEX = -1; //new WI
-int RESULTS_MUTE_INDEX = -1; //new WI
+int RESULTS_MUSIC_INDEX = -1; //new WI
 
 int tets = 0x935fe30C;
 
@@ -281,6 +281,16 @@ void CodeMenu()
 	SpecialSettings.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
 	Page SpecialSettingsPage("Other Settings", SpecialSettings);
 
+	// Results music list
+	int RESULTS_TRACK_COUNT = 8;
+	vector<string> RESULTS_MUSIC_SELECTION;
+	for (int i = 0; i < RESULTS_TRACK_COUNT; i++) {
+		RESULTS_MUSIC_SELECTION.push_back("Track " + to_string(i + 1));
+	}
+
+	RESULTS_MUSIC_SELECTION.push_back("Random");
+	RESULTS_MUSIC_SELECTION.push_back("OFF");
+
 	//main page
 	vector<Line*> MainLines;
 #if EON_DEBUG_BUILD
@@ -296,7 +306,8 @@ void CodeMenu()
 	MainLines.push_back(new Selection("Endless Friendlies", { "OFF", "ON", "ON (1v1)"}, 0, ENDLESS_FRIENDLIES_MODE_INDEX));
 	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
 	MainLines.push_back(new Toggle("Skip Results", false, AUTO_SKIP_TO_CSS_INDEX));
-	MainLines.push_back(new Selection("Results Music", {"Success Story", "High Tide", "Aquatic Mine", "Random", "OFF"}, 3, RESULTS_MUTE_INDEX));
+	//Results toggle defaults to random
+	MainLines.push_back(new Selection("Results Music", { RESULTS_MUSIC_SELECTION }, RESULTS_TRACK_COUNT, RESULTS_MUSIC_INDEX));
 	MainLines.push_back(new Comment(""));
 #if DOLPHIN_BUILD
 	MainLines.push_back(new Toggle("Autosave Replays", true, AUTO_SAVE_REPLAY_INDEX));
@@ -825,7 +836,7 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(SHIELD_COLOR_P3_INDEX, Header);
 	AddValueToByteArray(SHIELD_COLOR_P4_INDEX, Header);
 
-	AddValueToByteArray(RESULTS_MUTE_INDEX, Header);
+	AddValueToByteArray(RESULTS_MUSIC_INDEX, Header);
 
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);
