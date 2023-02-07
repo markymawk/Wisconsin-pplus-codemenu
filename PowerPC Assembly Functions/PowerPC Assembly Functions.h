@@ -170,21 +170,23 @@ const int MENU_SELECTED_TAG_OFFSET = 0x164;
 ///addresses end
 
 ///constants start
-///colors
+///colors used in DI draw
 #define RED 0xFF0000FF
 #define BLUE 0x0066FFFF
 #define ORANGE 0xFF9900FF
-#define GREEN 0x3EB74BFF
+#define GREEN 0x33CC33FF
 #define YELLOW 0xFFFF00FF
 #define BLACK 0x000000FF
 #define WHITE 0xFFFFFFFF
 #define PURPLE 0x6E0094FF
 #define TEAL 0x6DD0FFFF
 
+///menu text colors
 #define MENU_TEXT_UNSELECTED 0xA4A9ADFF
 #define MENU_TEXT_SELECTED 0xFFFF2DFF
 #define MENU_TEXT_MODIFIED_SELECTED 0xFFD32DFF
 #define MENU_TEXT_MODIFIED_UNSELECTED 0x64a0aaff
+#define MENU_COMMENT 0x3EB74BFF
 ///colors end
 ///primitive types
 #define PRIMITIVE_LINE 0xB0

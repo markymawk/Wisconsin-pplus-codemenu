@@ -659,7 +659,7 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(MENU_TEXT_SELECTED, Header); //highlighted line color, prev YELLOW
 	AddValueToByteArray(MENU_TEXT_MODIFIED_UNSELECTED, Header); //changed line color
 	AddValueToByteArray(MENU_TEXT_MODIFIED_SELECTED, Header); //changed and highlighted line color
-	AddValueToByteArray(GREEN, Header); //comment line color
+	AddValueToByteArray(MENU_COMMENT, Header); //comment line color
 	//frame timers
 	AddValueToByteArray(0, Header); //move frame timer
 	AddValueToByteArray(0, Header); //value frame timer
