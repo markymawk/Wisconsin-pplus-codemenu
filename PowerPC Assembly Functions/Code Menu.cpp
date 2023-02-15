@@ -243,7 +243,7 @@ void CodeMenu()
 	constantOverrides.emplace_back(0x80B88444, MINIMUM_SHIELD_SIZE_SCALING_INDEX);
 	GameplayModifiersLines.push_back(new Floating("Maximum Shield Size", 0, 5, 1, .05, SHIELD_SIZE_MULTIPLIER_INDEX, "%.2fx"));
 	constantOverrides.emplace_back(0x80B88478, SHIELD_SIZE_MULTIPLIER_INDEX);
-	GameplayModifiersLines.push_back(new Floating("Shield Decay Rate", -1, 2, 0.280000001192, .04, SHIELD_DECAY_INDEX, "%.2f"));
+	GameplayModifiersLines.push_back(new Floating("Shield Decay Rate", -1, 2, 0.280000001192, .05, SHIELD_DECAY_INDEX, "%.2f"));
 	constantOverrides.emplace_back(0x80B88450, SHIELD_DECAY_INDEX);
 	GameplayModifiersLines.push_back(new Floating("Shield Regen Rate", 0, 1, 0.07, .01, SHIELD_REGEN_INDEX, "%.2f"));
 	constantOverrides.emplace_back(0x80B88454, SHIELD_REGEN_INDEX);
