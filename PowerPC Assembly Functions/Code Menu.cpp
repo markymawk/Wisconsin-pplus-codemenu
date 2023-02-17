@@ -282,7 +282,8 @@ void CodeMenu()
 	Page SpecialSettingsPage("Other Settings", SpecialSettings);
 
 	// Results music list
-	int RESULTS_TRACK_COUNT = 8;
+	int RESULTS_TRACK_COUNT = 9;
+
 	vector<string> RESULTS_MUSIC_SELECTION;
 	for (int i = 0; i < RESULTS_TRACK_COUNT; i++) {
 		RESULTS_MUSIC_SELECTION.push_back("Track " + to_string(i + 1));
