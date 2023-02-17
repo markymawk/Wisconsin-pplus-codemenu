@@ -216,6 +216,8 @@ void CodeMenu()
 	vector<Line*> GameplayModifiersLines;
 	GameplayModifiersLines.push_back(new Comment("Modify core game mechanics"));
 	GameplayModifiersLines.push_back(new Comment(""));
+	GameplayModifiersLines.push_back(&FlightModePage.CalledFromLine);
+	GameplayModifiersLines.push_back(new Comment(""));
 	GameplayModifiersLines.push_back(new Comment("On-hit behavior"));
 	GameplayModifiersLines.push_back(new Toggle("Random Knockback Angle", false, RANDOM_ANGLE_TOGGLE_INDEX));
 	GameplayModifiersLines.push_back(new Selection("DI Amplitude", { "0x", "0.5x", "1x", "2.5x", "5x", "10x" }, 2, DI_RANGE_INDEX));
@@ -269,7 +271,7 @@ void CodeMenu()
 	SpecialSettings.push_back(new Comment("Other toggles & for-fun modes"));
 	SpecialSettings.push_back(new Comment(""));
 	SpecialSettings.push_back(&GameplayModifiersPage.CalledFromLine);
-	SpecialSettings.push_back(&FlightModePage.CalledFromLine);
+	
 	SpecialSettings.push_back(new Comment(""));
 	// Move Staling: Wording implies that "Damage Stales in Training Mode" is disabled, which is the case in WI but NOT in vanilla P+
 	SpecialSettings.push_back(new Selection("Move Staling", { "ON (Versus)", "ON (All Modes)", "OFF" }, 0, STALING_TOGGLE_INDEX));
