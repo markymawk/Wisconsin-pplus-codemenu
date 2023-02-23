@@ -882,22 +882,45 @@ void constantOverride() {
 
 	// Themes
 	int ThemeSet = GetNextLabel();
-	int MENU_PREFIX_ADDRESSES[4] = { 0x806FF2F3, 0x817F6365, 0x806FF30F, 0x817F634D };
+	int EndThemes = GetNextLabel();
+
+	int MENU_PREFIX_ADDRESSES[4] = {
+		0x806FF2F3,	//sc_selcharacter.pac
+		0x817F6365,	//sc_selcharacter_en.pac
+		0x806FF30F,	//sc_selcharacter2.pac
+		0x817F634D //sc_selcharacter2_en.pac
+	};
+
 	LoadWordToReg(reg1, THEME_INDEX + Line::VALUE);
+
 	If(reg1, EQUAL_I, 0); {
-		SetRegister(reg1, 0x7363); //sc
+		SetRegister(reg3, 0x7363); //sc
 		JumpToLabel(ThemeSet);
 	} EndIf();
+
 	If(reg1, EQUAL_I, 1); {
-		SetRegister(reg1, 0x6378); //cx
+		SetRegister(reg3, 0x6378); //cx
 		JumpToLabel(ThemeSet);
 	} EndIf();
-	If(reg1, EQUAL_I, 2); {
-		SetRegister(reg1, 0x7776); //wv
-		JumpToLabel(ThemeSet);
+
+	If(reg1, EQUAL_I, 2); {			//wave toggle. Use wv_selchar and in_selchar2
+		SetRegister(reg3, 0x7776); //wv
+		//set Wave selchar
+		for (int i = 0; i < 2; i++) {
+			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
+			STH(reg3, reg2, 0);
+		}
+		//set "in" selchar2
+		SetRegister(reg3, 0x696E); //in
+		for (int i = 2; i < 4; i++) {
+			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
+			STH(reg3, reg2, 0);
+		}
+		JumpToLabel(EndThemes);
 	} EndIf();
+
 	If(reg1, EQUAL_I, 3); {
-		SetRegister(reg1, 0x696E); //in
+		SetRegister(reg3, 0x696E); //in
 		JumpToLabel(ThemeSet);
 	} EndIf();
 	
@@ -905,8 +928,10 @@ void constantOverride() {
 
 	for (int i = 0; i < 4; i++) {
 		SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
-		STH(reg1, reg2, 0);
+		STH(reg3, reg2, 0);
 	}
+
+	Label(EndThemes);
 
 	// Universal walljumping - if in a match, must restart. Attempted writing to 0x80FC15C0 and 0x80FC15D8, but got same result
 	LoadWordToReg(reg1, ALL_CHARS_WALLJUMP_INDEX + Line::VALUE);
