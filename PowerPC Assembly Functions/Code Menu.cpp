@@ -319,7 +319,7 @@ void CodeMenu()
 #endif
 	MainLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Comment(""));
-	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (WI)", "Doubles (WI)", "Starters (WI)", "Singles (PMBR)", "Doubles (PMBR)", "Singles (Theatre)", "Doubles (Theatre)" }, 0, STAGELIST_INDEX));
+	MainLines.push_back(new Selection("Stagelist", { "Default", "P+ 2023 (Singles)", "P+ 2023 (Doubles)", "P+ 2023 (Doubles + GT)", "WI 2022 (Singles)", "WI 2022 (Doubles)", "PMBR (Singles)", "PMBR (Doubles)"}, 0, STAGELIST_INDEX));
 	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Project Wave", "Invincible 6" }, 0, THEME_INDEX));
 	MainLines.push_back(&PlayerCodes.CalledFromLine);
 	MainLines.push_back(&SpecialSettingsPage.CalledFromLine);
@@ -884,9 +884,11 @@ void constantOverride() {
 	int ThemeSet = GetNextLabel();
 	int EndThemes = GetNextLabel();
 
-	int MENU_PREFIX_ADDRESSES[4] = {
+	int MENU_PREFIX_ADDRESSES[6] = {
 		0x806FF2F3,	//sc_selcharacter.pac
 		0x817F6365,	//sc_selcharacter_en.pac
+		0x806FF3F7, //sc_selmap.pac
+		0x817F637C, //sc_selmap_en.pac
 		0x806FF30F,	//sc_selcharacter2.pac
 		0x817F634D //sc_selcharacter2_en.pac
 	};
@@ -905,14 +907,14 @@ void constantOverride() {
 
 	If(reg1, EQUAL_I, 2); {			//wave toggle. Use wv_selchar and in_selchar2
 		SetRegister(reg3, 0x7776); //wv
-		//set Wave selchar
-		for (int i = 0; i < 2; i++) {
+		//set Wave selchar, selmap
+		for (int i = 0; i < 4; i++) {
 			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
 			STH(reg3, reg2, 0);
 		}
 		//set "in" selchar2
 		SetRegister(reg3, 0x696E); //in
-		for (int i = 2; i < 4; i++) {
+		for (int i = 4; i < 6; i++) {
 			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
 			STH(reg3, reg2, 0);
 		}
@@ -926,12 +928,17 @@ void constantOverride() {
 	
 	Label(ThemeSet);
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 6; i++) {
 		SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
 		STH(reg3, reg2, 0);
 	}
 
 	Label(EndThemes);
+
+	//Stagelist toggle - store value near stage table addresses for easy access
+	LoadWordToReg(reg1, STAGELIST_INDEX + Line::VALUE);
+	SetRegister(reg3, 0x80495D1B);
+	STB(reg1, reg3, 0);
 
 	// Universal walljumping - if in a match, must restart. Attempted writing to 0x80FC15C0 and 0x80FC15D8, but got same result
 	LoadWordToReg(reg1, ALL_CHARS_WALLJUMP_INDEX + Line::VALUE);
