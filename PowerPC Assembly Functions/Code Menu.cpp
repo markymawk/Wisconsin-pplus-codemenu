@@ -97,7 +97,7 @@ int CROUCH_KNOCKBACK_INDEX = -1; //new WI
 int SHIELD_DECAY_INDEX = -1; //new WI
 int SHIELD_REGEN_INDEX = -1; //new WI
 int SCREEN_SHAKE_INDEX = -1; //new WI
-//int RESULTS_MUSIC_INDEX = -1; //new WI
+int LEDGEGRAB_LIMIT_INDEX = -1; //new WI
 
 int tets = 0x935fe30C;
 
@@ -278,6 +278,7 @@ void CodeMenu()
 	SpecialSettings.push_back(new Toggle("Random Teams", false, TEAMS_ROTATE_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Selection("Big Head Mode", {"OFF", "ON (1x)", "ON (2x)"}, 0, BIG_HEAD_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Comment(""));
+	SpecialSettings.push_back(new Selection("Timeout LGL", { "OFF", "45", "60" }, 1, LEDGEGRAB_LIMIT_INDEX));
 	SpecialSettings.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Toggle("Screen Shake", true, SCREEN_SHAKE_INDEX));
 	SpecialSettings.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
@@ -839,7 +840,7 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(SHIELD_COLOR_P3_INDEX, Header);
 	AddValueToByteArray(SHIELD_COLOR_P4_INDEX, Header);
 
-	//AddValueToByteArray(RESULTS_MUSIC_INDEX, Header);
+	AddValueToByteArray(LEDGEGRAB_LIMIT_INDEX, Header);
 
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);
