@@ -279,7 +279,7 @@ void CodeMenu()
 	SpecialSettings.push_back(new Selection("Big Head Mode", {"OFF", "ON (1x)", "ON (2x)"}, 0, BIG_HEAD_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Comment(""));
 	SpecialSettings.push_back(new Selection("Timeout LGL", { "OFF", "45", "60" }, 1, LEDGEGRAB_LIMIT_INDEX));
-	SpecialSettings.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
+	//SpecialSettings.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
 	SpecialSettings.push_back(new Toggle("Screen Shake", true, SCREEN_SHAKE_INDEX));
 	SpecialSettings.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
 	Page SpecialSettingsPage("Other Settings", SpecialSettings);
@@ -808,6 +808,8 @@ void CreateMenu(Page MainPage)
 
 	//Balloon stocks
 	AddValueToByteArray(BALLOON_STOCK_INDEX, Header);
+
+	//L-cancel miss flash
 	AddValueToByteArray(LCANCEL_MISS_P1_INDEX, Header);
 	AddValueToByteArray(LCANCEL_MISS_P2_INDEX, Header);
 	AddValueToByteArray(LCANCEL_MISS_P3_INDEX, Header);
