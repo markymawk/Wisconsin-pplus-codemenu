@@ -321,7 +321,7 @@ void CodeMenu()
 	MainLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(new Selection("Stagelist", { "Default", "P+ 2023 (Singles)", "P+ 2023 (Doubles)", "P+ 2023 (Doubles + GT)", "WI 2022 (Singles)", "WI 2022 (Doubles)", "PMBR (Singles)", "PMBR (Doubles)"}, 0, STAGELIST_INDEX));
-	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Project Wave", "Invincible 6" }, 0, THEME_INDEX));
+	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Project Wave", "Invincible 6", "Craig's"}, 0, THEME_INDEX));
 	MainLines.push_back(&PlayerCodes.CalledFromLine);
 	MainLines.push_back(&SpecialSettingsPage.CalledFromLine);
 	Page Main("Main", MainLines);
@@ -885,6 +885,7 @@ void constantOverride() {
 
 	// Themes
 	int ThemeSet = GetNextLabel();
+	int SetBlueMenu = GetNextLabel();
 	int EndThemes = GetNextLabel();
 
 	int MENU_PREFIX_ADDRESSES[6] = {
@@ -915,6 +916,7 @@ void constantOverride() {
 			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
 			STH(reg3, reg2, 0);
 		}
+		Label(SetBlueMenu);
 		//set "in" selchar2
 		SetRegister(reg3, 0x696E); //in
 		for (int i = 4; i < 6; i++) {
@@ -928,7 +930,18 @@ void constantOverride() {
 		SetRegister(reg3, 0x696E); //in
 		JumpToLabel(ThemeSet);
 	} EndIf();
-	
+
+	If(reg1, EQUAL_I, 4); {			// cv toggle. Use cv_selchar and in_selchar2
+		SetRegister(reg3, 0x6376); //cv
+		// set Craig selchar, selmap
+		for (int i = 0; i < 4; i++) {
+			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
+			STH(reg3, reg2, 0);
+		}
+		// use "in" selchar2
+		JumpToLabel(SetBlueMenu);
+	} EndIf();
+
 	Label(ThemeSet);
 
 	for (int i = 0; i < 6; i++) {
