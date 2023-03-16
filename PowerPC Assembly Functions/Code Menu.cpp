@@ -713,9 +713,9 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(CHARACTER_SELECT_P4_INDEX, Header); //P4
 	//infinite shields (WI: NOT USED but left for space)
 	AddValueToByteArray(INFINITE_SHIELDS_INDEX, Header); //P1
-	AddValueToByteArray(INFINITE_SHIELDS_P2_INDEX, Header); //P2
-	AddValueToByteArray(INFINITE_SHIELDS_P3_INDEX, Header); //P3
-	AddValueToByteArray(INFINITE_SHIELDS_P4_INDEX, Header); //P4
+	AddValueToByteArray(0, Header); //P2
+	AddValueToByteArray(0, Header); //P3
+	AddValueToByteArray(0, Header); //P4
 	//percent selection values
 	AddValueToByteArray(PERCENT_SELECT_VALUE_P1_INDEX, Header); //P1
 	AddValueToByteArray(PERCENT_SELECT_VALUE_P2_INDEX, Header); //P2
@@ -723,9 +723,9 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(PERCENT_SELECT_VALUE_P4_INDEX, Header); //P4
 	//percent selection activators
 	AddValueToByteArray(PERCENT_SELECT_ACTIVATOR_INDEX, Header); //P1
-	AddValueToByteArray(PERCENT_SELECT_ACTIVATOR_P2_INDEX, Header); //P2
-	AddValueToByteArray(PERCENT_SELECT_ACTIVATOR_P3_INDEX, Header); //P3
-	AddValueToByteArray(PERCENT_SELECT_ACTIVATOR_P4_INDEX, Header); //P4
+	AddValueToByteArray(0, Header); //P2
+	AddValueToByteArray(0, Header); //P3
+	AddValueToByteArray(0, Header); //P4
 	//disable DPad activators
 	AddValueToByteArray(DISABLE_DPAD_P1_INDEX, Header); //P1
 	AddValueToByteArray(DISABLE_DPAD_P2_INDEX, Header); //P2
