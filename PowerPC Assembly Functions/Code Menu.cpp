@@ -800,7 +800,7 @@ void CreateMenu(Page MainPage)
 	//Scale Modifier
 	//AddValueToByteArray(SCALE_MODIFIER_INDEX, Header);
 	
-	//Stagelist Looter
+	//Stagelist
 	AddValueToByteArray(STAGELIST_INDEX, Header);
 
 	//Universal walljump
@@ -955,6 +955,10 @@ void constantOverride() {
 	LoadWordToReg(reg1, STAGELIST_INDEX + Line::VALUE);
 	SetRegister(reg3, 0x80495D1B);
 	STB(reg1, reg3, 0);
+
+	//Store theme toggle next to stagelist toggle
+	LoadWordToReg(reg1, THEME_INDEX + Line::VALUE);
+	STB(reg1, reg3, 1);
 
 	// Universal walljumping - if in a match, must restart. Attempted writing to 0x80FC15C0 and 0x80FC15D8, but got same result
 	LoadWordToReg(reg1, ALL_CHARS_WALLJUMP_INDEX + Line::VALUE);
