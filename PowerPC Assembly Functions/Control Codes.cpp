@@ -268,6 +268,7 @@ void orderRotationQueueByMatchPlacing() {
 
 	IfInVersus(reg1); {
 		LoadWordToReg(reg1, ENDLESS_FRIENDLIES_MODE_INDEX + Line::VALUE);
+		//WI: endless friendlies rotation unused. Spawn points desync replays. Can comment all these out later
 		If(reg1, EQUAL_I, 2); //1v1 Rotation
 		{
 			//shift 1st position back
