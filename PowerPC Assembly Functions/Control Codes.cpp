@@ -17,11 +17,6 @@ void ControlCodes()
 
 	DeleteCharacterBufferOnTransform();
 
-	//RestoreLimitedCharacters();
-
-	if (PERCENT_SELECT_ACTIVATOR_P1_INDEX != -1) {
-		//FixPercentSelector();
-	}
 }
 
 void FixPercentSelector() {
