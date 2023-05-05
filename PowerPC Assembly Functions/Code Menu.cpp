@@ -904,7 +904,7 @@ void constantOverride() {
 			STH(reg3, reg2, 0);
 		}
 		Label(SetBlueMenu);
-		//set "in" selchar2
+		//set in_selchar2
 		SetRegister(reg3, 0x696E); //in
 		for (int i = 4; i < 6; i++) {
 			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
@@ -918,14 +918,14 @@ void constantOverride() {
 		JumpToLabel(ThemeSet);
 	} EndIf();
 
-	If(reg1, EQUAL_I, 4); {			// cv toggle. Use cv_selchar and in_selchar2
+	If(reg1, EQUAL_I, 4); {			//cv toggle. Use cv_selchar and in_selchar2
 		SetRegister(reg3, 0x6376); //cv
-		// set Craig selchar, selmap
+		// set cv selchar, selmap
 		for (int i = 0; i < 4; i++) {
 			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
 			STH(reg3, reg2, 0);
 		}
-		// use "in" selchar2
+		// use in_selchar2
 		JumpToLabel(SetBlueMenu);
 	} EndIf();
 
@@ -965,6 +965,7 @@ void constantOverride() {
 	// "pi" in this case means pi/10, or 0.314159265
 	LoadWordToReg(reg1, DI_RANGE_INDEX + Line::VALUE);
 	SetRegister(reg2, 0x80B88524); //Addr of pi value for DI calculations
+
 	// DI range toggle: If 2 (default), write default range of pi
 	If(reg1, EQUAL_I, 2); {
 		SetRegister(reg1, 0x3EA0D97C);
@@ -991,7 +992,6 @@ void constantOverride() {
 
 	ASMEnd(0x2c000000); //cmpwi, r0, 0
 }
-
 void ControlCodeMenu()
 {
 	ASMStart(0x80029574);
@@ -1064,7 +1064,6 @@ void ControlCodeMenu()
 			STW(Reg1, Reg4, 0);
 		} EndIf();
 	} EndIf();
-	
 	
 	LoadWordToReg(OpenFlagReg, Reg4, CODE_MENU_CONTROL_FLAG);
 
@@ -1157,7 +1156,6 @@ void ControlCodeMenu()
 			RLWINM(Reg5, Reg5, 31, 15, 31);
 		}EndWhile();
 	}CounterLoopEnd();
-
 
 	LoadWordToReg(Reg3, Reg5, IS_DEBUG_PAUSED);
 	
