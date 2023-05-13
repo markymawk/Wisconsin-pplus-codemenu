@@ -77,6 +77,7 @@ int SHIELD_COLOR_P2_INDEX = -1;
 int SHIELD_COLOR_P3_INDEX = -1;
 int SHIELD_COLOR_P4_INDEX = -1;
 int SOLO_COUNTDOWN_INDEX = -1;
+int ORDERED_STAGE_CHOICE_INDEX = -1;
 
 //constant overrides
 vector<ConstantPair> constantOverrides;
@@ -298,6 +299,9 @@ void CodeMenu()
 
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(&DebugMode.CalledFromLine);
+#if DOLPHIN_BUILD
+	MainLines.push_back(new Toggle("Ordered Stage Choice", false, ORDERED_STAGE_CHOICE_INDEX));
+#endif
 	MainLines.push_back(new Toggle("Endless Friendlies", false, ENDLESS_FRIENDLIES_MODE_INDEX));
 	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
 	MainLines.push_back(new Toggle("Skip Results", false, AUTO_SKIP_TO_CSS_INDEX));
@@ -833,6 +837,7 @@ void CreateMenu(Page MainPage)
 
 	AddValueToByteArray(LEDGEGRAB_LIMIT_INDEX, Header);
 	AddValueToByteArray(SOLO_COUNTDOWN_INDEX, Header);
+	AddValueToByteArray(ORDERED_STAGE_CHOICE_INDEX, Header);
 
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);
