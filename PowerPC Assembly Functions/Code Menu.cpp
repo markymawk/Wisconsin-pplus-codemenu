@@ -76,6 +76,7 @@ int SHIELD_COLOR_P1_INDEX = -1;
 int SHIELD_COLOR_P2_INDEX = -1;
 int SHIELD_COLOR_P3_INDEX = -1;
 int SHIELD_COLOR_P4_INDEX = -1;
+int SOLO_COUNTDOWN_INDEX = -1;
 
 //constant overrides
 vector<ConstantPair> constantOverrides;
@@ -197,6 +198,7 @@ void CodeMenu()
 	DebugLines.push_back(new Toggle("Lock Camera", false, CAMERA_LOCK_INDEX));
 	DebugLines.push_back(new Toggle("Show HUD", true, HUD_DISPLAY_INDEX));
 	DebugLines.push_back(new Toggle("Show FPS", false, FPS_DISPLAY_INDEX));
+	DebugLines.push_back(new Toggle("1P Countdown", false, SOLO_COUNTDOWN_INDEX));
 	DebugLines.push_back(new Selection("Code Menu", { "ON", "OFF (Debug)", "OFF" }, 0, CODE_MENU_ACTIVATION_SETTING_INDEX));
 	Page DebugMode("Debug Settings", DebugLines);
 
@@ -830,6 +832,7 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(SHIELD_COLOR_P4_INDEX, Header);
 
 	AddValueToByteArray(LEDGEGRAB_LIMIT_INDEX, Header);
+	AddValueToByteArray(SOLO_COUNTDOWN_INDEX, Header);
 
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);
