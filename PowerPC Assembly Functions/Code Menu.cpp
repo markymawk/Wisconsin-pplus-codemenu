@@ -292,9 +292,9 @@ void CodeMenu()
 #if EON_DEBUG_BUILD
 	MainLines.push_back(&TestPage.CalledFromLine);
 #elif DOLPHIN_BUILD
-	MainLines.push_back(new Comment("WI Netplay Code Menu (P+ 2.4)", &MENU_TITLE_CHECK_LOCATION));
+	MainLines.push_back(new Comment("WI Netplay Code Menu (P+ 2.4.1)", &MENU_TITLE_CHECK_LOCATION));
 #else
-	MainLines.push_back(new Comment("WI Code Menu v1.5 (P+ 2.4)", &MENU_TITLE_CHECK_LOCATION));
+	MainLines.push_back(new Comment("WI Code Menu v1.5 (P+ 2.4.1)", &MENU_TITLE_CHECK_LOCATION));
 #endif
 
 	MainLines.push_back(new Comment(""));
