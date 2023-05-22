@@ -1,29 +1,28 @@
-# Stagelist: WI 2022 Singles (9 stages)
-* 20495D1B 00000004 # If Stagelist value == 4
+# Stagelist: Default (14 stages)
+* 26495D1B 00000001 # If Stagelist value < 1
 
-byte 11 @ $806B929C # Page 1
+byte 14 @ $806B929C # Page 1
 byte 27 @ $806B92A4 # Page 2
 byte 68 @ $800AF673 # Stage Count (above values plus 27)
 
-# Random stage select
-* 42000000 90000000
-* 0417BE70 00021000
-* 0417BE74 15000115
-
-.BA<-STG4_PAGE1
+.BA<-STG0_PAGE1
 .BA->$80495D04
-.BA<-STG4_PAGE2
+.BA<-STG0_PAGE2
 .BA->$80495D08
-.GOTO->STG4_SkipStageTables
+.GOTO->STG0_SkipStageTables
 
-STG4_PAGE1:
-    byte[9] |
-0x1C, 0x18, 0x04, 0x23, | 		# GHZ, FoD, Metal, DL
-0x08, 0x1A, 0x00, 0x28, 0x02 | # TT, SV, BF, PS2, Delfino
+STG0_PAGE1:
+    byte[14] |
+0x0C, 0x18, 0x04, 0x0B, 0x21, 0x01, 0x23, | # YI, FoD, Metal, Meadows, GT, FD, DL
+0x1C, 0x08, 0x1A, 0x00, 0x28, 0x03, 0x02 # GHZ, TT, SV, BF, PS2, Mansion, Delfino
 
-STG4_PAGE2:
+STG0_PAGE2:
     byte[27] |
-0x0C, 0x0B, 0x21, 0x01, 0x03, |
+0x0E, | # Lylat
+0x1B, | # Shadow
+0x19, | # New Pork
+0x0D, | # Halberd
+0x36, | # Port Town
 0x3B, | # Mario Circuit
 0x2E, | # Eldin
 0x38, | # Mushroomy Kingdom
@@ -47,7 +46,7 @@ STG4_PAGE2:
 0x44, |	# Bobomb
 0x3A | # Subspace
 
-STG4_SkipStageTables:
+STG0_SkipStageTables:
 .RESET
 
 * E0000000 80008000

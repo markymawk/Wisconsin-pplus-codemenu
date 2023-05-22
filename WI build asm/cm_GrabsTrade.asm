@@ -3,7 +3,7 @@ Grab trade effects [Eon, code menu variant by mawwwk]
 ###########################################################
 # 0 = default, 1 = grabs recoil (trade), 2 = Manaphy Heart Swap effect
 .alias CodeMenuStart = 0x804E
-.alias CodeMenuHeader = 0x02D8
+.alias CodeMenuHeader = 0x02D4
 
 HOOK @ $8077055c
 {
@@ -14,8 +14,8 @@ HOOK @ $8077055c
   cmpwi r31, 0                  # /
   beq defaultGrab 				# Default behavior if codemenuVar = 0
   bne grabsClank				# Go to clank behavior otherwise
-  
-defaultGrab:		
+
+defaultGrab:
   lis r31, 0x8079				# \ original op: bl 0x807977c8
   ori r31, r31, 0x77C8
   mtctr r31
