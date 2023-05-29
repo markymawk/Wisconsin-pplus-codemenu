@@ -6,16 +6,16 @@ Intended only for use with WI P+ build v1.5, but forks are welcome. Please give 
 
 # Changes:
 - Recolored text & background colors with less contrast to be easier on the eyes
-- Includes shield color & theme toggles built-in, among other new toggles. Many toggles' functionality requires external asm files
+- Includes shield color & theme toggles built-in, among other new toggles. Fuctionality for many toggles requires external asm files included in this repo
 - Salty Runback button combination loosened to R+Y. Skip Results combo loosened to R+X
-- Player Codes reorganized into a separate sub-menu, sorted by feature instead of player port
-- Infinite Shields consolidated into a single toggle
-- Set Percent toggle consolidated into a single menu, with one toggle for all ports 
-- Gameplay Modifiers & Flight Mode are re-sorted into their own sub-menus with properly capped values
 - Start-alts replace Y-alts in random Alternate Stages
-- Debug Settings reworded with new comments & easier to read toggle phrasing
 - Includes Eon's fixes from P+ 2.27 onward for debug overlay flickers, and other stability fixes
-- Various other options re-arranged for organization, readability and all that
+- Player Codes reorganized into a separate sub-menu, sorted by feature instead of player port
+  - Infinite Shields consolidated into a single toggle
+  - Set Percent toggle re-sorted into a single sub-menu, with one toggle for all ports 
+- Various other options re-arranged for organization and readability
+  - Debug Settings reworded with new comments & easier to read toggle phrasing
+  - Gameplay Modifiers & Flight Mode are re-sorted into their own sub-menus with properly capped values
 
 Added options:
 - Stagelist: Set stage slots on page 1 and update random select accordingly
