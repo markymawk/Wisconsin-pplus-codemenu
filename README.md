@@ -20,7 +20,7 @@ Intended only for use with WI P+ build v1.5, but forks are welcome. Please give 
 Added options:
 - Stagelist: Set stage slots on page 1 and update random select accordingly
 - Theme: Load alternate selchar, selchar2, and selmap files
-- Timeout Ledgegrab Limit: On timeout, after any player reaches a ledgegrab threshold, determine winner by lower ledgegrab count
+- Timeout Ledgegrab Limit: If a game goes to time, and any player reaches a ledgegrab threshold, determine winner by lower ledgegrab count
 - (Netplay only) Ordered stage choice: Override stage choice setting for an even stage distribution in netplay sessions
 - Balloon Hit Behavior: Add or subtract a stock upon hitting the Smashville balloon (by Eon)
 - Big Head Mode (by Eon)
