@@ -292,8 +292,9 @@ void CodeMenu()
 	MainLines.push_back(new Comment("Inv7 Code Menu (P+ 2.4.1)", &MENU_TITLE_CHECK_LOCATION));
 	MainLines.push_back(new Comment("start.gg/invincible | @WiscoPM"));
 	MainLines.push_back(new Comment(""));
+	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles", "Doubles" }, 0, STAGELIST_INDEX));
+	MainLines.push_back(new Comment(""));
 	MainLines.push_back(&DebugMode.CalledFromLine);
-
 	MainLines.push_back(new Toggle("Endless Friendlies", false, ENDLESS_FRIENDLIES_MODE_INDEX));
 	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
 	MainLines.push_back(new Toggle("Skip Results", false, AUTO_SKIP_TO_CSS_INDEX));
@@ -305,7 +306,6 @@ void CodeMenu()
 #endif
 	MainLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Comment(""));
-	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (P+ 2023)", "Doubles (WI 2023)", "Doubles (P+ 2023)", "Singles (WI 2022)", "Doubles (WI 2022)", "Singles (PMBR)", "Doubles (PMBR)"}, 0, STAGELIST_INDEX));
 	//MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Project Wave", "Invincible 6", "Craig's"}, 0, THEME_INDEX));
 	MainLines.push_back(&PlayerCodes.CalledFromLine);
 	MainLines.push_back(&SpecialSettingsPage.CalledFromLine);
