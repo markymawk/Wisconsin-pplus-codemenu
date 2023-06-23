@@ -314,7 +314,7 @@ void CodeMenu()
 	MainLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (P+ 2023)", "Doubles (WI 2023)", "Doubles (P+ 2023)", "Singles (WI 2022)", "Doubles (WI 2022)", "Singles (PMBR)", "Doubles (PMBR)"}, 0, STAGELIST_INDEX));
-	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Project Wave", "Invincible 6", "Craig's"}, 0, THEME_INDEX));
+	//MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Project Wave", "Invincible 6", "Craig's"}, 0, THEME_INDEX));
 	MainLines.push_back(&PlayerCodes.CalledFromLine);
 	MainLines.push_back(&SpecialSettingsPage.CalledFromLine);
 	Page Main("Main", MainLines);
@@ -951,8 +951,8 @@ void constantOverride() {
 	SetRegister(reg3, 0x80495D1B);
 	STB(reg1, reg3, 0);
 
-	//Store theme toggle next to stagelist toggle
-	LoadWordToReg(reg1, THEME_INDEX + Line::VALUE);
+	//Store theme toggle next to stagelist toggle (disabled for Inv7)
+	LoadWordToReg(reg1, 0);
 	STB(reg1, reg3, 1);
 
 	// Universal walljumping - if in a match, must restart. Attempted writing to 0x80FC15C0 and 0x80FC15D8, but got same result
