@@ -289,19 +289,11 @@ void CodeMenu()
 
 	//main page
 	vector<Line*> MainLines;
-#if EON_DEBUG_BUILD
-	MainLines.push_back(&TestPage.CalledFromLine);
-#elif DOLPHIN_BUILD
-	MainLines.push_back(new Comment("WI Netplay Code Menu (P+ 2.4.1)", &MENU_TITLE_CHECK_LOCATION));
-#else
-	MainLines.push_back(new Comment("WI Code Menu v1.5 (P+ 2.4.1)", &MENU_TITLE_CHECK_LOCATION));
-#endif
-
+	MainLines.push_back(new Comment("Inv7 Code Menu (P+ 2.4.1)", &MENU_TITLE_CHECK_LOCATION));
+	MainLines.push_back(new Comment("start.gg/invincible | @WiscoPM"));
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(&DebugMode.CalledFromLine);
-#if DOLPHIN_BUILD
-	MainLines.push_back(new Toggle("Ordered Stage Choice", false, ORDERED_STAGE_CHOICE_INDEX));
-#endif
+
 	MainLines.push_back(new Toggle("Endless Friendlies", false, ENDLESS_FRIENDLIES_MODE_INDEX));
 	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
 	MainLines.push_back(new Toggle("Skip Results", false, AUTO_SKIP_TO_CSS_INDEX));
@@ -1039,7 +1031,7 @@ void ControlCodeMenu()
 		JumpToLabel(NotLoaded);
 	}EndIf();
 	#else
-	If(Reg1, NOT_EQUAL_I_L, 0x204D); // (space) M
+	If(Reg1, NOT_EQUAL_I_L, 0x6465); // (space) M
 	{
 		JumpToLabel(NotLoaded);
 	}EndIf();
