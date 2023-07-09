@@ -289,7 +289,7 @@ void CodeMenu()
 
 	//main page
 	vector<Line*> MainLines;
-	MainLines.push_back(new Comment("Inv7 Code Menu (P+ 2.4.1)", &MENU_TITLE_CHECK_LOCATION));
+	MainLines.push_back(new Comment("Inv7 Code Menu (P+ 2.4.2)", &MENU_TITLE_CHECK_LOCATION));
 	MainLines.push_back(new Comment("start.gg/invincible | @WiscoPM"));
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles", "Doubles" }, 0, STAGELIST_INDEX));
