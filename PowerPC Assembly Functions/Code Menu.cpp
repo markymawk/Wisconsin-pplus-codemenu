@@ -816,7 +816,7 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(DI_RANGE_INDEX, Header);
 
 	//Theme toggle
-	AddValueToByteArray(THEME_INDEX, Header);
+	AddValueToByteArray(0, Header);
 
 	//Screen shake toggle
 	AddValueToByteArray(SCREEN_SHAKE_INDEX, Header);
@@ -870,82 +870,10 @@ void constantOverride() {
 		STW(reg1, reg2, 0);
 	}
 
-	// Themes
-	int ThemeSet = GetNextLabel();
-	int SetBlueMenu = GetNextLabel();
-	int EndThemes = GetNextLabel();
-
-	int MENU_PREFIX_ADDRESSES[6] = {
-		0x806FF2F3,	//sc_selcharacter.pac
-		0x817F6365,	//sc_selcharacter_en.pac
-		0x806FF3F7, //sc_selmap.pac
-		0x817F637C, //sc_selmap_en.pac
-		0x806FF30F,	//sc_selcharacter2.pac
-		0x817F634D //sc_selcharacter2_en.pac
-	};
-
-	LoadWordToReg(reg1, THEME_INDEX + Line::VALUE);
-
-	If(reg1, EQUAL_I, 0); {
-		SetRegister(reg3, 0x7363); //sc
-		JumpToLabel(ThemeSet);
-	} EndIf();
-
-	If(reg1, EQUAL_I, 1); {
-		SetRegister(reg3, 0x6378); //cx
-		JumpToLabel(ThemeSet);
-	} EndIf();
-
-	If(reg1, EQUAL_I, 2); {			//wave toggle. Use wv_selchar and in_selchar2
-		SetRegister(reg3, 0x7776); //wv
-		//set Wave selchar, selmap
-		for (int i = 0; i < 4; i++) {
-			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
-			STH(reg3, reg2, 0);
-		}
-		Label(SetBlueMenu);
-		//set in_selchar2
-		SetRegister(reg3, 0x696E); //in
-		for (int i = 4; i < 6; i++) {
-			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
-			STH(reg3, reg2, 0);
-		}
-		JumpToLabel(EndThemes);
-	} EndIf();
-
-	If(reg1, EQUAL_I, 3); {
-		SetRegister(reg3, 0x696E); //in
-		JumpToLabel(ThemeSet);
-	} EndIf();
-
-	If(reg1, EQUAL_I, 4); {			//cv toggle. Use cv_selchar and in_selchar2
-		SetRegister(reg3, 0x6376); //cv
-		// set cv selchar, selmap
-		for (int i = 0; i < 4; i++) {
-			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
-			STH(reg3, reg2, 0);
-		}
-		// use in_selchar2
-		JumpToLabel(SetBlueMenu);
-	} EndIf();
-
-	Label(ThemeSet);
-
-	for (int i = 0; i < 6; i++) {
-		SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
-		STH(reg3, reg2, 0);
-	}
-
-	Label(EndThemes);
-
 	//Stagelist toggle - store value near stage table addresses for easy access
 	LoadWordToReg(reg1, STAGELIST_INDEX + Line::VALUE);
 	SetRegister(reg3, 0x80495D1B);
 	STB(reg1, reg3, 0);
-
-	//Store theme toggle next to stagelist toggle (disabled for Inv7)
-	LoadWordToReg(reg1, 0);
-	STB(reg1, reg3, 1);
 
 	// Universal walljumping - if in a match, must restart. Attempted writing to 0x80FC15C0 and 0x80FC15D8, but got same result
 	LoadWordToReg(reg1, ALL_CHARS_WALLJUMP_INDEX + Line::VALUE);
