@@ -314,7 +314,7 @@ void CodeMenu()
 	MainLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (P+ 2023)", "Doubles (WI 2023)", "Doubles (P+ 2023)", "Singles (WI 2022)", "Doubles (WI 2022)", "Singles (PMBR)", "Doubles (PMBR)"}, 0, STAGELIST_INDEX));
-	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Project Wave", "Invincible 6", "Craig's"}, 0, THEME_INDEX));
+	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Project Wave", "Invincible 6", "Invincible 7", "Craig's"}, 0, THEME_INDEX));
 	MainLines.push_back(&PlayerCodes.CalledFromLine);
 	MainLines.push_back(&SpecialSettingsPage.CalledFromLine);
 	Page Main("Main", MainLines);
@@ -926,7 +926,12 @@ void constantOverride() {
 		JumpToLabel(ThemeSet);
 	} EndIf();
 
-	If(reg1, EQUAL_I, 4); {			//cv toggle. Use cv_selchar and in_selchar2
+	If(reg1, EQUAL_I, 4); {
+		SetRegister(reg3, 0x6937); //i7
+		JumpToLabel(ThemeSet);
+	} EndIf();
+
+	If(reg1, EQUAL_I, 5); {			//cv toggle. Use cv_selchar and in_selchar2
 		SetRegister(reg3, 0x6376); //cv
 		// set cv selchar, selmap
 		for (int i = 0; i < 4; i++) {
