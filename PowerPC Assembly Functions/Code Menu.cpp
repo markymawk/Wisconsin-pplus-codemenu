@@ -294,7 +294,7 @@ void CodeMenu()
 #elif DOLPHIN_BUILD
 	MainLines.push_back(new Comment("WI Netplay Code Menu (P+ 2.4.2)", &MENU_TITLE_CHECK_LOCATION));
 #else
-	MainLines.push_back(new Comment("WI Code Menu v1.5b (P+ 2.4.2)", &MENU_TITLE_CHECK_LOCATION));
+	MainLines.push_back(new Comment("WI Code Menu v1.5c (P+ 2.4.2) +Theme", &MENU_TITLE_CHECK_LOCATION));
 #endif
 
 	MainLines.push_back(new Comment(""));
@@ -314,7 +314,12 @@ void CodeMenu()
 	MainLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (P+ 2023)", "Doubles (WI 2023)", "Doubles (P+ 2023)", "Singles (WI 2022)", "Doubles (WI 2022)", "Singles (PMBR)", "Doubles (PMBR)"}, 0, STAGELIST_INDEX));
-	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Project Wave", "Invincible 6", "Invincible 7", "Craig's"}, 0, THEME_INDEX));
+#if IS_THEME_EXPANSION	
+	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's", "Splat", "Project Wave", "Invincible 6", "Invincible 7"}, 3, THEME_INDEX));
+#else
+	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's" }, 0, THEME_INDEX));
+#endif
+
 	MainLines.push_back(&PlayerCodes.CalledFromLine);
 	MainLines.push_back(&SpecialSettingsPage.CalledFromLine);
 	Page Main("Main", MainLines);
@@ -883,6 +888,13 @@ void constantOverride() {
 	int SetBlueMenu = GetNextLabel();
 	int EndThemes = GetNextLabel();
 
+	int sc_ID = 0x7363;
+	int cx_ID = 0x6378;
+	int cv_ID = 0x6376;
+	int sp_ID = 0x7370;
+	int wv_ID = 0x7776;
+	int i6_ID = 0x6936;
+	int i7_ID = 0x6937;
 	int MENU_PREFIX_ADDRESSES[6] = {
 		0x806FF2F3,	//sc_selcharacter.pac
 		0x817F6365,	//sc_selcharacter_en.pac
@@ -894,26 +906,36 @@ void constantOverride() {
 
 	LoadWordToReg(reg1, THEME_INDEX + Line::VALUE);
 
-	If(reg1, EQUAL_I, 0); {
-		SetRegister(reg3, 0x7363); //sc
+	If(reg1, EQUAL_I, 0); {		//sc, Default
+		SetRegister(reg3, sc_ID); 
 		JumpToLabel(ThemeSet);
 	} EndIf();
 
-	If(reg1, EQUAL_I, 1); {
-		SetRegister(reg3, 0x6378); //cx
+	If(reg1, EQUAL_I, 1); {		 //cx, The Construct
+		SetRegister(reg3, cx_ID);
 		JumpToLabel(ThemeSet);
 	} EndIf();
 
-	If(reg1, EQUAL_I, 2); {			//wave toggle. Use wv_selchar and in_selchar2
-		SetRegister(reg3, 0x7776); //wv
-		//set Wave selchar, selmap
+	If(reg1, EQUAL_I, 2); {			//cv, Craig's
+		SetRegister(reg3, cv_ID);
+		JumpToLabel(ThemeSet);
+	} EndIf();
+
+	If(reg1, EQUAL_I, 3); {			//sp, Splat
+		SetRegister(reg3, sp_ID);
+		JumpToLabel(ThemeSet);
+	} EndIf();
+
+	If(reg1, EQUAL_I, 4); {			//wv, Project Wave
+		SetRegister(reg3, wv_ID);
+		// set Wave selchar, selmap
 		for (int i = 0; i < 4; i++) {
 			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
 			STH(reg3, reg2, 0);
 		}
 		Label(SetBlueMenu);
-		//set in_selchar2
-		SetRegister(reg3, 0x696E); //in
+		// use cv_selchar2
+		SetRegister(reg3, cv_ID);
 		for (int i = 4; i < 6; i++) {
 			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
 			STH(reg3, reg2, 0);
@@ -921,26 +943,18 @@ void constantOverride() {
 		JumpToLabel(EndThemes);
 	} EndIf();
 
-	If(reg1, EQUAL_I, 3); {
-		SetRegister(reg3, 0x696E); //in
-		JumpToLabel(ThemeSet);
-	} EndIf();
-
-	If(reg1, EQUAL_I, 4); {
-		SetRegister(reg3, 0x6937); //i7
-		JumpToLabel(ThemeSet);
-	} EndIf();
-
-	If(reg1, EQUAL_I, 5); {			//cv toggle. Use cv_selchar and in_selchar2
-		SetRegister(reg3, 0x6376); //cv
-		// set cv selchar, selmap
+	If(reg1, EQUAL_I, 5); {			//i6, Invincible 6
+		SetRegister(reg3, i6_ID);
+		// set i6 selchar, selmap
 		for (int i = 0; i < 4; i++) {
 			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
 			STH(reg3, reg2, 0);
 		}
-		// use in_selchar2
+		// use cv_selchar2
 		JumpToLabel(SetBlueMenu);
 	} EndIf();
+
+	SetRegister(reg3, i7_ID);	//i7, Invincible 7
 
 	Label(ThemeSet);
 
