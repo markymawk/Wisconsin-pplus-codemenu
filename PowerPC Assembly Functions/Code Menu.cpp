@@ -923,7 +923,16 @@ void constantOverride() {
 
 	If(reg1, EQUAL_I, 3); {			//sp, Splat
 		SetRegister(reg3, sp_ID);
-		JumpToLabel(SetBlueMenu);
+		for (int i = 0; i < 4; i++) {
+			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
+			STH(reg3, reg2, 0);
+		}
+		SetRegister(reg3, cx_ID); //use cx selchar2
+		for (int i = 4; i < 6; i++) {
+			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
+			STH(reg3, reg2, 0);
+		}
+		JumpToLabel(EndThemes);
 	} EndIf();
 
 	If(reg1, EQUAL_I, 4); {			//wv, Project Wave
