@@ -293,8 +293,10 @@ void CodeMenu()
 	MainLines.push_back(&TestPage.CalledFromLine);
 #elif DOLPHIN_BUILD
 	MainLines.push_back(new Comment("WI Netplay Code Menu (P+ 2.4.2)", &MENU_TITLE_CHECK_LOCATION));
-#else
+#elif IS_THEME_EXPANSION
 	MainLines.push_back(new Comment("WI Code Menu v1.5c (P+ 2.4.2) +Theme", &MENU_TITLE_CHECK_LOCATION));
+#else
+	MainLines.push_back(new Comment("WI Code Menu v1.5c (P+ 2.4.2)", &MENU_TITLE_CHECK_LOCATION));
 #endif
 
 	MainLines.push_back(new Comment(""));
