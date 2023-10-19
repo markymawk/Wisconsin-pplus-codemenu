@@ -314,8 +314,8 @@ void CodeMenu()
 	MainLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (P+ 2023)", "Doubles (WI 2023)", "Doubles (P+ 2023)", "Singles (WI 2022)", "Doubles (WI 2022)", "Singles (PMBR)", "Doubles (PMBR)"}, 0, STAGELIST_INDEX));
-#if IS_THEME_EXPANSION	
-	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's", "Splat", "Project Wave", "Invincible 6", "Invincible 7"}, 3, THEME_INDEX));
+#if IS_THEME_EXPANSION
+	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's", "Splat", "Project Wave", "Invincible 6", "Invincible 7"}, 0, THEME_INDEX));
 #else
 	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's" }, 0, THEME_INDEX));
 #endif
@@ -976,6 +976,10 @@ void constantOverride() {
 	//Store theme toggle next to stagelist toggle
 	LoadWordToReg(reg1, THEME_INDEX + Line::VALUE);
 	STB(reg1, reg3, 1);
+
+	//Store Alternate Stage toggle (for Splat music)
+	LoadWordToReg(reg1, ALT_STAGE_BEHAVIOR_INDEX + Line::VALUE);
+	STB(reg1, reg3, 2);
 
 	// Universal walljumping - if in a match, must restart. Attempted writing to 0x80FC15C0 and 0x80FC15D8, but got same result
 	LoadWordToReg(reg1, ALL_CHARS_WALLJUMP_INDEX + Line::VALUE);
