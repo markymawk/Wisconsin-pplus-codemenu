@@ -22,7 +22,7 @@ using namespace std;
 
 int main()
 {
-	#if DOLPHIN_BUILD
+	#if NETPLAY_BUILD
 	string OutputTextPath = "G:\\Files\\Wisco PM\\Code menu repos\\asm-net.txt";
 	#else
 	string OutputTextPath = "G:\\Files\\Wisco PM\\Code menu repos\\asm.txt";

@@ -64,7 +64,7 @@ void LoadCodeMenu()
 	int reg1 = 31;
 	int reg2 = 30;
 
-#if DOLPHIN_BUILD
+#if NETPLAY_BUILD
 	LoadFile("/menu3/dnet.cmnu", START_OF_CODE_MENU_HEADER, reg1, reg2, false);
 #elif BUILD_TYPE == PROJECT_PLUS
 	LoadFile("/menu3/data.cmnu", START_OF_CODE_MENU_HEADER, reg1, reg2, false);

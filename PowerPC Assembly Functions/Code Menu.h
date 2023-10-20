@@ -310,9 +310,9 @@ static int CurrentOffset = START_OF_CODE_MENU;
 #define FRAMES_WAITED_DURING_SLOW_MOTION 3
 
 static vector<int> Defaults;
-#if BUILD_TYPE == PROJECT_PLUS && DOLPHIN_BUILD == true
+#if NETPLAY_BUILD
 static fstream MenuFile("G:\\Files\\Wisco PM\\wisco build P+\\build\\Project+\\pf\\menu3\\dnet.cmnu", fstream::out | fstream::binary);
-#elif BUILD_TYPE == PROJECT_PLUS && DOLPHIN_BUILD == false
+#else
 static fstream MenuFile("G:\\Files\\Wisco PM\\wisco build P+\\build\\Project+\\pf\\menu3\\data.cmnu", fstream::out | fstream::binary);
 #endif
 

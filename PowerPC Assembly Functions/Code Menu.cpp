@@ -291,7 +291,7 @@ void CodeMenu()
 	vector<Line*> MainLines;
 #if EON_DEBUG_BUILD
 	MainLines.push_back(&TestPage.CalledFromLine);
-#elif DOLPHIN_BUILD
+#elif NETPLAY_BUILD
 	MainLines.push_back(new Comment("WI Netplay Code Menu (P+ 2.4.2)", &MENU_TITLE_CHECK_LOCATION));
 #elif IS_THEME_EXPANSION
 	MainLines.push_back(new Comment("WI Code Menu v1.5c (P+ 2.4.2) +Theme", &MENU_TITLE_CHECK_LOCATION));
@@ -301,14 +301,14 @@ void CodeMenu()
 
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(&DebugMode.CalledFromLine);
-#if DOLPHIN_BUILD
+#if NETPLAY_BUILD
 	MainLines.push_back(new Toggle("Ordered Stage Choice", false, ORDERED_STAGE_CHOICE_INDEX));
 #endif
 	MainLines.push_back(new Toggle("Endless Friendlies", false, ENDLESS_FRIENDLIES_MODE_INDEX));
 	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
 	MainLines.push_back(new Toggle("Skip Results", false, AUTO_SKIP_TO_CSS_INDEX));
 	MainLines.push_back(new Comment(""));
-#if DOLPHIN_BUILD
+#if NETPLAY_BUILD
 	MainLines.push_back(new Toggle("Autosave Replays", true, AUTO_SAVE_REPLAY_INDEX));
 #else
 	MainLines.push_back(new Toggle("Autosave Replays", false, AUTO_SAVE_REPLAY_INDEX));
@@ -316,7 +316,7 @@ void CodeMenu()
 	MainLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (P+ 2023)", "Doubles (WI 2023)", "Doubles (P+ 2023)", "Singles (WI 2022)", "Doubles (WI 2022)", "Singles (PMBR)", "Doubles (PMBR)"}, 0, STAGELIST_INDEX));
-#if IS_THEME_EXPANSION
+#if (IS_THEME_EXPANSION || NETPLAY_BUILD)
 	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's", "Splat", "Project Wave", "Invincible 6", "Invincible 7"}, 0, THEME_INDEX));
 #else
 	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's" }, 0, THEME_INDEX));
@@ -1061,7 +1061,7 @@ void ControlCodeMenu()
 	//Tried deleting this and it seemed more likely to break HUD on console. Remove at your own risk
 	LoadHalfToReg(Reg1, MENU_TITLE_CHECK_LOCATION + 7 + Line::COMMENT_LINE_TEXT_START);
 
-	#if DOLPHIN_BUILD
+	#if NETPLAY_BUILD
 	If(Reg1, NOT_EQUAL_I_L, 0x6C61); // la
 	{
 		JumpToLabel(NotLoaded);
@@ -2508,7 +2508,7 @@ void SaveReplay()
 	int reg6 = 20;
 	int reg7 = 19;
 
-#if DOLPHIN_BUILD
+#if NETPLAY_BUILD
 	SetRegister(reg5, STRING_BUFFER);
 	WriteStringToMem("nand:/collect.vff\0"s, reg5);
 	SetRegs(3, { DOLPHIN_MOUNT_VF_LOC, 0, STRING_BUFFER });
@@ -2556,7 +2556,7 @@ void SaveReplay()
 	ADDI(3, 3, 0x20);
 	STW(3, CryptoBufferReg, 0x14);
 	ADDI(3, CryptoBufferReg, -832);
-#if DOLPHIN_BUILD == false
+#if NETPLAY_BUILD == false
 	CallBrawlFunc(0x8003d1cc); //run crypto
 #endif
 	
@@ -2576,14 +2576,14 @@ void SaveReplay()
 	SetRegister(3, 100);
 	MR(4, reg6);
 	MOD(reg6, 4, 3);
-#if DOLPHIN_BUILD
+#if NETPLAY_BUILD
 	WriteStringToMem("/rp/rp_%02d%02d%02d_%02d%02d_%02d.bin\0"s, PathPtrReg);
 #else
 	WriteStringToMem("/" + MAIN_FOLDER + "/rp/rp_%02d%02d%02d_%02d%02d_%02d.bin\0"s, PathPtrReg);
 #endif
 	SprintF(PathPtrReg, { reg6, reg5, reg4, reg3, reg2, reg7 });
 	SetRegister(PathPtrReg, STRING_BUFFER);
-#if DOLPHIN_BUILD
+#if NETPLAY_BUILD
 	LWZ(reg2, SectionBufferReg, 0);
 	LWZ(reg1, reg2, 0x1C);
 	ADDI(reg1, reg1, 0x20);
@@ -2597,7 +2597,7 @@ void SaveReplay()
 	ADDI(1, 3, 0x1F00);
 	MR(reg4, 3);
 
-#if DOLPHIN_BUILD
+#if NETPLAY_BUILD
 	WriteFileToVF(PathPtrReg, reg1, reg2);
 
 	SetRegs(3, { DOLPHIN_MOUNT_VF_LOC, 0 });
