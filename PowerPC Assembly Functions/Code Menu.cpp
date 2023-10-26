@@ -878,6 +878,7 @@ void constantOverride() {
 	int reg1 = 4;
 	int reg2 = 5;
 	int reg3 = 3;
+	int reg4 = 6;
 
 	for (auto& x : constantOverrides) {
 		LoadWordToReg(reg1, *x.index + Line::VALUE);
@@ -887,16 +888,16 @@ void constantOverride() {
 
 	// Themes
 	int ThemeSet = GetNextLabel();
-	int SetBlueMenu = GetNextLabel();
-	int EndThemes = GetNextLabel();
 
-	int sc_ID = 0x7363;
-	int cx_ID = 0x6378;
-	int cv_ID = 0x6376;
-	int sp_ID = 0x7370;
-	int wv_ID = 0x7776;
-	int i6_ID = 0x6936;
-	int i7_ID = 0x6937;
+	int THEME_STRING[7] = {
+		0x7363,	//sc
+		0x6378,	//cx
+		0x6376,	//cv
+		0x7370,	//sp
+		0x7776,	//wv
+		0x6936,	//i6
+		0x6937	//i7
+	};
 	int MENU_PREFIX_ADDRESSES[6] = {
 		0x806FF2F3,	//sc_selcharacter.pac
 		0x817F6365,	//sc_selcharacter_en.pac
@@ -908,67 +909,56 @@ void constantOverride() {
 
 	LoadWordToReg(reg1, THEME_INDEX + Line::VALUE);
 
-	If(reg1, EQUAL_I, 0); {		//sc, Default
-		SetRegister(reg3, sc_ID); 
+	If(reg1, EQUAL_I, 0); {					//sc, Default
+		SetRegister(reg3, THEME_STRING[0]);	//reg3 used for selchar, selmap
+		SetRegister(reg4, THEME_STRING[0]);	//reg4 used for selchar2
 		JumpToLabel(ThemeSet);
 	} EndIf();
 
-	If(reg1, EQUAL_I, 1); {		 //cx, The Construct
-		SetRegister(reg3, cx_ID);
+	If(reg1, EQUAL_I, 1); {			//cx, The Construct
+		SetRegister(reg3, THEME_STRING[1]);
+		SetRegister(reg4, THEME_STRING[1]);
 		JumpToLabel(ThemeSet);
 	} EndIf();
 
 	If(reg1, EQUAL_I, 2); {			//cv, Craig's
-		SetRegister(reg3, cv_ID);
+		SetRegister(reg3, THEME_STRING[2]);
+		SetRegister(reg4, THEME_STRING[2]);
 		JumpToLabel(ThemeSet);
 	} EndIf();
 
 	If(reg1, EQUAL_I, 3); {			//sp, Splat
-		SetRegister(reg3, sp_ID);
-		for (int i = 0; i < 4; i++) {
-			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
-			STH(reg3, reg2, 0);
-		}
-		SetRegister(reg3, cx_ID); //use cx selchar2
-		for (int i = 4; i < 6; i++) {
-			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
-			STH(reg3, reg2, 0);
-		}
-		JumpToLabel(EndThemes);
+		SetRegister(reg3, THEME_STRING[3]);
+		SetRegister(reg4, THEME_STRING[1]); //Splat uses cx_selchar2
+		JumpToLabel(ThemeSet);
 	} EndIf();
 
 	If(reg1, EQUAL_I, 4); {			//wv, Project Wave
-		SetRegister(reg3, wv_ID);
-		// set Wave selchar, selmap
-		Label(SetBlueMenu);
-		for (int i = 0; i < 4; i++) {
-			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
-			STH(reg3, reg2, 0);
-		}
-		// use cv_selchar2
-		SetRegister(reg3, cv_ID);
-		for (int i = 4; i < 6; i++) {
-			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
-			STH(reg3, reg2, 0);
-		}
-		JumpToLabel(EndThemes);
+		SetRegister(reg3, THEME_STRING[4]);
+		SetRegister(reg4, THEME_STRING[2]); //Wave uses cv_selchar2
+		JumpToLabel(ThemeSet);
 	} EndIf();
 
 	If(reg1, EQUAL_I, 5); {			//i6, Invincible 6
-		SetRegister(reg3, i6_ID);
-		JumpToLabel(SetBlueMenu);
+		SetRegister(reg3, THEME_STRING[5]);
+		SetRegister(reg4, THEME_STRING[2]);	//Inv6 uses cv_selchar2
+		JumpToLabel(ThemeSet);
 	} EndIf();
 
-	SetRegister(reg3, i7_ID);	//i7, Invincible 7
+	SetRegister(reg3, THEME_STRING[6]);		//i7, Invincible 7
+	SetRegister(reg4, THEME_STRING[6]);
 
 	Label(ThemeSet);
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 4; i++) {
 		SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
 		STH(reg3, reg2, 0);
 	}
 
-	Label(EndThemes);
+	for (int i = 4; i < 6; i++) {
+		SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
+		STH(reg4, reg2, 0);
+	}
 
 	//Stagelist toggle - store value near stage table addresses for easy access
 	LoadWordToReg(reg1, STAGELIST_INDEX + Line::VALUE);
