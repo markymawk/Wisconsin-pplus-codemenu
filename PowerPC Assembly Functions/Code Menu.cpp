@@ -886,80 +886,81 @@ void constantOverride() {
 		STW(reg1, reg2, 0);
 	}
 
-	// Themes
-	int ThemeSet = GetNextLabel();
+	// Themes. If disabled, may need to set 0 in byte array
+	if (THEME_INDEX != -1) {
+		int ThemeSet = GetNextLabel();
 
-	int THEME_STRING[7] = {
-		0x7363,	//sc
-		0x6378,	//cx
-		0x6376,	//cv
-		0x7370,	//sp
-		0x7776,	//wv
-		0x6936,	//i6
-		0x6937	//i7
-	};
-	int MENU_PREFIX_ADDRESSES[6] = {
-		0x806FF2F3,	//sc_selcharacter.pac
-		0x817F6365,	//sc_selcharacter_en.pac
-		0x806FF3F7, //sc_selmap.pac
-		0x817F637C, //sc_selmap_en.pac
-		0x806FF30F,	//sc_selcharacter2.pac
-		0x817F634D //sc_selcharacter2_en.pac
-	};
+		int THEME_STRING[7] = {
+			0x7363,	//sc
+			0x6378,	//cx
+			0x6376,	//cv
+			0x7370,	//sp
+			0x7776,	//wv
+			0x6936,	//i6
+			0x6937	//i7
+		};
+		int MENU_PREFIX_ADDRESSES[6] = {
+			0x806FF2F3,	//sc_selcharacter.pac
+			0x817F6365,	//sc_selcharacter_en.pac
+			0x806FF3F7, //sc_selmap.pac
+			0x817F637C, //sc_selmap_en.pac
+			0x806FF30F,	//sc_selcharacter2.pac
+			0x817F634D //sc_selcharacter2_en.pac
+		};
 
-	LoadWordToReg(reg1, THEME_INDEX + Line::VALUE);
+		LoadWordToReg(reg1, THEME_INDEX + Line::VALUE);
 
-	If(reg1, EQUAL_I, 0); {					//sc, Default
-		SetRegister(reg3, THEME_STRING[0]);	//reg3 used for selchar, selmap
-		SetRegister(reg4, THEME_STRING[0]);	//reg4 used for selchar2
-		JumpToLabel(ThemeSet);
-	} EndIf();
+		If(reg1, EQUAL_I, 0); {					//sc, Default
+			SetRegister(reg3, THEME_STRING[0]);	//reg3 used for selchar, selmap
+			SetRegister(reg4, THEME_STRING[0]);	//reg4 used for selchar2
+			JumpToLabel(ThemeSet);
+		} EndIf();
 
-	If(reg1, EQUAL_I, 1); {			//cx, The Construct
-		SetRegister(reg3, THEME_STRING[1]);
-		SetRegister(reg4, THEME_STRING[1]);
-		JumpToLabel(ThemeSet);
-	} EndIf();
+		If(reg1, EQUAL_I, 1); {			//cx, The Construct
+			SetRegister(reg3, THEME_STRING[1]);
+			SetRegister(reg4, THEME_STRING[1]);
+			JumpToLabel(ThemeSet);
+		} EndIf();
 
-	If(reg1, EQUAL_I, 2); {			//cv, Craig's
-		SetRegister(reg3, THEME_STRING[2]);
-		SetRegister(reg4, THEME_STRING[2]);
-		JumpToLabel(ThemeSet);
-	} EndIf();
+		If(reg1, EQUAL_I, 2); {			//cv, Craig's
+			SetRegister(reg3, THEME_STRING[2]);
+			SetRegister(reg4, THEME_STRING[2]);
+			JumpToLabel(ThemeSet);
+		} EndIf();
 
-	If(reg1, EQUAL_I, 3); {			//sp, Splat
-		SetRegister(reg3, THEME_STRING[3]);
-		SetRegister(reg4, THEME_STRING[1]); //Splat uses cx_selchar2
-		JumpToLabel(ThemeSet);
-	} EndIf();
+		If(reg1, EQUAL_I, 3); {			//sp, Splat
+			SetRegister(reg3, THEME_STRING[3]);
+			SetRegister(reg4, THEME_STRING[1]); //Splat uses cx_selchar2
+			JumpToLabel(ThemeSet);
+		} EndIf();
 
-	If(reg1, EQUAL_I, 4); {			//wv, Project Wave
-		SetRegister(reg3, THEME_STRING[4]);
-		SetRegister(reg4, THEME_STRING[2]); //Wave uses cv_selchar2
-		JumpToLabel(ThemeSet);
-	} EndIf();
+		If(reg1, EQUAL_I, 4); {			//wv, Project Wave
+			SetRegister(reg3, THEME_STRING[4]);
+			SetRegister(reg4, THEME_STRING[2]); //Wave uses cv_selchar2
+			JumpToLabel(ThemeSet);
+		} EndIf();
 
-	If(reg1, EQUAL_I, 5); {			//i6, Invincible 6
-		SetRegister(reg3, THEME_STRING[5]);
-		SetRegister(reg4, THEME_STRING[2]);	//Inv6 uses cv_selchar2
-		JumpToLabel(ThemeSet);
-	} EndIf();
+		If(reg1, EQUAL_I, 5); {			//i6, Invincible 6
+			SetRegister(reg3, THEME_STRING[5]);
+			SetRegister(reg4, THEME_STRING[2]);	//Inv6 uses cv_selchar2
+			JumpToLabel(ThemeSet);
+		} EndIf();
 
-	SetRegister(reg3, THEME_STRING[6]);		//i7, Invincible 7
-	SetRegister(reg4, THEME_STRING[6]);
+		SetRegister(reg3, THEME_STRING[6]);		//i7, Invincible 7
+		SetRegister(reg4, THEME_STRING[6]);
 
-	Label(ThemeSet);
+		Label(ThemeSet);
 
-	for (int i = 0; i < 4; i++) {
-		SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
-		STH(reg3, reg2, 0);
+		for (int i = 0; i < 4; i++) {
+			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
+			STH(reg3, reg2, 0);
+		}
+
+		for (int i = 4; i < 6; i++) {
+			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
+			STH(reg4, reg2, 0);
+		}
 	}
-
-	for (int i = 4; i < 6; i++) {
-		SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
-		STH(reg4, reg2, 0);
-	}
-
 	//Stagelist toggle - store value near stage table addresses for easy access
 	LoadWordToReg(reg1, STAGELIST_INDEX + Line::VALUE);
 	SetRegister(reg3, 0x80495D1B);
