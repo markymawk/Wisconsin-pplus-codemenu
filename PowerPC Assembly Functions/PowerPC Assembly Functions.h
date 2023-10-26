@@ -23,7 +23,6 @@ typedef unsigned char u8;
 #define NETPLAY_BUILD false
 #define IS_THEME_EXPANSION true
 #define EON_DEBUG_BUILD false
-#define TOURNAMENT_ADDITION_BUILD false
 
 //ROTC floating offsets
 #define FS_20_0 -0x7920
