@@ -428,8 +428,9 @@ void EndMatch()
 		LoadWordToReg(reg4, reg3, 0x80584084); //get current hold to pause flag
 
 		if (AUTO_SKIP_TO_CSS_INDEX != -1) {
+			//WI build: Check changed from 1 to 3
 			LoadWordToReg(reg1, AUTO_SKIP_TO_CSS_INDEX + Line::VALUE);
-			If(reg1, EQUAL_I, 1); {
+			If(reg1, EQUAL_I, 3); {
 				SetRegister(reg4, 0); //clear hold to pause
 				SetRegister(NextSceneReg, 0xD);
 			}EndIf();

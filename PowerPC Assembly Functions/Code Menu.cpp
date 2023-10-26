@@ -306,7 +306,7 @@ void CodeMenu()
 #endif
 	MainLines.push_back(new Toggle("Endless Friendlies", false, ENDLESS_FRIENDLIES_MODE_INDEX));
 	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
-	MainLines.push_back(new Toggle("Skip Results", false, AUTO_SKIP_TO_CSS_INDEX));
+	MainLines.push_back(new Selection("Results", {"Default", "Stage", "Theme", "OFF"}, 0, AUTO_SKIP_TO_CSS_INDEX));
 	MainLines.push_back(new Comment(""));
 #if NETPLAY_BUILD
 	MainLines.push_back(new Toggle("Autosave Replays", true, AUTO_SAVE_REPLAY_INDEX));
@@ -982,6 +982,10 @@ void constantOverride() {
 	//Store Alternate Stage toggle (for Splat music)
 	LoadWordToReg(reg1, ALT_STAGE_BEHAVIOR_INDEX + Line::VALUE);
 	STB(reg1, reg3, 2);
+
+	//Store Results toggle
+	LoadWordToReg(reg1, AUTO_SKIP_TO_CSS_INDEX + Line::VALUE);
+	STB(reg1, reg3, 3);
 
 	// Universal walljumping - if in a match, must restart. Attempted writing to 0x80FC15C0 and 0x80FC15D8, but got same result
 	LoadWordToReg(reg1, ALL_CHARS_WALLJUMP_INDEX + Line::VALUE);
