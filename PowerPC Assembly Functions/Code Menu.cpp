@@ -289,12 +289,8 @@ void CodeMenu()
 
 	//main page
 	vector<Line*> MainLines;
-#if EON_DEBUG_BUILD
-	MainLines.push_back(&TestPage.CalledFromLine);
-#elif NETPLAY_BUILD
-	MainLines.push_back(new Comment("WI Netplay Code Menu (P+ 2.4.2)", &MENU_TITLE_CHECK_LOCATION));
-#elif IS_THEME_EXPANSION
-	MainLines.push_back(new Comment("WI Code Menu v1.5c (P+ 2.4.2) +Theme", &MENU_TITLE_CHECK_LOCATION));
+#if WI_LITE_BUILD
+	MainLines.push_back(new Comment("WI Code Menu v1.5c (P+ 2.4.2) Lite", &MENU_TITLE_CHECK_LOCATION));
 #else
 	MainLines.push_back(new Comment("WI Code Menu v1.5c (P+ 2.4.2)", &MENU_TITLE_CHECK_LOCATION));
 #endif
@@ -316,10 +312,10 @@ void CodeMenu()
 	MainLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (P+ 2023)", "Doubles (WI 2023)", "Doubles (P+ 2023)", "Singles (WI 2022)", "Doubles (WI 2022)", "Singles (PMBR)", "Doubles (PMBR)"}, 0, STAGELIST_INDEX));
-#if (IS_THEME_EXPANSION || NETPLAY_BUILD)
-	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's", "Splat", "Project Wave", "Invincible 6", "Invincible 7"}, 0, THEME_INDEX));
-#else
+#if WI_LITE_BUILD
 	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's" }, 0, THEME_INDEX));
+#else
+	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's", "Splat", "Project Wave", "Invincible 6", "Invincible 7" }, 0, THEME_INDEX));
 #endif
 
 	MainLines.push_back(&PlayerCodes.CalledFromLine);

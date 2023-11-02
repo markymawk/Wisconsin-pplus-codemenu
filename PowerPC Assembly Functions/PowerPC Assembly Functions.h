@@ -21,7 +21,7 @@ typedef unsigned char u8;
 #define PROJECT_PLUS 2
 #define BUILD_TYPE PROJECT_PLUS
 #define NETPLAY_BUILD false
-#define IS_THEME_EXPANSION true
+#define WI_LITE_BUILD false
 #define EON_DEBUG_BUILD false
 
 //ROTC floating offsets
