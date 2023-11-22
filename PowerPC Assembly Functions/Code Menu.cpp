@@ -290,9 +290,9 @@ void CodeMenu()
 	//main page
 	vector<Line*> MainLines;
 #if WI_LITE_BUILD
-	MainLines.push_back(new Comment("WI Code Menu v1.5c (P+ 2.4.2) Lite", &MENU_TITLE_CHECK_LOCATION));
+	MainLines.push_back(new Comment("WI Code Menu v1.6 (P+ 2.4.2) Lite", &MENU_TITLE_CHECK_LOCATION));
 #else
-	MainLines.push_back(new Comment("WI Code Menu v1.5c (P+ 2.4.2)", &MENU_TITLE_CHECK_LOCATION));
+	MainLines.push_back(new Comment("WI Code Menu v1.6 (P+ 2.4.2)", &MENU_TITLE_CHECK_LOCATION));
 #endif
 
 	MainLines.push_back(new Comment(""));
