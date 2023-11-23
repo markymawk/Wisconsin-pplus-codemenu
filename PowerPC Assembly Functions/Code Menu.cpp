@@ -300,15 +300,22 @@ void CodeMenu()
 #if NETPLAY_BUILD
 	MainLines.push_back(new Toggle("Ordered Stage Choice", false, ORDERED_STAGE_CHOICE_INDEX));
 #endif
+
 	MainLines.push_back(new Toggle("Endless Friendlies", false, ENDLESS_FRIENDLIES_MODE_INDEX));
 	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
-	MainLines.push_back(new Selection("Results", {"Default", "Stage", "Theme", "OFF"}, 0, AUTO_SKIP_TO_CSS_INDEX));
+#if WI_LITE_BUILD
+	MainLines.push_back(new Toggle("Skip Results", false, AUTO_SKIP_TO_CSS_INDEX));
+#else
+	MainLines.push_back(new Selection("Results", { "Default", "Stage", "Theme", "OFF" }, 0, AUTO_SKIP_TO_CSS_INDEX)); 
+#endif
+
 	MainLines.push_back(new Comment(""));
 #if NETPLAY_BUILD
 	MainLines.push_back(new Toggle("Autosave Replays", true, AUTO_SAVE_REPLAY_INDEX));
 #else
 	MainLines.push_back(new Toggle("Autosave Replays", false, AUTO_SAVE_REPLAY_INDEX));
 #endif
+
 	MainLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (P+ 2023)", "Doubles (WI 2023)", "Doubles (P+ 2023)", "Singles (WI 2022)", "Doubles (WI 2022)", "Singles (PMBR)", "Doubles (PMBR)"}, 0, STAGELIST_INDEX));
@@ -972,6 +979,11 @@ void constantOverride() {
 
 	//Store Results toggle
 	LoadWordToReg(reg1, AUTO_SKIP_TO_CSS_INDEX + Line::VALUE);
+#if WI_LITE_BUILD
+	// if false (0), set to 2 (Theme) for StageLoader_WI.
+	// if true (1), set to 3 (Skip)
+	ADDI(reg1, reg1, 2); 
+#endif
 	STB(reg1, reg3, 3);
 
 	// Universal walljumping - if in a match, must restart. Attempted writing to 0x80FC15C0 and 0x80FC15D8, but got same result
