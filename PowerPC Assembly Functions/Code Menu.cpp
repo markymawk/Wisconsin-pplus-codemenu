@@ -306,7 +306,7 @@ void CodeMenu()
 #if WI_LITE_BUILD
 	MainLines.push_back(new Toggle("Skip Results", false, AUTO_SKIP_TO_CSS_INDEX));
 #else
-	MainLines.push_back(new Selection("Results", { "Default", "Stage", "Theme", "OFF" }, 0, AUTO_SKIP_TO_CSS_INDEX)); 
+	MainLines.push_back(new Selection("Results", { "Default", "Theme",  "Stage", "OFF" }, 0, AUTO_SKIP_TO_CSS_INDEX));
 #endif
 
 	MainLines.push_back(new Comment(""));
@@ -980,9 +980,10 @@ void constantOverride() {
 	//Store Results toggle
 	LoadWordToReg(reg1, AUTO_SKIP_TO_CSS_INDEX + Line::VALUE);
 #if WI_LITE_BUILD
-	// if false (0), set to 2 (Theme) for StageLoader_WI.
+	// if false (0), set to 1 (Theme) for StageLoader_WI.
 	// if true (1), set to 3 (Skip)
-	ADDI(reg1, reg1, 2); 
+	MULLI(reg1, reg1, 2);
+	ADDI(reg1, reg1, 1); 
 #endif
 	STB(reg1, reg3, 3);
 
