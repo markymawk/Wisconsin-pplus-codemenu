@@ -840,19 +840,21 @@ void CodeMenu()
 
 	//debug mode
 	vector<Line*> DebugLines;
-	DebugLines.push_back(new Comment("Debug Mode Commands:"));
-	DebugLines.push_back(new Comment("Start = Toggle Frame Advance"));
-	DebugLines.push_back(new Comment("Z = Frame Advance | Hold Z = Slow Motion"));
+	DebugLines.push_back(new Comment("With Frame Advance ON:"));
+	DebugLines.push_back(new Comment("Start = Pause | Z = Adv Frame"));
+	DebugLines.push_back(new Comment("X+Dpad Up = Normal Pause"));
 	DebugLines.push_back(new Comment(""));
-	DebugLines.push_back(new Toggle("Debug Mode", false, DEBUG_MODE_INDEX));
-	DebugLines.push_back(new Selection("Hitbox Display", { "OFF", "ON", "Models Off" }, 0, DISPLAY_HITBOXES_INDEX));
-	DebugLines.push_back(new Toggle("Collision Display", false, DISPLAY_COLLISION_INDEX));
-	DebugLines.push_back(new Selection("Stage Collisions", { "OFF", "ON", "Background Off" }, 0, DISPLAY_LEDGEGRAB_INDEX));
-	DebugLines.push_back(new Toggle("Camera Lock", false, CAMERA_LOCK_INDEX));
-	DebugLines.push_back(new Toggle("Draw DI", false, DI_DRAW_INDEX));
-	DebugLines.push_back(new Toggle("FPS Display", false, FPS_DISPLAY_INDEX));
-	DebugLines.push_back(new Toggle("HUD", true, HUD_DISPLAY_INDEX));
-	DebugLines.push_back(new Selection("Code Menu Activation", { "Default", "PM 3.6", "OFF" }, 0, CODE_MENU_ACTIVATION_SETTING_INDEX));
+	DebugLines.push_back(new Toggle("Frame Advance", false, DEBUG_MODE_INDEX));
+	DebugLines.push_back(new Selection("Show Hitboxes", { "OFF", "ON", "ON (Hide Characters)" }, 0, DISPLAY_HITBOXES_INDEX));
+	DebugLines.push_back(new Toggle("Show DI", false, DI_DRAW_INDEX));
+	DebugLines.push_back(new Toggle("Show ECB", false, DISPLAY_COLLISION_INDEX));
+	DebugLines.push_back(new Selection("Show Collisions", { "OFF", "ON", "ON (Hide Stage)" }, 0, DISPLAY_LEDGEGRAB_INDEX));
+	DebugLines.push_back(new Comment(""));
+	DebugLines.push_back(new Toggle("Lock Camera", false, CAMERA_LOCK_INDEX));
+	DebugLines.push_back(new Toggle("Show HUD", true, HUD_DISPLAY_INDEX));
+	DebugLines.push_back(new Toggle("Show FPS", false, FPS_DISPLAY_INDEX));
+	//DebugLines.push_back(new Toggle("1P Countdown", false, SOLO_COUNTDOWN_INDEX));
+	DebugLines.push_back(new Selection("Code Menu", { "ON", "OFF (Debug)", "OFF" }, 0, CODE_MENU_ACTIVATION_SETTING_INDEX));
 	Page DebugMode("Debug Settings", DebugLines);
 
 	//value setting
