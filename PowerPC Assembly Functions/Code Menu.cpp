@@ -857,10 +857,23 @@ void CodeMenu()
 	DebugLines.push_back(new Selection("Code Menu", { "ON", "OFF (Debug)", "OFF" }, 0, CODE_MENU_ACTIVATION_SETTING_INDEX));
 	Page DebugMode("Debug Settings", DebugLines);
 
+	//DBZ Mode settings
+	vector<Line*> DBZModeLines;
+	DBZModeLines.push_back(new Toggle("Flight Mode", false, DBZ_MODE_INDEX));
+	DBZModeLines.push_back(new Floating("Max Horizontal Speed", 0, 100, 2, .05, DBZ_MODE_MAX_SPEED_X_INDEX, "%.3f"));
+	DBZModeLines.push_back(new Floating("Max Vertical Speed", 0, 100, 2, .05, DBZ_MODE_MAX_SPEED_Y_INDEX, "%.3f"));
+	DBZModeLines.push_back(new Comment("Acceleration Scales Based On Stick Magnitude"));
+	DBZModeLines.push_back(new Floating("Horizontal Acceleration", -100, 100, 1, .01, DBZ_MODE_ACCEL_X_INDEX, "%.3f"));
+	DBZModeLines.push_back(new Floating("Vertical Acceleration", -100, 100, 1, .01, DBZ_MODE_ACCEL_Y_INDEX, "%.3f"));
+	Page DBZModePage("Flight Mode Settings", DBZModeLines);
+
 	//value setting
 	vector<Line*> ConstantsLines;
 	ConstantsLines.push_back(new Comment("Set attributes to new values"));
+	ConstantsLines.push_back(&DBZModePage.CalledFromLine);
+	
 	ConstantsLines.push_back(new Comment(""));
+	ConstantsLines.push_back(new Toggle("Random Angle Mode", false, RANDOM_ANGLE_INDEX));
 	ConstantsLines.push_back(new Floating("Hitstun Multiplier", 0, 999, 0.4, .01, HITSTUN_MULTIPLIER_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B87AA8, HITSTUN_MULTIPLIER_INDEX);
 	ConstantsLines.push_back(new Floating("Hitlag Multiplier", 0, 999, 1. / 3., .02, HITLAG_MULTIPLIER_INDEX, "%.3f"));
@@ -890,7 +903,7 @@ void CodeMenu()
 	constantOverrides.emplace_back(0x80B88510, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX);
 	ConstantsLines.push_back(new Floating("Knockback Decay Rate", -999, 999, 0.051, .001, KNOCKBACK_DECAY_MULTIPLIER_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B88534, KNOCKBACK_DECAY_MULTIPLIER_INDEX);
-	ConstantsLines.push_back(new Selection("Staling Toggle", { "Default", "ON", "OFF" }, 0, STALING_TOGGLE_INDEX));
+
 	/*
 	if (CONFIG_DASH_ATTACK_ITEM_GRAB_ENABLED)
 	{
@@ -910,23 +923,14 @@ void CodeMenu()
 	}
 	*/
 	Page ConstantsPage("Gameplay Modifiers", ConstantsLines);
-
-	//DBZ Mode settings
-	vector<Line*> DBZModeLines;
-	DBZModeLines.push_back(new Toggle("Flight Mode", false, DBZ_MODE_INDEX));
-	DBZModeLines.push_back(new Floating("Max Horizontal Speed", 0, 100, 2, .05, DBZ_MODE_MAX_SPEED_X_INDEX, "%.3f"));
-	DBZModeLines.push_back(new Floating("Max Vertical Speed", 0, 100, 2, .05, DBZ_MODE_MAX_SPEED_Y_INDEX, "%.3f"));
-	DBZModeLines.push_back(new Comment("Acceleration Scales Based On Stick Magnitude"));
-	DBZModeLines.push_back(new Floating("Horizontal Acceleration", -100, 100, 1, .01, DBZ_MODE_ACCEL_X_INDEX, "%.3f"));
-	DBZModeLines.push_back(new Floating("Vertical Acceleration", -100, 100, 1, .01, DBZ_MODE_ACCEL_Y_INDEX, "%.3f"));
-	Page DBZModePage("Flight Mode Settings", DBZModeLines);
 	
 	//Special Mode Settings
 	vector<Line*> SpecialModeLines;
-	SpecialModeLines.push_back(new Comment("Special Modes"));
+	SpecialModeLines.push_back(new Comment("Other toggles & for-fun modes"));
+	SpecialModeLines.push_back(new Comment(""));
 	SpecialModeLines.push_back(&ConstantsPage.CalledFromLine);
-	SpecialModeLines.push_back(&DBZModePage.CalledFromLine);
-	SpecialModeLines.push_back(new Toggle("Random Angle Mode", false, RANDOM_ANGLE_INDEX));
+	SpecialModeLines.push_back(new Comment(""));
+
 	if (PROJECT_PLUS_EX_BUILD)
 	{
 		SpecialModeLines.push_back(new Toggle("War Mode", false, WAR_MODE_INDEX));
@@ -934,7 +938,9 @@ void CodeMenu()
 		SpecialModeLines.push_back(new Toggle("Scale Mode", false, SCALE_INDEX));
 		SpecialModeLines.push_back(new Floating("Scale Modifier", 0.5, 3, 1, 0.05, EXTERNAL_INDEX, "%.2fX"));
 	}
-	SpecialModeLines.push_back(new Selection("Big Head Mode", { "Off", "On", "Larger", "Largest", "Largerest" }, 0, BIG_HEAD_INDEX));
+	SpecialModeLines.push_back(new Selection("Move Staling", { "ON (Versus)", "ON (All Modes)", "OFF" }, 0, STALING_TOGGLE_INDEX));
+	SpecialModeLines.push_back(new Selection("Big Head Mode", { "OFF", "ON (1x)", "ON (2x)"}, 0, BIG_HEAD_INDEX));
+	SpecialModeLines.push_back(new Comment(""));
 	SpecialModeLines.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
 	SpecialModeLines.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
 	Page SpecialModePage("Other Settings", SpecialModeLines);
