@@ -486,10 +486,18 @@ void EndMatch()
 
 		if (AUTO_SKIP_TO_CSS_INDEX != -1) {
 			LoadWordToReg(reg1, AUTO_SKIP_TO_CSS_INDEX + Line::VALUE);
+#if WI_LITE_BUILD
 			If(reg1, EQUAL_I, 1); {
 				SetRegister(reg4, 0); //clear hold to pause
 				SetRegister(NextSceneReg, 0xD);
 			}EndIf();
+#else
+			//WI build: Skip Results check changed from 1 to 3
+			If(reg1, EQUAL_I, 3); {
+				SetRegister(reg4, 0); //clear hold to pause
+				SetRegister(NextSceneReg, 0xD);
+			}EndIf();
+#endif
 		}
 
 		//reload stage
