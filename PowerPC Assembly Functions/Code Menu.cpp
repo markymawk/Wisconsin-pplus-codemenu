@@ -941,26 +941,22 @@ void CodeMenu()
 	vector<Line*> PlayerCodesLines;
 	PlayerCodesLines.push_back(&P1.CalledFromLine);
 	PlayerCodesLines.push_back(&P2.CalledFromLine);
-	PlayerCodesLines.push_back(&P2.CalledFromLine);
-	PlayerCodesLines.push_back(&P2.CalledFromLine);
+	PlayerCodesLines.push_back(&P3.CalledFromLine);
+	PlayerCodesLines.push_back(&P4.CalledFromLine);
 	Page PlayerCodesPage("Player Codes", PlayerCodesLines);
 
 	//main page
 	vector<Line*> MainLines;
-	// Writes the Menu's Title, appending the netplay suffix only if the config file didn't specify its own title.
 	MainLines.push_back(new Comment("WI Code Menu v1.6 (P+ 2.5)"));
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(&DebugMode.CalledFromLine);
 	//	MainLines.push_back(new Selection("Endless Friendlies", { "OFF", "Same Stage", "Random Stage", "Round Robin" }, 0, INFINITE_FRIENDLIES_INDEX));
 	MainLines.push_back(new Toggle("Endless Friendlies", false, ENDLESS_FRIENDLIES_MODE_INDEX));
 	//MainLines.push_back(new Selection("Endless Friendlies Stage Selection", { "Random", "Same" }, 0, ENDLESS_FRIENDLIES_STAGE_SELECTION_INDEX));
-#if TOURNAMENT_ADDITION_BUILD
-	MainLines.push_back(new Selection("Random 1-1", { "OFF", "ON" }, 0, RANDOM_1_TO_1_INDEX));
-#endif
 	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
 	MainLines.push_back(new Toggle("Autoskip Results Screen", false, AUTO_SKIP_TO_CSS_INDEX));
 	MainLines.push_back(new Comment(""));
-#if DOLPHIN_BUILD
+#if NETPLAY_BUILD
 	MainLines.push_back(new Toggle("Autosave Replays", true, AUTO_SAVE_REPLAY_INDEX));
 #else
 	MainLines.push_back(new Toggle("Autosave Replays", false, AUTO_SAVE_REPLAY_INDEX));
@@ -3301,7 +3297,7 @@ void SaveReplay()
 	int reg6 = 20;
 	int reg7 = 19;
 
-#if DOLPHIN_BUILD
+#if NETPLAY_BUILD
 	SetRegister(reg5, STRING_BUFFER);
 	WriteStringToMem("nand:/collect.vff\0"s, reg5);
 	SetRegs(3, { DOLPHIN_MOUNT_VF_LOC, 0, STRING_BUFFER });
@@ -3350,7 +3346,7 @@ void SaveReplay()
 	ADDI(3, 3, 0x20);
 	STW(3, CryptoBufferReg, 0x14);
 	ADDI(3, CryptoBufferReg, -832);
-#if DOLPHIN_BUILD == false
+#if NETPLAY_BUILD == false
 	CallBrawlFunc(0x8003d1cc); //run crypto
 #endif
 	
@@ -3370,14 +3366,14 @@ void SaveReplay()
 	SetRegister(3, 100);
 	MR(4, reg6);
 	MOD(reg6, 4, 3);
-#if DOLPHIN_BUILD
+#if NETPLAY_BUILD
 	WriteStringToMem("/rp/rp_%02d%02d%02d_%02d%02d_%02d.bin\0"s, PathPtrReg);
 #else
 	WriteStringToMem("/" + MAIN_FOLDER + "/rp/rp_%02d%02d%02d_%02d%02d_%02d.bin\0"s, PathPtrReg);
 #endif
 	SprintF(PathPtrReg, { reg6, reg5, reg4, reg3, reg2, reg7 });
 	SetRegister(PathPtrReg, STRING_BUFFER);
-#if DOLPHIN_BUILD
+#if NETPLAY_BUILD
 	LWZ(reg2, SectionBufferReg, 0);
 	LWZ(reg1, reg2, 0x1C);
 	ADDI(reg1, reg1, 0x20);
@@ -3391,7 +3387,7 @@ void SaveReplay()
 	ADDI(1, 3, 0x1F00);
 	MR(reg4, 3);
 
-#if DOLPHIN_BUILD
+#if NETPLAY_BUILD
 	WriteFileToVF(PathPtrReg, reg1, reg2);
 
 	SetRegs(3, { DOLPHIN_MOUNT_VF_LOC, 0 });

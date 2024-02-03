@@ -168,7 +168,7 @@ int main(int argc, char** argv)
 		{
 			logOutput << " Netplay";
 		}
-		if (DOLPHIN_BUILD == true)
+		if (NETPLAY_BUILD == true)
 		{
 			logOutput << " (Dolphin)";
 		}
@@ -177,7 +177,7 @@ int main(int argc, char** argv)
 			logOutput << " (Offline)";
 		}
 		logOutput << "\n";
-		if (DOLPHIN_BUILD == true)
+		if (NETPLAY_BUILD == true)
 		{
 			logOutput << "Note: This code menu was configured for use with Dolphin only, and IS NOT COMPATIBLE with consoles!\n";
 			logOutput << "\tAttempting to use this code menu on console can (and likely will) damage your system.\n";
