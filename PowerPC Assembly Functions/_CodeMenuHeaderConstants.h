@@ -226,7 +226,7 @@ private:
 		result[COLORS::COLOR_PINK]          = 0xFF60C0FF;
 		result[COLORS::COLOR_GRAY]          = 0xFFFFFF80;
 		result[COLORS::COLOR_LIGHT_GRAY]    = 0xFFFFFFB0;
-		result[COLORS::COLOR_BLACK]         = 0x000000FF;
+		result[COLORS::COLOR_BLACK]         = 0x000612ff;
 		result[COLORS::COLOR_TEXT_WHITE]	= 0xA7ACAFFF;
 		result[COLORS::COLOR_TEXT_YELLOW]	= 0xFFFF2DFF;
 		result[COLORS::COLOR_TEXT_BLUE]		= 0x66A4ADFF;

@@ -848,6 +848,7 @@ void CodeMenu()
 	DebugLines.push_back(new Toggle("Draw DI", false, DI_DRAW_INDEX));
 	DebugLines.push_back(new Toggle("FPS Display", false, FPS_DISPLAY_INDEX));
 	DebugLines.push_back(new Toggle("HUD", true, HUD_DISPLAY_INDEX));
+	DebugLines.push_back(new Selection("Code Menu Activation", { "Default", "PM 3.6", "OFF" }, 0, CODE_MENU_ACTIVATION_SETTING_INDEX));
 	Page DebugMode("Debug Settings", DebugLines);
 
 	//value setting
@@ -926,7 +927,9 @@ void CodeMenu()
 		SpecialModeLines.push_back(new Floating("Scale Modifier", 0.5, 3, 1, 0.05, EXTERNAL_INDEX, "%.2fX"));
 	}
 	SpecialModeLines.push_back(new Selection("Big Head Mode", { "Off", "On", "Larger", "Largest", "Largerest" }, 0, BIG_HEAD_INDEX));
-	Page SpecialModePage("Special Modes", SpecialModeLines);
+	SpecialModeLines.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
+	SpecialModeLines.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
+	Page SpecialModePage("Other Settings", SpecialModeLines);
 
 
 	
@@ -945,13 +948,15 @@ void CodeMenu()
 #endif
 	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
 	MainLines.push_back(new Toggle("Autoskip Results Screen", false, AUTO_SKIP_TO_CSS_INDEX));
+	MainLines.push_back(new Comment(""));
 #if DOLPHIN_BUILD
 	MainLines.push_back(new Toggle("Autosave Replays", true, AUTO_SAVE_REPLAY_INDEX));
 #else
 	MainLines.push_back(new Toggle("Autosave Replays", false, AUTO_SAVE_REPLAY_INDEX));
 #endif
 	MainLines.push_back(new Toggle("Save Previous Replay", false, SAVE_REPLAY_ANYWHERE_INDEX));
-	MainLines.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
+	MainLines.push_back(new Comment(""));
+
 	MainLines.push_back(&P1.CalledFromLine);
 	MainLines.push_back(&P2.CalledFromLine);
 	MainLines.push_back(&P3.CalledFromLine);
@@ -976,12 +981,10 @@ void CodeMenu()
 		MainLines.push_back(&HUDColorsPage.CalledFromLine);
 	}
 
+	
 
-#if BUILD_TYPE == PROJECT_PLUS
-	MainLines.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
-#endif
 
-	MainLines.push_back(new Selection("Code Menu Activation", { "Default", "PM 3.6", "OFF" }, 0, CODE_MENU_ACTIVATION_SETTING_INDEX));
+	/*
 	if (ROSTER_LIST.size() > 1)
 	{
 		MainLines.push_back(new Selection("CSS Roster Version", ROSTER_LIST, 0, CSS_VERSION_SETTING_INDEX));
@@ -991,28 +994,7 @@ void CodeMenu()
 	{
 		MainLines.push_back(new Selection("Active Theme", THEME_LIST, 0, THEME_SETTING_INDEX));
 	}
-	
-	//MainLines.push_back(new Print("%s", {&tets}));
-	
-	
-	/*MainLines.push_back(new Integer("P1 1st Shield Red", 0, 0xFF, 0, 1, SHIELD_RED_1));
-	MainLines.push_back(new Integer("P1 1st Shield Green", 0, 0xFF, 0, 1, SHIELD_GREEN_1));
-	MainLines.push_back(new Integer("P1 1st Shield Blue", 0, 0xFF, 0, 1, SHIELD_BLUE_1));
-	MainLines.push_back(new Integer("P1 1st Shield Alpha", 0, 0xFF, 0, 1, SHIELD_ALPHA_1));
-	MainLines.push_back(new Integer("P1 2nd Shield Red", 0, 0xFF, 0, 1, SHIELD_RED_2));
-	MainLines.push_back(new Integer("P1 2nd Shield Green", 0, 0xFF, 0, 1, SHIELD_GREEN_2));
-	MainLines.push_back(new Integer("P1 2nd Shield Blue", 0, 0xFF, 0, 1, SHIELD_BLUE_2));
-	MainLines.push_back(new Integer("P1 2nd Shield Alpha", 0, 0xFF, 0, 1, SHIELD_ALPHA_2));
-	MainLines.push_back(new Integer("P1 3rd Shield Red", 0, 0xFF, 0, 1, SHIELD_RED_3));
-	MainLines.push_back(new Integer("P1 3rd Shield Green", 0, 0xFF, 0, 1, SHIELD_GREEN_3));
-	MainLines.push_back(new Integer("P1 3rd Shield Blue", 0, 0xFF, 0, 1, SHIELD_BLUE_3));
-	MainLines.push_back(new Integer("P1 3rd Shield Alpha", 0, 0xFF, 0, 1, SHIELD_ALPHA_3));
-	MainLines.push_back(new Integer("P1 4th Shield Red", 0, 0xFF, 0, 1, SHIELD_RED_4));
-	MainLines.push_back(new Integer("P1 4th Shield Green", 0, 0xFF, 0, 1, SHIELD_GREEN_4));
-	MainLines.push_back(new Integer("P1 4th Shield Blue", 0, 0xFF, 0, 1, SHIELD_BLUE_4));
-	MainLines.push_back(new Integer("P1 4th Shield Alpha", 0, 0xFF, 0, 1, SHIELD_ALPHA_4));*/
-
-
+	*/
 
 	Page Main("Main", MainLines);
 	
@@ -1021,14 +1003,6 @@ void CodeMenu()
 		3254926684, 3, 2288895028, 946012161, 2557330484, 2283733000, 1610612736, 0, 3254926716, 6, 2288895029, 946012161, 2557330485, 738394172, 1098907672, 2288895028, 2959983670, 945815552, 2557330484, 2557330485, 2147549204, 0
 		});
 
-	/*
-	Causes target smash to load lvl 1.  Fixed by Duke in seperate code
-	WriteIntToFile(0xC210F98C);
-	WriteIntToFile(0x00000002);
-	WriteIntToFile(0x7C9F2378);
-	WriteIntToFile(0x3BA00000);
-	WriteIntToFile(0x93BF0000);
-	WriteIntToFile(0x00000000);*/
 
 	CreateMenu(Main);
 
