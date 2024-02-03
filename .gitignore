@@ -6,7 +6,7 @@
 *.user
 *.userosscache
 *.sln.docstates
-
+*.gitignore
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -259,3 +259,5 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+PowerPC Assembly Functions/Code_Menu_Output/Code_Menu_Changelog.txt
+PowerPC Assembly Functions/Code_Menu_Output/Code_Menu_Options.xml
