@@ -2,6 +2,204 @@
 #include "PowerPC Assembly Functions.h"
 #include <iostream>
 
+
+#if BUILD_TYPE == PROJECT_PLUS // If the program is configured by default for P+ builds...
+	#if PROJECT_PLUS_EX_BUILD // ... and this is a P+EX build... 
+		unsigned long characterListVersion = characterListVersions::clv_PPEX_WALUIGI; // ... we'll default to the current version's character list,
+		string MAIN_FOLDER = "P+EX/./."; // use the "P+EX" base directory,
+		std::string MENU_NAME = "Project+Ex Code Menu"; // and use the P+EX menu name.
+
+	#else // Otherwise...
+		unsigned long characterListVersion = characterListVersions::clv_PPLUS; // ... we'll use the regular P+ Character List,
+		string MAIN_FOLDER = "Project+"; // use the "Project+" directory,
+		std::string MENU_NAME = "Project+ Code Menu"; // and use the P+ menu name.
+	#endif
+#else // If it's not for P+ builds...
+	unsigned long characterListVersion = characterListVersions::clv_PROJECTM; // ... then we'll default to the Project M character list,
+	string MAIN_FOLDER = "LegacyTE"; // use the LegacyTE directory (this can be changed, this is just what it was originally),
+	std::string MENU_NAME = "Legacy TE 2.5 Code Menu"; // and use the LTE menu name.
+#endif
+
+const std::array<std::string, characterListVersions::__clv_Count> characterListVersionNames = 
+{
+	"vBrawl",
+	"vBrawl+ (Sopo, Giga Bowser, WarioMan)",
+	"Project M (Roy, Mewtwo)",
+	"Project+ (Knuckles)",
+	"P+EX (Ridley)",
+	"P+EX (Waluigi)",
+	"P+EX (Alloys)",
+	"P+EX (Dark Samus)",
+	"P+EX (Sceptile)",
+};
+
+bool CONFIG_OUTPUT_ASM_INSTRUCTION_DICTIONARY = 0;
+bool CONFIG_DISABLE_ASM_DISASSEMBLY = 0;
+bool CONFIG_ENABLE_ASM_HEX_COMMENTS = 0;
+bool CONFIG_DELETE_ASM_TXT_FILE = 1;
+bool CONFIG_ALLOW_IMPLICIT_OPTIMIZATIONS = 0;
+bool CONFIG_ALLOW_BLA_FUNCTION_CALLS = 0;
+
+
+bool setMAIN_FOLDER(std::string mainFolderIn)
+{
+	bool result = 0;
+
+	if (mainFolderIn.size() == 0x8)
+	{
+		MAIN_FOLDER = mainFolderIn;
+		result = 1;
+	}
+
+	return result;
+}
+
+bool CUSTOM_NAME_SUPPLIED = 0;
+
+fstream WPtr;
+std::vector<ledger::codeLedgerEntry> codeLedger = {};
+std::size_t ledger::codeLedgerEntry::length()
+{
+	return (codeStartPos != SIZE_MAX && codeEndPos != SIZE_MAX && codeEndPos > codeStartPos) ? codeEndPos - codeStartPos : SIZE_MAX;
+}
+bool ledger::openLedgerEntry(std::string codeName, std::string codeBlurb)
+{
+	bool result = 0;
+
+	if (codeLedger.empty() || codeLedger.back().codeEndPos != SIZE_MAX)
+	{
+		codeLedger.push_back(ledger::codeLedgerEntry(codeName, WPtr.tellp(), codeBlurb));
+		result = 1;
+	}
+	else
+	{
+		std::cerr << "[ERROR] Failed to open code ledger entry (\"" << codeName << "\"):\n" <<
+			"\tPrevious entry (\"" << codeLedger.back().codeName << "\") isn't closed!\n";
+	}
+
+	return result;
+}
+bool ledger::closeLedgerEntry()
+{
+	bool result = 0;
+
+	if (!codeLedger.empty() && codeLedger.back().codeEndPos == SIZE_MAX)
+	{
+		codeLedger.back().codeEndPos = WPtr.tellp();
+		result = 1;
+	}
+	else
+	{
+		std::cerr << "[ERROR] Failed to close code ledger entry (\"" << codeLedger.back().codeName << "\"):\n" <<
+			"\tIt's already closed!\n";
+	}
+
+	return result;
+}
+
+bool ledger::writeCodeToASMStream(std::ostream& output, std::istream& codeStreamIn, std::size_t expectedLength, const std::string codeNameIn, const std::string codeBlurbIn, bool codeUnattested, bool disableDisassembly)
+{
+	bool result = 0;
+
+	// Determine Hashtag Border Length
+	std::size_t hashtagStrLength = (codeNameIn.empty()) ? 0 : std::max((int)codeNameIn.size(), 20);
+	if (!codeBlurbIn.empty())
+	{
+		std::size_t cursorBak = 0;
+		std::size_t cursor = 0;
+		while (cursor < codeBlurbIn.size())
+		{
+			cursorBak = cursor;
+			cursor = codeBlurbIn.find('\n', cursor);
+			if (cursor != std::string::npos)
+			{
+				hashtagStrLength = std::max((cursor - cursorBak) + 2, hashtagStrLength);
+				cursor += 1;
+			}
+			else
+			{
+				hashtagStrLength = std::max((codeBlurbIn.size() - cursorBak) + 2, hashtagStrLength);
+				cursor = std::string::npos;
+			}
+		}
+	}
+	if (hashtagStrLength > 0)
+	{
+		// Write Code Name, Blurb, and Hashtags
+		output << std::string(hashtagStrLength, '#') << "\n";
+		output << codeNameIn << "\n";
+		if (!codeBlurbIn.empty())
+		{
+			std::stringstream blurbStream(codeBlurbIn);
+			std::string currentLine = "";
+			while (std::getline(blurbStream, currentLine))
+			{
+				output << "# " << currentLine << "\n";
+			}
+		}
+		output << std::string(hashtagStrLength, '#') << "\n";
+	}
+
+	// If we're intended to do the disassembly...
+	if (!disableDisassembly)
+	{
+		// ... then pass off to the disassembler.
+		result = lava::gecko::parseGeckoCode(output, codeStreamIn, expectedLength, 0, 0, CONFIG_ENABLE_ASM_HEX_COMMENTS) == expectedLength;
+	}
+	// Otherwise...
+	else
+	{
+		// ... we'll just do it in-place.
+		std::size_t consumedBytes = 0;
+		// We're effectively just writing the same base string over and over again, just with different numbers.
+		// So set up a base line to start...
+		std::string currentLine = "* XXXXXXXX XXXXXXXX\n";
+		// ... then for as long as we still have bytes to pull...
+		while (codeStreamIn.good() && consumedBytes < expectedLength)
+		{
+
+			// ... write the next 16 bytes into their rightful positions in our string.
+			lava::readNCharsFromStream(&currentLine[2], codeStreamIn, 0x8);
+			lava::readNCharsFromStream(&currentLine[11], codeStreamIn, 0x8);
+			// From there, just print it to the output stream...
+			output << currentLine;
+			// ... and increment the byte tally.
+			consumedBytes += 0x10;
+		}
+	}
+
+
+	return result;
+}
+
+branchConditionAndConditionBit::branchConditionAndConditionBit(int BranchConditionIn, int ConditionBitIn, unsigned char ConditionRegFieldIn)
+{
+	BranchCondition = BranchConditionIn;
+	if (ConditionRegFieldIn == UCHAR_MAX)
+	{
+		if (ConditionBitIn != INT_MAX)
+		{
+			assert(ConditionBitIn < 32 && "Invalid ConditionBitIn: Value must be less than 32; Condition Register is only 32 bits!");
+		}
+		ConditionBit = ConditionBitIn;
+	}
+	else
+	{
+		assert(ConditionRegFieldIn < 8 && "Invalid ConditionRegFieldIn: Value must be less than 8; there are only 8 Condition Register fields!");
+		assert(ConditionBitIn < 4 && "Invalid ConditionBitIn: If ConditionRegFieldIn is specified, ConditionBitIn must only indicate bit, not field!");
+		ConditionBit = ConditionBitIn + (4 * ConditionRegFieldIn);
+	}
+}
+// Returns a copy of this bCACB, with the ConditionRegField set to the specified value!
+branchConditionAndConditionBit branchConditionAndConditionBit::inConditionRegField(unsigned char ConditionRegFieldIn) const
+{
+	return branchConditionAndConditionBit(BranchCondition, ConditionBit % 4, ConditionRegFieldIn);
+}
+
+std::vector<std::streampos> LabelPosVec{};
+std::vector<labels::labelJump> LabelJumpVec{};
+
+
 //converts char hex digit to decimal
 int HexToDec(char x)
 {
@@ -77,10 +275,72 @@ void MakeGCT(string TextFilePath, string OldGCTFilePath, string NewGCTFilePath)
 	NewGCTFilePtr.close();
 }
 
+bool MakeASM(string TextFilePath, string OutputAsmPath, bool disableDisassembly)
+{
+	ifstream textFile(TextFilePath);
+	if (!textFile.is_open())
+	{
+		cout << "Error: Unable to open txt file";
+		return false;
+	}
+
+	ofstream neoASMFile(OutputAsmPath);
+	if (!codeLedger.empty() && neoASMFile.is_open())
+	{
+		std::string tempName = "";
+		unsigned long unknownCount = 0x00;
+		unsigned long unnamedCount = 0x00;
+
+		textFile.seekg(0);
+		for (unsigned long i = 0; i < codeLedger.size(); i++)
+		{
+			ledger::codeLedgerEntry* currEntry = &codeLedger[i];
+			if (textFile.tellg() < currEntry->codeStartPos)
+			{
+				tempName = "Unattested Code " + std::to_string(unknownCount);
+				std::size_t unattestedLength = currEntry->codeStartPos - textFile.tellg();
+				ledger::writeCodeToASMStream(neoASMFile, textFile, unattestedLength, tempName, "", 1);
+				neoASMFile << "\n";
+				unknownCount++;
+			}
+
+			std::size_t entryLength = currEntry->length();
+			if (entryLength != SIZE_MAX)
+			{
+				tempName = currEntry->codeName;
+				if (tempName.empty() && !ALLOW_BLANK_CODE_NAMES_IN_ASM)
+				{
+					tempName = "Unnamed Code " + std::to_string(unnamedCount);
+					unnamedCount++;
+				}
+				textFile.seekg(currEntry->codeStartPos);
+				ledger::writeCodeToASMStream(neoASMFile, textFile, entryLength, tempName, currEntry->codeBlurb, 0, disableDisassembly);
+				neoASMFile << "\n";
+			}
+		}
+
+		textFile.close();
+		if (CONFIG_DELETE_ASM_TXT_FILE)
+		{
+			std::filesystem::remove(TextFilePath);
+		}
+	}
+	else
+	{
+		std::cerr << "[ERROR] Couldn't create ASM File (\"" << OutputAsmPath << "\")!\n";
+	}
+}
+
+
 int GetHexFromFloat(float Value)
 {
 	int *b = (int *)&Value;
 	return *b;
+}
+float GetFloatFromHex(int Value)
+{
+	float *f = (float*)&Value;
+	return *f;
 }
 
 int GetShiftNum(int endPos)
@@ -164,17 +424,21 @@ void EndIf()
 	assert(IfIndex >= 0);
 	int holdPos = WPtr.tellp();
 	WPtr.seekp(IfStartPos[IfIndex]);
-	int BranchCond = BRANCH_IF_FALSE;
 	if(IfConditionArray[IfIndex] == IS_ELSE)
 	{
-		BranchCond = BRANCH_ALWAYS;
+		B(CalcBranchOffset(IfStartPos[IfIndex], holdPos));
 	}
-	else if(IfConditionArray[IfIndex] > 2)
+	else
 	{
-		BranchCond = BRANCH_IF_TRUE;
-		IfConditionArray[IfIndex] -= 3;
+		int BranchCond = BRANCH_IF_FALSE;
+		if (IfConditionArray[IfIndex] > 2)
+		{
+			BranchCond = BRANCH_IF_TRUE;
+			IfConditionArray[IfIndex] -= 3;
+		}
+		BC(CalcBranchOffset(IfStartPos[IfIndex], holdPos), BranchCond, IfConditionArray[IfIndex]);
 	}
-	BC(CalcBranchOffset(IfStartPos[IfIndex], holdPos), BranchCond, IfConditionArray[IfIndex]);
+	
 	WPtr.seekp(holdPos);
 }
 
@@ -417,8 +681,10 @@ void ConvertIntToFloat(int SourceReg, int TempReg, int ResultReg)
 //keeps track of how many lines are written
 //writes extra 00000000 or 60000000 00000000 at end as necessary
 //assumes ba = 0x80000000
-void ASMStart(int BranchAddress)
+void ASMStart(int BranchAddress, std::string name, std::string blurb)
 {
+	ledger::openLedgerEntry(name, blurb);
+
 	int OpWord = (0xC2 << 24);
 	if(BranchAddress >= 0x81000000)
 	{
@@ -453,6 +719,8 @@ void ASMEnd()
 	WPtr.seekp(ASMStartAddress - 8);
 	WriteIntToFile(numLines);
 	WPtr.seekp(HoldPos);
+
+	ledger::closeLedgerEntry();
 }
 
 void ASMEnd(int Replacement)
@@ -461,42 +729,67 @@ void ASMEnd(int Replacement)
 	ASMEnd();
 }
 
+void CodeRaw(std::string name, std::string blurb, const std::vector<unsigned long>& rawHexIn)
+{
+	ledger::openLedgerEntry(name, blurb);
+	for (std::size_t i = 0; i < rawHexIn.size(); i++)
+	{
+		WriteIntToFile(rawHexIn[i]);
+	}
+	ledger::closeLedgerEntry();
+}
+
+void CodeRawStart(std::string name, std::string blurb)
+{
+	ledger::openLedgerEntry(name, blurb);
+}
+
+void CodeRawEnd()
+{
+	ledger::closeLedgerEntry();
+}
+
 void Label(int LabelNum)
 {
-	if(LabelNum >= MAX_LABELS)
+	if (LabelNum >= LabelPosVec.size())
 	{
-		cout << "ERROR, too many labels\n";
+		cout << "ERROR, invalid label num!\n";
 		exit(0);
 	}
-	LabelPosArray[LabelNum] = WPtr.tellg();
+	LabelPosVec[LabelNum] = WPtr.tellg();
 }
 
 int GetNextLabel()
 {
-	LabelIndex++;
-	return (LabelIndex - 1);
+	LabelPosVec.push_back(SIZE_MAX);
+	return int(LabelPosVec.size() - 1);
 }
 
-void JumpToLabel(int LabelNum)
+void JumpToLabel(int LabelNum, branchConditionAndConditionBit conditionIn)
 {
-	if(JumpIndex >= MAX_JUMPS)
-	{
-		cout << "ERROR, too many jumps\n";
-		exit(0);
-	}
-	JumpLabelNumArray[JumpIndex] = LabelNum;
-	JumpFromArray[JumpIndex] = WPtr.tellp();
+	LabelJumpVec.push_back(labels::labelJump(LabelNum, WPtr.tellp(), conditionIn));
 	WriteIntToFile(0);
-	JumpIndex++;
+}
+void JumpToLabel(int LabelNum, int BranchCondition, int ConditionBit)
+{
+	JumpToLabel(LabelNum, { BranchCondition, ConditionBit });
 }
 
 void CompleteJumps()
 {
 	int holdPos = WPtr.tellp();
-	for(int i = 0; i < JumpIndex ; i++)
+	for(int i = 0; i < LabelJumpVec.size(); i++)
 	{
-		WPtr.seekp(JumpFromArray[i]);
-		B(CalcBranchOffset(JumpFromArray[i], LabelPosArray[JumpLabelNumArray[i]]));
+		labels::labelJump* currJump = &LabelJumpVec[i];
+		WPtr.seekp(currJump->jumpSourcePos);
+		if (currJump->jumpCondition.BranchCondition != INT_MAX && currJump->jumpCondition.ConditionBit != INT_MAX)
+		{
+			BC(CalcBranchOffset(currJump->jumpSourcePos, LabelPosVec[currJump->labelNum]), currJump->jumpCondition.BranchCondition, currJump->jumpCondition.ConditionBit);
+		}
+		else
+		{
+			B(CalcBranchOffset(currJump->jumpSourcePos, LabelPosVec[currJump->labelNum]));
+		}
 	}
 	WPtr.seekp(holdPos);
 }
@@ -703,10 +996,18 @@ void FindInTerminatedArray(int ValueReg, int StartAddressReg, int endMarker, int
 	Label(EndOfSearch);
 }
 
-void CallBrawlFunc(int Address) {
-	SetRegister(0, Address);
-	MTCTR(0);
-	BCTRL();
+void CallBrawlFunc(int Address, int addressReg) {
+	// If BLAs are enabled, and the target address can be validly represented using a BLA...
+	if (CONFIG_ALLOW_BLA_FUNCTION_CALLS && (Address >= 0x80000000) && (Address < 0x88000000) && !(Address & 0b11))
+	{
+		BLA(Address);
+	}
+	else
+	{
+		SetRegister(addressReg, Address);
+		MTCTR(addressReg);
+		BCTRL();
+	}
 }
 
 //r3 returns ptr to memory
@@ -1509,6 +1810,49 @@ void IfNotInSSE(int reg1, int reg2) {
 	If(reg1, NOT_EQUAL, reg2);
 }
 
+void GetHeapAddress(_heapCacheTable::CachedHeaps heapIndex, int destinationReg)
+{
+	ADDIS(destinationReg, 0, HEAP_ADDRESS_TABLE.table_start() >> 0x10);
+	LWZ(destinationReg, destinationReg, HEAP_ADDRESS_TABLE.header_relative_address_offset(heapIndex));
+}
+
+void LoadWordFromHeapAddress(_heapCacheTable::CachedHeaps heapIndex, int loadDestinationReg, int addressDestinationReg, int offset)
+{
+	GetHeapAddress(heapIndex, addressDestinationReg);
+	LWZ(loadDestinationReg, addressDestinationReg, offset);
+}
+
+void StoreWordToHeapAddress(_heapCacheTable::CachedHeaps heapIndex, int sourceReg, int addressDestinationReg, int offset)
+{
+	GetHeapAddress(heapIndex, addressDestinationReg);
+	STW(sourceReg, addressDestinationReg, offset);
+}
+
+void LoadHalfFromHeapAddress(_heapCacheTable::CachedHeaps heapIndex, int loadDestinationReg, int addressDestinationReg, int offset)
+{
+	GetHeapAddress(heapIndex, addressDestinationReg);
+	LHZ(loadDestinationReg, addressDestinationReg, offset);
+}
+
+void StoreHalfToHeapAddress(_heapCacheTable::CachedHeaps heapIndex, int sourceReg, int addressDestinationReg, int offset)
+{
+	GetHeapAddress(heapIndex, addressDestinationReg);
+	STH(sourceReg, addressDestinationReg, offset);
+}
+
+void LoadByteFromHeapAddress(_heapCacheTable::CachedHeaps heapIndex, int loadDestinationReg, int addressDestinationReg, int offset)
+{
+	GetHeapAddress(heapIndex, addressDestinationReg);
+	LBZ(loadDestinationReg, addressDestinationReg, offset);
+}
+
+void StoreByteToHeapAddress(_heapCacheTable::CachedHeaps heapIndex, int sourceReg, int addressDestinationReg, int offset)
+{
+	GetHeapAddress(heapIndex, addressDestinationReg);
+	STB(sourceReg, addressDestinationReg, offset);
+}
+
+
 void ABS(int DestReg, int SourceReg, int tempReg)
 {
 	SRAWI(tempReg, SourceReg, 31);
@@ -1516,19 +1860,30 @@ void ABS(int DestReg, int SourceReg, int tempReg)
 	XOR(DestReg, DestReg, tempReg);
 }
 
-void ADD(int DestReg, int SourceReg1, int SourceReg2)
+void ADD(int DestReg, int SourceReg1, int SourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(SourceReg1, 5, 15);
 	OpHex |= GetOpSegment(SourceReg2, 5, 20);
 	OpHex |= GetOpSegment(266, 9, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
 void ADDI(int DestReg, int SourceReg, int Immediate)
 {
 	OpHex = GetOpSegment(14, 6, 5);
+	OpHex |= GetOpSegment(DestReg, 5, 10);
+	OpHex |= GetOpSegment(SourceReg, 5, 15);
+	OpHex |= GetOpSegment(Immediate, 16, 31);
+	WriteIntToFile(OpHex);
+}
+
+void ADDIC(int DestReg, int SourceReg, int Immediate, bool SetConditionReg)
+{
+	// Op Code is 13 if we're updating the condition register, 12 if we aren't! 
+	OpHex = GetOpSegment((SetConditionReg) ? 13 : 12, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(SourceReg, 5, 15);
 	OpHex |= GetOpSegment(Immediate, 16, 31);
@@ -1544,24 +1899,36 @@ void ADDIS(int DestReg, int SourceReg, int Immediate)
 	WriteIntToFile(OpHex);
 }
 
-void AND(int DestReg, int SourceReg1, int SourceReg2)
+void ADDME(int DestReg, int SourceReg, bool SetConditionReg)
+{
+	OpHex = GetOpSegment(31, 6, 5);
+	OpHex |= GetOpSegment(DestReg, 5, 10);
+	OpHex |= GetOpSegment(SourceReg, 5, 15);
+	OpHex |= GetOpSegment(234, 9, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
+	WriteIntToFile(OpHex);
+}
+
+void AND(int DestReg, int SourceReg1, int SourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(SourceReg1, 5, 10);
 	OpHex |= GetOpSegment(DestReg, 5, 15);
 	OpHex |= GetOpSegment(SourceReg2, 5, 20);
 	OpHex |= GetOpSegment(28, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
 //SourceReg2 is complimented
-void ANDC(int DestReg, int SourceReg1, int SourceReg2)
+void ANDC(int DestReg, int SourceReg1, int SourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(SourceReg1, 5, 10);
 	OpHex |= GetOpSegment(DestReg, 5, 15);
 	OpHex |= GetOpSegment(SourceReg2, 5, 20);
 	OpHex |= GetOpSegment(60, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
@@ -1573,7 +1940,7 @@ void ANDI(int DestReg, int SourceReg, int Immediate)
 	OpHex |= GetOpSegment(Immediate, 16, 31);
 	WriteIntToFile(OpHex);
 }
-
+	
 void ANDIS(int DestReg, int SourceReg, int Immediate)
 {
 	OpHex = GetOpSegment(29, 6, 5);
@@ -1599,9 +1966,20 @@ void BA(int Address)
 	WriteIntToFile(OpHex);
 }
 
+void BC(int JumpDist, branchConditionAndConditionBit conditionIn)
+{
+	BC(JumpDist, conditionIn.BranchCondition, conditionIn.ConditionBit);
+}
 //distance/4, branch if true/false, bit to check
 void BC(int JumpDist, int BranchCondition, int ConditionBit)
 {
+	// If we're jumping backwards...
+	if (JumpDist < 0)
+	{
+		// ... we need to invert the y-bit in BO.
+		BranchCondition ^= 0b1;
+	}
+
 	OpHex = GetOpSegment(16, 6, 5);
 	OpHex |= GetOpSegment(BranchCondition, 5, 10);
 	OpHex |= GetOpSegment(ConditionBit, 5, 15);
@@ -1678,12 +2056,13 @@ void CMPLI(int Reg, int Immediate, int CondField)
 	WriteIntToFile(OpHex);
 }
 
-void CNTLZW(int DestReg, int SourceReg)
+void CNTLZW(int DestReg, int SourceReg, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(SourceReg, 5, 10);
 	OpHex |= GetOpSegment(DestReg, 5, 15);
 	OpHex |= GetOpSegment(26, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
@@ -1703,71 +2082,78 @@ void DCBST(int SourceReg1, int SourceReg2) {
 	WriteIntToFile(OpHex);
 }
 
-void DIVW(int DestReg, int DividendReg, int DivisorReg)
+void DIVW(int DestReg, int DividendReg, int DivisorReg, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(DividendReg, 5, 15);
 	OpHex |= GetOpSegment(DivisorReg, 5, 20);
 	OpHex |= GetOpSegment(491, 9, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void DIVWU(int DestReg, int DividendReg, int DivisorReg)
+void DIVWU(int DestReg, int DividendReg, int DivisorReg, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(DividendReg, 5, 15);
 	OpHex |= GetOpSegment(DivisorReg, 5, 20);
 	OpHex |= GetOpSegment(459, 9, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void EQV(int DestReg, int SourceReg1, int SourceReg2)
+void EQV(int DestReg, int SourceReg1, int SourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 15);
 	OpHex |= GetOpSegment(SourceReg1, 5, 10);
 	OpHex |= GetOpSegment(SourceReg2, 5, 20);
 	OpHex |= GetOpSegment(284, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void EXTSB(int DestReg, int SourceReg)
+void EXTSB(int DestReg, int SourceReg, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(SourceReg, 5, 10);
 	OpHex |= GetOpSegment(DestReg, 5, 15);
 	OpHex |= GetOpSegment(954, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void FABS(int DestReg, int SourceReg)
+void FABS(int DestReg, int SourceReg, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(63, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(SourceReg, 5, 20);
 	OpHex |= GetOpSegment(264, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void FADD(int DestReg, int SourceReg1, int SourceReg2)
+void FADD(int DestReg, int SourceReg1, int SourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(63, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(SourceReg1, 5, 15);
 	OpHex |= GetOpSegment(SourceReg2, 5, 20);
 	OpHex |= GetOpSegment(21, 5, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void FADDS(int DestReg, int SourceReg1, int SourceReg2)
+void FADDS(int DestReg, int SourceReg1, int SourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(59, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(SourceReg1, 5, 15);
 	OpHex |= GetOpSegment(SourceReg2, 5, 20);
 	OpHex |= GetOpSegment(21, 9, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
@@ -1780,136 +2166,150 @@ void FCMPU(int FPReg1, int FPReg2, int CondField)
 	WriteIntToFile(OpHex);
 }
 
-void FCTIW(int SourceReg, int DestReg)
+void FCTIW(int SourceReg, int DestReg, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(63, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(SourceReg, 5, 20);
 	OpHex |= GetOpSegment(14, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void FCTIWZ(int DestReg, int SourceReg)
+void FCTIWZ(int DestReg, int SourceReg, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(63, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(SourceReg, 5, 20);
 	OpHex |= GetOpSegment(15, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void FDIV(int FPDestReg, int FPSourceReg1, int FPSourceReg2)
+void FDIV(int FPDestReg, int FPSourceReg1, int FPSourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(63, 6, 5);
 	OpHex |= GetOpSegment(FPDestReg, 5, 10);
 	OpHex |= GetOpSegment(FPSourceReg1, 5, 15);
 	OpHex |= GetOpSegment(FPSourceReg2, 5, 20);
 	OpHex |= GetOpSegment(18, 5, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void FDIVS(int FPDestReg, int FPSourceReg1, int FPSourceReg2)
+void FDIVS(int FPDestReg, int FPSourceReg1, int FPSourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(59, 6, 5);
 	OpHex |= GetOpSegment(FPDestReg, 5, 10);
 	OpHex |= GetOpSegment(FPSourceReg1, 5, 15);
 	OpHex |= GetOpSegment(FPSourceReg2, 5, 20);
 	OpHex |= GetOpSegment(18, 5, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void FMR(int DestReg, int SourceReg)
+void FMR(int DestReg, int SourceReg, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(63, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(SourceReg, 5, 20);
 	OpHex |= GetOpSegment(72, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void FMUL(int DestReg, int SourceReg1, int SourceReg2)
+void FMUL(int DestReg, int SourceReg1, int SourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(63, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(SourceReg1, 5, 15);
 	OpHex |= GetOpSegment(SourceReg2, 5, 25);
 	OpHex |= GetOpSegment(25, 5, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void FMULS(int DestReg, int SourceReg1, int SourceReg2)
+void FMULS(int DestReg, int SourceReg1, int SourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(59, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(SourceReg1, 5, 15);
 	OpHex |= GetOpSegment(SourceReg2, 5, 25);
 	OpHex |= GetOpSegment(25, 5, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void FNEG(int DestReg, int SourceReg)
+void FNEG(int DestReg, int SourceReg, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(63, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(SourceReg, 5, 20);
 	OpHex |= GetOpSegment(40, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void FRES(int DestReg, int SourceReg)
+void FRES(int DestReg, int SourceReg, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(59, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(SourceReg, 5, 20);
 	OpHex |= GetOpSegment(24, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
 //Rounds a 64-bit, double precision floating-point operand to single precision
 //places result in a floating-point register
-void FRSP(int DestReg, int SourceReg)
+void FRSP(int DestReg, int SourceReg, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(63, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(SourceReg, 5, 20);
 	OpHex |= GetOpSegment(12, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void FRSQRTE(int DestReg, int SourceReg)
+void FRSQRTE(int DestReg, int SourceReg, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(63, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(SourceReg, 5, 20);
 	OpHex |= GetOpSegment(26, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void FSQRT(int FPDestReg, int FPSourceReg) {
+void FSQRT(int FPDestReg, int FPSourceReg, bool SetConditionReg) {
 	OpHex = GetOpSegment(63, 6, 5);
 	OpHex |= GetOpSegment(FPDestReg, 5, 10);
 	OpHex |= GetOpSegment(FPSourceReg, 5, 20);
 	OpHex |= GetOpSegment(22, 5, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void FSUB(int FPDestReg, int FPSourceReg1, int FPSourceReg2)
+void FSUB(int FPDestReg, int FPSourceReg1, int FPSourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(63, 6, 5);
 	OpHex |= GetOpSegment(FPDestReg, 5, 10);
 	OpHex |= GetOpSegment(FPSourceReg1, 5, 15);
 	OpHex |= GetOpSegment(FPSourceReg2, 5, 20);
 	OpHex |= GetOpSegment(20, 5, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void FSUBS(int FPDestReg, int FPSourceReg1, int FPSourceReg2)
+void FSUBS(int FPDestReg, int FPSourceReg1, int FPSourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(59, 6, 5);
 	OpHex |= GetOpSegment(FPDestReg, 5, 10);
 	OpHex |= GetOpSegment(FPSourceReg1, 5, 15);
 	OpHex |= GetOpSegment(FPSourceReg2, 5, 20);
 	OpHex |= GetOpSegment(20, 5, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
@@ -2130,15 +2530,18 @@ void LSWI(int StartReg, int AddressReg, int numBytes) {
 	WriteIntToFile(OpHex);
 }
 
-void LSWX(int StartReg, int AddressReg1, int AddressReg2, int NumArgsReg) {
-	MTXER(NumArgsReg);
-
+void LSWX(int StartReg, int AddressReg1, int AddressReg2)
+{
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(StartReg, 5, 10);
 	OpHex |= GetOpSegment(AddressReg1, 5, 15);
 	OpHex |= GetOpSegment(AddressReg2, 5, 20);
 	OpHex |= GetOpSegment(533, 10, 30);
 	WriteIntToFile(OpHex);
+}
+void LSWX(int StartReg, int AddressReg1, int AddressReg2, int NumArgsReg) {
+	MTXER(NumArgsReg);
+	LSWX(StartReg, AddressReg1, AddressReg2);
 }
 
 void MFCTR(int TargetReg)
@@ -2155,6 +2558,15 @@ void MFLR(int TargetReg)
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(TargetReg, 5, 10);
 	OpHex |= GetOpSegment(8 << 5, 10, 20); //spr
+	OpHex |= GetOpSegment(339, 10, 30);
+	WriteIntToFile(OpHex);
+}
+
+void MFXER(int TargetReg)
+{
+	OpHex = GetOpSegment(31, 6, 5);
+	OpHex |= GetOpSegment(TargetReg, 5, 10);
+	OpHex |= GetOpSegment(1 << 5, 10, 20); //xer
 	OpHex |= GetOpSegment(339, 10, 30);
 	WriteIntToFile(OpHex);
 }
@@ -2200,29 +2612,39 @@ void MTXER(int TargetReg) {
 
 void MULLI(int DestReg, int SourceReg, int Immediate)
 {
-	OpHex = GetOpSegment(7, 6, 5);
-	OpHex |= GetOpSegment(DestReg, 5, 10);
-	OpHex |= GetOpSegment(SourceReg, 5, 15);
-	OpHex |= GetOpSegment(Immediate, 16, 31);
-	WriteIntToFile(OpHex);
+	if (CONFIG_ALLOW_IMPLICIT_OPTIMIZATIONS && isPowerOf2((unsigned long)Immediate))
+	{
+		unsigned long shiftCount = bitIndexFromButtonHex(Immediate, 1);
+		RLWINM(DestReg, SourceReg, shiftCount, 0x00, 0x1F - shiftCount );
+	}
+	else
+	{
+		OpHex = GetOpSegment(7, 6, 5);
+		OpHex |= GetOpSegment(DestReg, 5, 10);
+		OpHex |= GetOpSegment(SourceReg, 5, 15);
+		OpHex |= GetOpSegment(Immediate, 16, 31);
+		WriteIntToFile(OpHex);
+	}
 }
 
-void MULLW(int DestReg, int SourceReg1, int SourceReg2)
+void MULLW(int DestReg, int SourceReg1, int SourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(SourceReg1, 5, 15);
 	OpHex |= GetOpSegment(SourceReg2, 5, 20);
 	OpHex |= GetOpSegment(235, 9, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void NEG(int DestReg, int SourceReg)
+void NEG(int DestReg, int SourceReg, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(SourceReg, 5, 15);
 	OpHex |= GetOpSegment(104, 9, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
@@ -2231,33 +2653,36 @@ void NOP()
 	ORI(0, 0, 0);
 }
 
-void NOR(int DestReg, int SourceReg1, int SourceReg2)
+void NOR(int DestReg, int SourceReg1, int SourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(SourceReg1, 5, 10);
 	OpHex |= GetOpSegment(DestReg, 5, 15);
 	OpHex |= GetOpSegment(SourceReg2, 5, 20);
 	OpHex |= GetOpSegment(124, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void OR(int DestReg, int SourceReg1, int SourceReg2)
+void OR(int DestReg, int SourceReg1, int SourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(SourceReg1, 5, 10);
 	OpHex |= GetOpSegment(DestReg, 5, 15);
 	OpHex |= GetOpSegment(SourceReg2, 5, 20);
 	OpHex |= GetOpSegment(444, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void ORC(int DestReg, int SourceReg1, int SourceReg2)
+void ORC(int DestReg, int SourceReg1, int SourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(SourceReg1, 5, 10);
 	OpHex |= GetOpSegment(DestReg, 5, 15);
 	OpHex |= GetOpSegment(SourceReg2, 5, 20);
 	OpHex |= GetOpSegment(412, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
@@ -2279,7 +2704,19 @@ void ORIS(int DestReg, int SourceReg, int Immediate)
 	WriteIntToFile(OpHex);
 }
 
-void RLWINM(int DestReg, int SourceReg, int ShiftNum, int MaskStart, int MaskEnd)
+void RLWIMI(int DestReg, int SourceReg, int ShiftNum, int MaskStart, int MaskEnd, bool SetConditionReg)
+{
+	OpHex = GetOpSegment(20, 6, 5);
+	OpHex |= GetOpSegment(SourceReg, 5, 10);
+	OpHex |= GetOpSegment(DestReg, 5, 15);
+	OpHex |= GetOpSegment(ShiftNum, 5, 20);
+	OpHex |= GetOpSegment(MaskStart, 5, 25);
+	OpHex |= GetOpSegment(MaskEnd, 5, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
+	WriteIntToFile(OpHex);
+}
+
+void RLWINM(int DestReg, int SourceReg, int ShiftNum, int MaskStart, int MaskEnd, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(21, 6, 5);
 	OpHex |= GetOpSegment(SourceReg, 5, 10);
@@ -2287,10 +2724,11 @@ void RLWINM(int DestReg, int SourceReg, int ShiftNum, int MaskStart, int MaskEnd
 	OpHex |= GetOpSegment(ShiftNum, 5, 20);
 	OpHex |= GetOpSegment(MaskStart, 5, 25);
 	OpHex |= GetOpSegment(MaskEnd, 5, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void RLWNM(int DestReg, int SourceReg, int ShiftReg, int MaskStart, int MaskEnd)
+void RLWNM(int DestReg, int SourceReg, int ShiftReg, int MaskStart, int MaskEnd, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(23, 6, 5);
 	OpHex |= GetOpSegment(SourceReg, 5, 10);
@@ -2298,16 +2736,18 @@ void RLWNM(int DestReg, int SourceReg, int ShiftReg, int MaskStart, int MaskEnd)
 	OpHex |= GetOpSegment(ShiftReg, 5, 20);
 	OpHex |= GetOpSegment(MaskStart, 5, 25);
 	OpHex |= GetOpSegment(MaskEnd, 5, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
-void SRAWI(int DestReg, int SourceReg, int ShiftNum)
+void SRAWI(int DestReg, int SourceReg, int ShiftNum, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(SourceReg, 5, 10);
 	OpHex |= GetOpSegment(DestReg, 5, 15);
 	OpHex |= GetOpSegment(ShiftNum, 5, 20);
 	OpHex |= GetOpSegment(824, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
@@ -2423,6 +2863,31 @@ void STMW(int StartReg, int AddressReg, int Immediate)
 	WriteIntToFile(OpHex);
 }
 
+void STSWI(int StartReg, int AddressReg, int Immediate)
+{
+	OpHex = GetOpSegment(31, 6, 5);
+	OpHex |= GetOpSegment(StartReg, 5, 10);
+	OpHex |= GetOpSegment(AddressReg, 5, 15);
+	OpHex |= GetOpSegment(Immediate, 5, 20);
+	OpHex |= GetOpSegment(725, 10, 30);
+	WriteIntToFile(OpHex);
+}
+
+void STSWX(int StartReg, int AddressReg1, int AddressReg2)
+{
+	OpHex = GetOpSegment(31, 6, 5);
+	OpHex |= GetOpSegment(StartReg, 5, 10);
+	OpHex |= GetOpSegment(AddressReg1, 5, 15);
+	OpHex |= GetOpSegment(AddressReg2, 5, 20);
+	OpHex |= GetOpSegment(661, 10, 30);
+	WriteIntToFile(OpHex);
+}
+void STSWX(int StartReg, int AddressReg1, int AddressReg2, int NumArgsReg)
+{
+	MTXER(NumArgsReg);
+	STSWX(StartReg, AddressReg1, AddressReg2);
+}
+
 void STW(int DestReg, int AddressReg, int Immediate)
 {
 	OpHex = GetOpSegment(36, 6, 5);
@@ -2462,13 +2927,14 @@ void STWX(int DestReg, int AddressReg1, int AddressReg2)
 }
 
 //DestReg = SourceReg1 - SourceReg2
-void SUBF(int DestReg, int SourceReg1, int SourceReg2)
+void SUBF(int DestReg, int SourceReg1, int SourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(DestReg, 5, 10);
 	OpHex |= GetOpSegment(SourceReg2, 5, 15);
 	OpHex |= GetOpSegment(SourceReg1, 5, 20);
 	OpHex |= GetOpSegment(40, 9, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
@@ -2478,13 +2944,14 @@ void SYNC() {
 	WriteIntToFile(OpHex);
 }
 
-void XOR(int DestReg, int SourceReg1, int SourceReg2)
+void XOR(int DestReg, int SourceReg1, int SourceReg2, bool SetConditionReg)
 {
 	OpHex = GetOpSegment(31, 6, 5);
 	OpHex |= GetOpSegment(SourceReg1, 5, 10);
 	OpHex |= GetOpSegment(DestReg, 5, 15);
 	OpHex |= GetOpSegment(SourceReg2, 5, 20);
 	OpHex |= GetOpSegment(316, 10, 30);
+	OpHex |= GetOpSegment(SetConditionReg, 1, 31);
 	WriteIntToFile(OpHex);
 }
 
