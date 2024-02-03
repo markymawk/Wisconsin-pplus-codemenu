@@ -1534,6 +1534,7 @@ void CreateMenu(Page MainPage)
 	//Theme Index
 	AddValueToByteArray(THEME_INDEX, Header);
 
+	/*
 	//War Mode Index
 	AddValueToByteArray(WAR_MODE_INDEX, Header);
 
@@ -1582,7 +1583,8 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(JUMPSQUAT_OVERRIDE_FRAMES_INDEX, Header);
 	AddValueToByteArray(JUMPSQUAT_OVERRIDE_MIN_INDEX, Header);
 	AddValueToByteArray(JUMPSQUAT_OVERRIDE_MAX_INDEX, Header);
-	
+	*/
+
 	//draw settings buffer
 	vector<u32> DSB(0x200 / 4, 0);
 	DSB[0x4 / 4] = 0xFFFFFFFF;
