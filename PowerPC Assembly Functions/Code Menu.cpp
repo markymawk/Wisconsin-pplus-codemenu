@@ -848,7 +848,7 @@ void CodeMenu()
 	DebugLines.push_back(new Toggle("Draw DI", false, DI_DRAW_INDEX));
 	DebugLines.push_back(new Toggle("FPS Display", false, FPS_DISPLAY_INDEX));
 	DebugLines.push_back(new Toggle("HUD", true, HUD_DISPLAY_INDEX));
-	Page DebugMode("Debug Mode Settings", DebugLines);
+	Page DebugMode("Debug Settings", DebugLines);
 
 	//value setting
 	vector<Line*> ConstantsLines;
@@ -934,33 +934,16 @@ void CodeMenu()
 	//main page
 	vector<Line*> MainLines;
 	// Writes the Menu's Title, appending the netplay suffix only if the config file didn't specify its own title.
-	MainLines.push_back(new Comment(MENU_NAME + ((!CUSTOM_NAME_SUPPLIED && BUILD_NETPLAY_FILES) ? " (Netplay)" : "")));
-	if (!CONFIG_DELETE_CONTROLS_COMMENTS)
-	{
-		MainLines.push_back(new Comment("Green = Comments | Blue = Changed"));
-		MainLines.push_back(new Comment("A = Enter Submenu | B = Back/Exit"));
-		MainLines.push_back(new Comment("X = Reset Selection | Y = Reset Page"));
-		MainLines.push_back(new Comment("Hold Z = Scroll Faster"));
-		MainLines.push_back(new Comment(""));
-	}
-	for (std::size_t i = 0; i < CONFIG_INCOMING_COMMENTS.size(); i++)
-	{
-		MainLines.push_back(new Comment(CONFIG_INCOMING_COMMENTS[i]));
-	}
-	
-
-#if EON_DEBUG_BUILD
-	MainLines.push_back(&TestPage.CalledFromLine);
-#endif
-	
+	MainLines.push_back(new Comment("WI Code Menu v1.6 (P+ 2.5)"));
+	MainLines.push_back(new Comment(""));
 	MainLines.push_back(&DebugMode.CalledFromLine);
 	//	MainLines.push_back(new Selection("Endless Friendlies", { "OFF", "Same Stage", "Random Stage", "Round Robin" }, 0, INFINITE_FRIENDLIES_INDEX));
-	MainLines.push_back(new Selection("Endless Friendlies Mode", { "OFF", "All Stay", "Winner Stays", "Loser Stays", "Rotation"}, 0, ENDLESS_FRIENDLIES_MODE_INDEX));
-	MainLines.push_back(new Selection("Endless Friendlies Stage Selection", { "Random", "Same" }, 0, ENDLESS_FRIENDLIES_STAGE_SELECTION_INDEX));
+	MainLines.push_back(new Toggle("Endless Friendlies", false, ENDLESS_FRIENDLIES_MODE_INDEX));
+	//MainLines.push_back(new Selection("Endless Friendlies Stage Selection", { "Random", "Same" }, 0, ENDLESS_FRIENDLIES_STAGE_SELECTION_INDEX));
 #if TOURNAMENT_ADDITION_BUILD
 	MainLines.push_back(new Selection("Random 1-1", { "OFF", "ON" }, 0, RANDOM_1_TO_1_INDEX));
 #endif
-	MainLines.push_back(new Selection("Alternate Stages", { "Enabled", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
+	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
 	MainLines.push_back(new Toggle("Autoskip Results Screen", false, AUTO_SKIP_TO_CSS_INDEX));
 #if DOLPHIN_BUILD
 	MainLines.push_back(new Toggle("Autosave Replays", true, AUTO_SAVE_REPLAY_INDEX));
@@ -1163,9 +1146,9 @@ void stopAnouncer() {
 	int reg1 = 4;
 
 	LoadWordToReg(reg1, ENDLESS_FRIENDLIES_MODE_INDEX + Line::VALUE);
-	If(reg1, GREATER_OR_EQUAL_I, 2); {
-		BLR();
-	} EndIf();
+	//If(reg1, GREATER_OR_EQUAL_I, 2); {
+	//	BLR();
+	//} EndIf();
 
 	//RestoreRegisters();
 	ASMEnd(0x9421ffe0); //stwu sp, -0x20 (sp)
@@ -1190,6 +1173,7 @@ void endlessFriendlies() {
 	
 	SetRegister(flagReg, -1); //Doesn't do anything unless changed
 
+	/*
 	LoadWordToReg(reg1, ENDLESS_FRIENDLIES_MODE_INDEX + Line::VALUE);
 	If(reg1, GREATER_OR_EQUAL_I, 2); {
 		LoadWordToReg(reg2, reg1, ENDLESS_ROTATION_QUEUE_LOC);
@@ -1219,6 +1203,7 @@ void endlessFriendlies() {
 			} EndIf();
 		} EndIf();
 	} EndIf();
+	*/
 
 	If(flagReg, EQUAL_I, 0);
 	{
