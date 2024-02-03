@@ -67,6 +67,9 @@ int ALC_P3_FLASH_RED_INDEX = -1;
 int ALC_P4_FLASH_RED_INDEX = -1;
 int BIG_HEAD_INDEX = -1;
 int RANDOM_ANGLE_INDEX = -1;
+
+int STAGELIST_INDEX = -1;
+
 int WAR_MODE_INDEX = -1;
 int BUFFER_P1_INDEX = -1;
 int BUFFER_P2_INDEX = -1;
@@ -963,7 +966,7 @@ void CodeMenu()
 #endif
 	MainLines.push_back(new Toggle("Save Previous Replay", false, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Comment(""));
-	//MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (P+ 2023)", "Doubles (WI 2023)", "Doubles (P+ 2023)", "Singles (PMBR)", "Doubles (PMBR)" }, 0, STAGELIST_INDEX));
+	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (P+ 2023)", "Doubles (WI 2023)", "Doubles (P+ 2023)", "Singles (PMBR)", "Doubles (PMBR)" }, 0, STAGELIST_INDEX));
 	//MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's", "Splat", "Project Wave", "Invincible 6", "Invincible 7" }, 0, THEME_INDEX));
 
 	MainLines.push_back(&PlayerCodesPage.CalledFromLine);
@@ -1512,6 +1515,9 @@ void CreateMenu(Page MainPage)
 	
 	//Big Head Mode Index
 	AddValueToByteArray(BIG_HEAD_INDEX, Header);
+
+	//Big Head Mode Index
+	AddValueToByteArray(STAGELIST_INDEX, Header);
 
 	//Random Angle Mode
 	AddValueToByteArray(RANDOM_ANGLE_INDEX, Header);
