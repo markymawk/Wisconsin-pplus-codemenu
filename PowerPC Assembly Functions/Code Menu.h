@@ -74,6 +74,7 @@ extern int BIG_HEAD_INDEX;
 extern int RANDOM_ANGLE_INDEX;
 
 extern int STAGELIST_INDEX;
+extern int THEME_INDEX;
 
 extern int WAR_MODE_INDEX;
 extern int BUFFER_P1_INDEX;

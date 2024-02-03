@@ -69,6 +69,7 @@ int BIG_HEAD_INDEX = -1;
 int RANDOM_ANGLE_INDEX = -1;
 
 int STAGELIST_INDEX = -1;
+int THEME_INDEX = -1;
 
 int WAR_MODE_INDEX = -1;
 int BUFFER_P1_INDEX = -1;
@@ -967,7 +968,7 @@ void CodeMenu()
 	MainLines.push_back(new Toggle("Save Previous Replay", false, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (P+ 2023)", "Doubles (WI 2023)", "Doubles (P+ 2023)", "Singles (PMBR)", "Doubles (PMBR)" }, 0, STAGELIST_INDEX));
-	//MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's", "Splat", "Project Wave", "Invincible 6", "Invincible 7" }, 0, THEME_INDEX));
+	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's", "Splat", "Project Wave", "Invincible 6", "Invincible 7" }, 0, THEME_INDEX));
 
 	MainLines.push_back(&PlayerCodesPage.CalledFromLine);
 	MainLines.push_back(&SpecialModePage.CalledFromLine);
@@ -1516,11 +1517,14 @@ void CreateMenu(Page MainPage)
 	//Big Head Mode Index
 	AddValueToByteArray(BIG_HEAD_INDEX, Header);
 
-	//Big Head Mode Index
-	AddValueToByteArray(STAGELIST_INDEX, Header);
-
 	//Random Angle Mode
 	AddValueToByteArray(RANDOM_ANGLE_INDEX, Header);
+
+	//Stagelist Index
+	AddValueToByteArray(STAGELIST_INDEX, Header);
+
+	//Theme Index
+	AddValueToByteArray(THEME_INDEX, Header);
 
 	//War Mode Index
 	AddValueToByteArray(WAR_MODE_INDEX, Header);
@@ -1541,7 +1545,7 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(CSS_VERSION_SETTING_INDEX, Header);
 
 	// Theme Setting
-	AddValueToByteArray(THEME_SETTING_INDEX, Header);
+	//AddValueToByteArray(THEME_SETTING_INDEX, Header);
 
 	// Dash Attack Item Grab Setting
 	AddValueToByteArray(DASH_ATTACK_ITEM_GRAB_INDEX, Header);
@@ -1625,12 +1629,112 @@ void constantOverride() {
 
 	int reg1 = 4;
 	int reg2 = 5;
+	int reg3 = 3;
+	int reg4 = 6;
 
 	for(auto& x : constantOverrides) {
 		LoadWordToReg(reg1, *x.index + Line::VALUE);
 		SetRegister(reg2, x.address);
 		STW(reg1, reg2, 0);
 	}
+
+	// Themes. If disabled, may need to set 0 in byte array
+	if (THEME_INDEX != -1) {
+		int ThemeSet = GetNextLabel();
+
+		int THEME_STRING[7] = {
+			0x7363,	//sc
+			0x6378,	//cx
+			0x6376,	//cv
+			0x7370,	//sp
+			0x7776,	//wv
+			0x6936,	//i6
+			0x6937	//i7
+		};
+		int MENU_PREFIX_ADDRESSES[6] = {
+			0x806FF2F3,	//sc_selcharacter.pac
+			0x817F6365,	//sc_selcharacter_en.pac
+			0x806FF3F7, //sc_selmap.pac
+			0x817F637C, //sc_selmap_en.pac
+			0x806FF30F,	//sc_selcharacter2.pac
+			0x817F634D //sc_selcharacter2_en.pac
+		};
+
+		LoadWordToReg(reg1, THEME_INDEX + Line::VALUE);
+
+		If(reg1, EQUAL_I, 0); {					//sc, Default
+			SetRegister(reg3, THEME_STRING[0]);	//reg3 used for selchar, selmap
+			SetRegister(reg4, THEME_STRING[0]);	//reg4 used for selchar2
+			JumpToLabel(ThemeSet);
+		} EndIf();
+
+		If(reg1, EQUAL_I, 1); {			//cx, The Construct
+			SetRegister(reg3, THEME_STRING[1]);
+			SetRegister(reg4, THEME_STRING[1]);
+			JumpToLabel(ThemeSet);
+		} EndIf();
+
+		If(reg1, EQUAL_I, 2); {			//cv, Craig's
+			SetRegister(reg3, THEME_STRING[2]);
+			SetRegister(reg4, THEME_STRING[2]);
+			JumpToLabel(ThemeSet);
+		} EndIf();
+
+		If(reg1, EQUAL_I, 3); {			//sp, Splat
+			SetRegister(reg3, THEME_STRING[3]);
+			SetRegister(reg4, THEME_STRING[1]); //Splat uses cx_selchar2
+			JumpToLabel(ThemeSet);
+		} EndIf();
+
+		If(reg1, EQUAL_I, 4); {			//wv, Project Wave
+			SetRegister(reg3, THEME_STRING[4]);
+			SetRegister(reg4, THEME_STRING[2]); //Wave uses cv_selchar2
+			JumpToLabel(ThemeSet);
+		} EndIf();
+
+		If(reg1, EQUAL_I, 5); {			//i6, Invincible 6
+			SetRegister(reg3, THEME_STRING[5]);
+			SetRegister(reg4, THEME_STRING[2]);	//Inv6 uses cv_selchar2
+			JumpToLabel(ThemeSet);
+		} EndIf();
+
+		SetRegister(reg3, THEME_STRING[6]);		//i7, Invincible 7
+		SetRegister(reg4, THEME_STRING[6]);
+
+		Label(ThemeSet);
+
+		for (int i = 0; i < 4; i++) {
+			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
+			STH(reg3, reg2, 0);
+		}
+
+		for (int i = 4; i < 6; i++) {
+			SetRegister(reg2, MENU_PREFIX_ADDRESSES[i]);
+			STH(reg4, reg2, 0);
+		}
+	}
+	//Stagelist toggle - store value near stage table addresses for easy access
+	LoadWordToReg(reg1, STAGELIST_INDEX + Line::VALUE);
+	SetRegister(reg3, 0x80495D1B);
+	STB(reg1, reg3, 0);
+
+	//Store theme toggle next to stagelist toggle
+	LoadWordToReg(reg1, THEME_INDEX + Line::VALUE);
+	STB(reg1, reg3, 1);
+
+	//Store Alternate Stage toggle (for Splat music)
+	LoadWordToReg(reg1, ALT_STAGE_BEHAVIOR_INDEX + Line::VALUE);
+	STB(reg1, reg3, 2);
+
+	//Store Results toggle
+	LoadWordToReg(reg1, AUTO_SKIP_TO_CSS_INDEX + Line::VALUE);
+
+//#if WI_LITE_BUILD
+//	// if false (0), set to 2 (Theme) for StageLoader_WI.
+//	// if true (1), set to 3 (Skip)
+//	ADDI(reg1, reg1, 2);
+//#endif
+	STB(reg1, reg3, 3);
 
 	ASMEnd(0x2c000000); //cmpwi, r0, 0
 }

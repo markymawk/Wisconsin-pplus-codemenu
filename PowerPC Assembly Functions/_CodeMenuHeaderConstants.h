@@ -98,8 +98,9 @@ static const int BIG_HEAD_LOC = ALC_P4_LOC + 4; //4
 static const int RANDOM_ANGLE_LOC = BIG_HEAD_LOC + 4; //4
 
 static const int STAGELIST_LOC = RANDOM_ANGLE_LOC + 4; //4
+static const int THEME_LOC = STAGELIST_LOC + 4; //4
 
-static const int WAR_MODE_LOC = STAGELIST_LOC + 4; //4
+static const int WAR_MODE_LOC = THEME_LOC + 4; //4
 
 static const int BUFFER_P1_LOC = WAR_MODE_LOC + 4; //4
 static const int BUFFER_P2_LOC = BUFFER_P1_LOC + 4; //4
@@ -112,9 +113,9 @@ static const int SPEED_LOC = SCALE_LOC + 4; //4
 
 static const int CSS_VER_LOC = SPEED_LOC + 4; //4
 
-static const int THEME_LOC = CSS_VER_LOC + 4; //4
+//static const int THEME_LOC = CSS_VER_LOC + 4; //4
 
-static const int DASH_ATTACK_ITEM_GRAB_LOC = THEME_LOC + 4; //4
+static const int DASH_ATTACK_ITEM_GRAB_LOC = CSS_VER_LOC + 4; //4
 
 static const int TRIP_TOGGLE_LOC = DASH_ATTACK_ITEM_GRAB_LOC + 4; //4
 static const int TRIP_RATE_MULTIPLIER_LOC = TRIP_TOGGLE_LOC + 4; //4
