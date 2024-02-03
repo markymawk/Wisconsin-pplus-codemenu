@@ -885,6 +885,7 @@ void CodeMenu()
 	ConstantsLines.push_back(new Floating("Knockback Decay Rate", -999, 999, 0.051, .001, KNOCKBACK_DECAY_MULTIPLIER_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B88534, KNOCKBACK_DECAY_MULTIPLIER_INDEX);
 	ConstantsLines.push_back(new Selection("Staling Toggle", { "Default", "ON", "OFF" }, 0, STALING_TOGGLE_INDEX));
+	/*
 	if (CONFIG_DASH_ATTACK_ITEM_GRAB_ENABLED)
 	{
 		ConstantsLines.push_back(new Selection("Aerial & Dash Attack Item Grab Toggle", { "OFF", "ON" }, 0, DASH_ATTACK_ITEM_GRAB_INDEX));
@@ -901,6 +902,7 @@ void CodeMenu()
 		ConstantsLines.push_back(new Integer("Jumpsquat Modifier Minimum Length", minFrameCount, maxFrameCount, minFrameCount, 1, JUMPSQUAT_OVERRIDE_MIN_INDEX, "%d", Integer::INT_FLAG_ALLOW_WRAP));
 		ConstantsLines.push_back(new Integer("Jumpsquat Modifier Maximum Length", minFrameCount, maxFrameCount, maxFrameCount, 1, JUMPSQUAT_OVERRIDE_MAX_INDEX, "%d", Integer::INT_FLAG_ALLOW_WRAP));
 	}
+	*/
 	Page ConstantsPage("Gameplay Modifiers", ConstantsLines);
 
 	//DBZ Mode settings
@@ -932,7 +934,12 @@ void CodeMenu()
 	Page SpecialModePage("Other Settings", SpecialModeLines);
 
 
-	
+	vector<Line*> PlayerCodesLines;
+	PlayerCodesLines.push_back(&P1.CalledFromLine);
+	PlayerCodesLines.push_back(&P2.CalledFromLine);
+	PlayerCodesLines.push_back(&P2.CalledFromLine);
+	PlayerCodesLines.push_back(&P2.CalledFromLine);
+	Page PlayerCodesPage("Player Codes", PlayerCodesLines);
 
 	//main page
 	vector<Line*> MainLines;
@@ -956,11 +963,10 @@ void CodeMenu()
 #endif
 	MainLines.push_back(new Toggle("Save Previous Replay", false, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Comment(""));
+	//MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (P+ 2023)", "Doubles (WI 2023)", "Doubles (P+ 2023)", "Singles (PMBR)", "Doubles (PMBR)" }, 0, STAGELIST_INDEX));
+	//MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's", "Splat", "Project Wave", "Invincible 6", "Invincible 7" }, 0, THEME_INDEX));
 
-	MainLines.push_back(&P1.CalledFromLine);
-	MainLines.push_back(&P2.CalledFromLine);
-	MainLines.push_back(&P3.CalledFromLine);
-	MainLines.push_back(&P4.CalledFromLine);
+	MainLines.push_back(&PlayerCodesPage.CalledFromLine);
 	MainLines.push_back(&SpecialModePage.CalledFromLine);
 
 	
@@ -980,9 +986,6 @@ void CodeMenu()
 	{
 		MainLines.push_back(&HUDColorsPage.CalledFromLine);
 	}
-
-	
-
 
 	/*
 	if (ROSTER_LIST.size() > 1)

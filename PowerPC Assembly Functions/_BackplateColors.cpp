@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "_BackplateColors.h"
 
+//WI build: Disabled for now
+
+/* 
 const std::string codePrefix = "[CM: _BackplateColors] ";
 const std::string codeVersion = "v2.0.1";
 const std::string codeSuffix = " " + codeVersion + " [QuickLava]";
@@ -722,6 +725,7 @@ void selcharCLR0ColorChange()
 	ADDI(3, 3, 1);
 	ASMEnd();
 }
+
 void resultsColorFrameOverrideBody(int workingReg, int colorReg)
 {
 	// Multiply the slot index by 4 to get offset into LOC entries for relevant line...
@@ -732,6 +736,7 @@ void resultsColorFrameOverrideBody(int workingReg, int colorReg)
 	// Load the line's value into reg1.
 	LWZ(workingReg, workingReg, Line::VALUE);
 }
+
 void resultsCLR0ColorChange()
 {
 	const std::string codeGroupName = codePrefix + "Results HUD Color Changer";
@@ -763,3 +768,5 @@ void resultsCLR0ColorChange()
 			0x040e8eb8, 0x60000000, // Replaces "fadds	f1,f0,f1" with "nop"
 		});
 }
+
+*/

@@ -239,13 +239,13 @@ int main(int argc, char** argv)
 
 		CodeMenu(); tagBasedCostumes(); 
 		
-		cssRosterChange(); themeChange(); 
+		//cssRosterChange(); themeChange(); 
 
-		playerSlotColorChangers(CONFIG_BACKPLATE_COLOR_MODE);
+		//playerSlotColorChangers(CONFIG_BACKPLATE_COLOR_MODE);
 
-		dashAttackItemGrab(CONFIG_DASH_ATTACK_ITEM_GRAB_ENABLED);
+		//dashAttackItemGrab(CONFIG_DASH_ATTACK_ITEM_GRAB_ENABLED);
 
-		jumpsquatOverride(CONFIG_JUMPSQUAT_OVERRIDE_ENABLED);
+		//jumpsquatOverride(CONFIG_JUMPSQUAT_OVERRIDE_ENABLED);
 
 		// tripRateModifier();
 
