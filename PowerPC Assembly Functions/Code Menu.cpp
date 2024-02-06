@@ -1724,6 +1724,46 @@ void constantOverride() {
 #endif
 	STB(reg1, reg3, 3);
 
+	// Universal walljumping - if in a match, must restart. Attempted writing to 0x80FC15C0 and 0x80FC15D8, but got same result
+	LoadWordToReg(reg1, ALL_CHARS_WALLJUMP_INDEX + Line::VALUE);
+	SetRegister(reg2, 0x80FAA9A0); //walljump comparison addr
+
+	If(reg1, EQUAL_I, 1); {		// If set
+		SetRegister(reg1, 1);	// word 1 @ $80FAA9A0, everyone can walljump
+	}
+	Else(); {					// If not set
+		SetRegister(reg1, 2);  // word 2 @ $80FAA9A0, normal walljump mechanics
+	} EndIf();
+	STW(reg1, reg2, 0);
+
+	// DI amplitude - multiply the internal value to pi to manipulate the DI range
+	// "pi" in this case means pi/10, or 0.314159265
+	LoadWordToReg(reg1, DI_RANGE_INDEX + Line::VALUE);
+	SetRegister(reg2, 0x80B88524); //Addr of pi value for DI calculations
+
+	If(reg1, EQUAL_I, 2); {
+		SetRegister(reg1, 0x3EA0D97C);		// If 2 (default), write default range of pi
+	}
+	Else(); {
+		If(reg1, EQUAL_I, 0); {
+			SetRegister(reg1, 0);			// 0 (no DI)
+		} EndIf();
+		If(reg1, EQUAL_I, 1); {
+			SetRegister(reg1, 0x3e20d973); // 0.314159 / 2
+		} EndIf();
+		If(reg1, EQUAL_I, 3); {
+			SetRegister(reg1, 0x3f490fd0); // 0.314159 * 2.5
+		} EndIf();
+		If(reg1, EQUAL_I, 4); {
+			SetRegister(reg1, 0x3fc90fd0); // 0.314159 * 5
+		} EndIf();
+		If(reg1, EQUAL_I, 5); {
+			SetRegister(reg1, 0x40490fd0); // 0.314159 * 10
+		} EndIf();
+	}
+	EndIf();
+	STW(reg1, reg2, 0);
+
 	ASMEnd(0x2c000000); //cmpwi, r0, 0
 }
 
