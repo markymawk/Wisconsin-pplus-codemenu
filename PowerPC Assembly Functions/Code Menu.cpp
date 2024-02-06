@@ -770,14 +770,15 @@ void CodeMenu()
 
 	// Shield Colors page
 	vector<Line*> ShieldColorsLines;
+	vector<string> SHIELD_COLORS_LIST = { "Red", "Blue", "Yellow", "Green", "Pink", "Orange", "Cyan", "Purple", "Gray" };
 	ShieldColorsLines.push_back(new Comment("Select from:"));
 	ShieldColorsLines.push_back(new Comment("Red, Blue, Yellow, Green, Pink,"));
 	ShieldColorsLines.push_back(new Comment("Orange, Cyan, Purple, Gray"));
 	ShieldColorsLines.push_back(new Comment(""));
-	ShieldColorsLines.push_back(new Selection("P1 Shield Color", { "Red", "Blue", "Yellow", "Green", "Pink", "Orange", "Cyan", "Purple", "Gray" }, 0, SHIELD_COLOR_P1_INDEX));
-	ShieldColorsLines.push_back(new Selection("P2 Shield Color", { "Red", "Blue", "Yellow", "Green", "Pink", "Orange", "Cyan", "Purple", "Gray" }, 1, SHIELD_COLOR_P2_INDEX));
-	ShieldColorsLines.push_back(new Selection("P3 Shield Color", { "Red", "Blue", "Yellow", "Green", "Pink", "Orange", "Cyan", "Purple", "Gray" }, 2, SHIELD_COLOR_P3_INDEX));
-	ShieldColorsLines.push_back(new Selection("P4 Shield Color", { "Red", "Blue", "Yellow", "Green", "Pink", "Orange", "Cyan", "Purple", "Gray" }, 3, SHIELD_COLOR_P4_INDEX));
+	ShieldColorsLines.push_back(new Selection("P1 Shield Color", SHIELD_COLORS_LIST, 0, SHIELD_COLOR_P1_INDEX));
+	ShieldColorsLines.push_back(new Selection("P2 Shield Color", SHIELD_COLORS_LIST, 1, SHIELD_COLOR_P2_INDEX));
+	ShieldColorsLines.push_back(new Selection("P3 Shield Color", SHIELD_COLORS_LIST, 2, SHIELD_COLOR_P3_INDEX));
+	ShieldColorsLines.push_back(new Selection("P4 Shield Color", SHIELD_COLORS_LIST, 3, SHIELD_COLOR_P4_INDEX));
 	Page ShieldColorsPage("Shield Colors", ShieldColorsLines);
 
 	vector<Line*> PlayerCodesLines;
