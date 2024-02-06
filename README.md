@@ -1,15 +1,17 @@
 # Wisconsin Project+ code menu
 
-Fork of Fracture's code menu as used in Project+ 2.2, with the latest release for use with Project+ v2.4.1.
+Fork of Fracture's code menu as used in Project+ 2.2, rebuilt on QuickLava's edits as included in Project+ 2.5.
 
-Intended only for use with WI P+ build v1.5, but forks are welcome. Please give credit and open-source any edits for custom builds!
+The latest release is for use with Project+ v2.5.
+
+Intended only for use with WI P+ build v1.6, but forks are welcome. Please give credit and open-source any edits for custom builds!
 
 # Changes:
 - Recolored text & background colors with less contrast to be easier on the eyes
 - Includes shield color & theme toggles built-in, among other new toggles. Fuctionality for many toggles requires external asm files included in this repo
 - Salty Runback button combination loosened to R+Y. Skip Results combo loosened to R+X
 - Start-alts replace Y-alts in random Alternate Stages
-- Includes Eon's fixes from P+ 2.27 onward for debug overlay flickers, and other stability fixes
+- Rebuilt on QuickLava's version as included in P+ 2.5 (commit ee5c21b8)
 - Player Codes reorganized into a separate sub-menu, sorted by feature instead of player port
   - Infinite Shields consolidated into a single toggle
   - Set Percent toggle re-sorted into a single sub-menu, with one toggle for all ports 
@@ -20,7 +22,7 @@ Intended only for use with WI P+ build v1.5, but forks are welcome. Please give 
 Added options:
 - Stagelist: Set stage slots on page 1 and update random select accordingly
 - Theme: Load alternate selchar, selchar2, and selmap files
-- Timeout Ledgegrab Limit: If a game goes to time, and any player reaches a ledgegrab threshold, determine winner by lower ledgegrab count
+- Timeout Ledgegrab Limit: If a game goes to time, and any player reaches a ledgegrab threshold, determines winner by lower ledgegrab count
 - (Netplay only) Ordered stage choice: Override stage choice setting for an even stage distribution in netplay sessions
 - Balloon Hit Behavior: Add or subtract a stock upon hitting the Smashville balloon (by Eon)
 - Big Head Mode (by Eon)
@@ -38,7 +40,8 @@ Added options:
 - Gameplay Modifier - DI Amplitude (address thanks to Eon)
 
 #### Credits and thanks to the modders that made these edits possible:  
-- **Fracture** for the base code menu architecture as it appears in Legacy TE and Project+, as well as all the great tech that came with it.  
+- **Fracture** for the base code menu architecture as it appears in Legacy TE and Project+, as well as all the great tech that came with it.
+- **QuickLava** for modernizing heap usage, initial setup, and code output for P+ 2.5 onward.
 - **DesiacX** for the helpful guides and implementations of adding external code toggles
-- **Eon** for providing the v2.27 debug overlay fix code, and for creating various codes used here.  
+- **Eon** for providing codes and fixes for past iterations, and for creating various codes used here. 
 - **DukeItOut** for designing the GCTRM format which streamlines the Gecko coding process at every step, along with the flexible STEX file system which makes the Stagelist toggle possible, among others.
