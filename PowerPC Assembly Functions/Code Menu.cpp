@@ -1218,11 +1218,8 @@ void ActualCodes()
 			STH(Reg1, Reg2, 0);
 		} Else(); If(Reg1, EQUAL_I, 1); //random
 		{
-#if BUILD_TYPE == PROJECT_PLUS
-			vector<int> alts = { 0, BUTTON_L, BUTTON_R, BUTTON_Z, BUTTON_Y };
-#else
-			vector<int> alts = { 0, BUTTON_L, BUTTON_Z, BUTTON_START };
-#endif
+			vector<int> alts = { 0, BUTTON_L, BUTTON_R, BUTTON_Z, BUTTON_START };
+
 			LoadWordToReg(Reg1, Reg2, RANDOM_ALTS_MATCH_START_FLAG);
 			If(Reg1, EQUAL_I, 1); {
 				//set new rng value and clear flag
@@ -1348,8 +1345,8 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(START_OF_CODE_MENU, Header); //current page ptr
 	AddValueToByteArray(START_OF_CODE_MENU, Header); //main page ptr
 	//button combos
-	AddValueToByteArray(BUTTON_L | BUTTON_R | BUTTON_Y , Header); //salty runback
-	AddValueToByteArray(BUTTON_L | BUTTON_R | BUTTON_X, Header); //skip results
+	AddValueToByteArray(BUTTON_R | BUTTON_Y , Header); //salty runback
+	AddValueToByteArray(BUTTON_R | BUTTON_X, Header); //skip results
 	// Old Line Color Table
 	AddValueToByteArray(0x00, Header);
 	AddValueToByteArray(0x00, Header);
