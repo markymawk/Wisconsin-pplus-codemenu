@@ -1,35 +1,33 @@
+#################################
 Reset Teams on re-enter CSS [Eon]
+#################################
 # Code menu variant by mawwwk
 
-#Calls assignTeams if teams are enabled
-.alias CodeMenuStart = 0x804E
-.alias CodeMenuHeader = 0x02CC     #Offset of word containing location of code menu toggle
-HOOK @ $80683634
+.include Source/Extras/Macros.asm
+
+.alias CodeMenuLoc = 0x804E02C8
+
+HOOK @ $80683634				# Calls assignTeams if teams are enabled
 {  
   mr r3, r30
-  lis r12, 0x8068
-  ori r12, r12, 0x4D84
-  mtctr r12 
-  bctrl 
-  cmpwi r3, 1 #if is teams (if not go to vanilla code)
+  %call(0x80684D84)
+  cmpwi r3, 1 				# If not teams, use default behavior
   bne end
-  lis r3, CodeMenuStart			# Code menu check
-  ori r3, r3, CodeMenuHeader
-  lwz r3, 0(r3)
-  lbz r3, 0xB(r3)
-  cmpwi r3, 1                   # If toggle not set, use default behavior
-  bne end                       #
-  mr r3, r30 #assign random teams
-  lis r12, 0x8068
-  ori r12, r12, 0xAC4C
-  mtctr r12 
-  bctrl 
+  
+  %cmHeader(r3, CodeMenuLoc)
+  cmpwi r3, 1              # If toggle not set, use default behavior
+  bne end
+  
+  mr r3, r30 				#assign random teams
+  %call(0x8068AC4C)
+  
 end:
   li r3, 42
 }
 
-
+############################################
 Assign Teams randomises colour & order [Eon]
+############################################
 .macro randi(<i>)
 {
   li r3, <i> 
@@ -47,7 +45,7 @@ HOOK @ $8068ACD0
   li r6, totalTeams
   mr r30, r6  
 
-  #initialise list filled with one random team 
+  #initialise list filled with one random team
   %randi(totalTeams) 
   li r4, 0x8
 initialLoop:   #set everyone to base team 

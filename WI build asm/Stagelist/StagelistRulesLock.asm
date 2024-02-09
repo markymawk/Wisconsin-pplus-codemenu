@@ -29,60 +29,55 @@ Stagelist rules lock [mawwwk]
 # Lock menu rule options from scrolling
 #######################
 
-# Damage ratio lock
-HOOK @ $806A79E8
+HOOK @ $806A79E8			# Damage ratio lock
 {
 	%CompareStagelistToggle(r25)
 	li r0, 10; b %END%		# If stagelist set, lock damage ratio at 1.0
 
 UpdateVal:
-	add r0, r0, 24			# If default stagelist, run original op
+	add r0, r0, 24			# If no stagelist set, run original op
 }
 
-# Timer lock (99:00 -> infinite -> 8:00)
-HOOK @ $806A96D8
+HOOK @ $806A96D8	# Timer lock (99:00 -> infinite -> 8:00)
 {
 	%CompareStagelistToggle(r4)
 	cmpwi r0, 98; bge maxTimer	# Cap leftmost at 99
 	cmpwi r0, 9; bge eightMin	# Cap rightmost at 8
 	b UpdateVal
 
-eightMin:
+  eightMin:
 	li r0, 8; b UpdateVal
 
-maxTimer:
-	li r0, 99				# 99 min, for crew battles mostly
+  maxTimer:
+	li r0, 99			# 99 min, for crew battles mostly
 
-UpdateVal:
-	stb r0, 0x66C(r3)		# If default stagelist, run original op
+  UpdateVal:
+    stb r0, 0x66C(r3)	# If no stagelist set, or within valid range, run original op
 }
 
-# Team attack lock
-HOOK @ $806A9900
+HOOK @ $806A9900			# Team attack lock
 {
 	%CompareStagelistToggle(r4)
 	li r4, 0; b %END%		# Treat "ON" as the left-most option
 	
-UpdateVal:
-	lbz	r4, 0x66D(r3)		# If default stagelist, run original op
+  UpdateVal:
+	lbz r4, 0x66D(r3)		# If default stagelist, run original op
 }
 
-# ALC lock
-HOOK @ $806A9D9C
+HOOK @ $806A9D9C			# ALC lock
 {
 	%CompareStagelistToggle(r4)
 	li r4, 1; b %END%		# Treat "OFF" as the right-most ooption
 	
-UpdateVal:
+  UpdateVal:
 	lbz r4, 0x66F(r3)		# If default stagelist, run original op
 }
 
-# Input assist lock
-HOOK @ $806A9F90
+HOOK @ $806A9F90			# Input assist lock
 {
 	%CompareStagelistToggle(r4)
 	li r4, 1; b %END%		# Treat "OFF" as the right-most option
 
-UpdateVal:
+  UpdateVal:
 	lbz r4, 0x670(r3)		# If default stagelist, run original op
 }

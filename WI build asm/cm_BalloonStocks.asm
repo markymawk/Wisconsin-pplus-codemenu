@@ -1,9 +1,11 @@
-###########################################################
+######################################################
 Smashville Balloon gives 1 stock to its attacker [Eon]
-###########################################################
-#Code Menu Variant by mawwwk, with thanks to Desi for the format
-.alias CodeMenuStart = 0x804E
-.alias CodeMenuHeader = 0x02B8       #Offset of word containing location of toggle
+######################################################
+# Code menu variant by mawwwk
+
+.include Source/Extras/Macros.asm
+
+.alias CodeMenuLoc = 0x804E02F0
 
 HOOK @ $80979BE4 #at the `return True` of `onDamage/[ykDamageModuleImpl]/yk_damage_module_impl.o`
 {
@@ -25,43 +27,35 @@ HOOK @ $80979BE4 #at the `return True` of `onDamage/[ykDamageModuleImpl]/yk_dama
     mtctr r12
     bctrl 
     mr r30, r3
+	
     #TaskScheduler.getInstance()
-    lis r12, 0x8002
-    ori r12, r12, 0xE30C
-    mtctr r12
-    bctrl 
+    %call(0x8002E30C)
+	
     #taskScheduler.getTaskById(attackerType, attackerID)
     lbz r4, 0x10(r30)
     lwz r5, 0x14(r30)
-    lis r12, 0x8002
-    ori r12, r12, 0xF018
-    mtctr r12
-    bctrl
+	%call(0x8002F018)
     cmpwi r3, 0
     beq end
+	
     #attacker.getOwner()
     lwz r12, 0x3C(r3)
     lwz r12, 0x2EC(r12)
     mtctr r12
     bctrl 
     mr r30, r3
-    #attackerOwner.getStockCount()
-    lis r12, 0x8081
-    ori r12, r12, 0xC540
-    mtctr r12
-    bctrl
 	
-	lis r12, CodeMenuStart			#
-	ori r12, r12, CodeMenuHeader	# Load Code Menu Header
-	lwz r12, 0 (r12)
-	lbz r12, 0xB(r12)
-	cmpwi r12, 0					# If (CodeMenuVar == 0), don't affect stocks
+    #attackerOwner.getStockCount()
+	%call(0x8081C540)
+	
+	%cmHeader(r12, CodeMenuLoc)
+	cmpwi r12, 0			# If toggle off, do nothing
 	beq end	
 	
-	cmpwi r12, 1					# Else if (CodeMenuVar == 1), add a stock to attacker
+	cmpwi r12, 1			# If set to 1, add stock
 	beq AddStock
 	
-	subi r4, r3, 1					# Else, subtract a stock
+	subi r4, r3, 1			# Else, subtract a stock
 	b return
 	
     #attackerOwner.setStockCount(prevStockCount+1)
@@ -70,10 +64,7 @@ HOOK @ $80979BE4 #at the `return True` of `onDamage/[ykDamageModuleImpl]/yk_dama
 	
 	return:
       mr r3, r30
-      lis r12, 0x8081
-      ori r12, r12, 0xC528
-      mtctr r12
-      bctrl 
+	  %call(0x8081C528)
 end:
-    li r3,1 
+    li r3, 1 
 }

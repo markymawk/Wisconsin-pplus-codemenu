@@ -3,7 +3,7 @@
 
 byte 14 @ $806B929C # Page 1
 byte 27 @ $806B92A4 # Page 2
-byte 68 @ $800AF673 # Stage Count (above values plus 27)
+byte 68 @ $800AF673 # Stage Count (sum of above values plus 27)
 
 .BA<-STG0_PAGE1
 .BA->$80495D04
@@ -13,8 +13,8 @@ byte 68 @ $800AF673 # Stage Count (above values plus 27)
 
 STG0_PAGE1:
     byte[14] |
-0x0C, 0x18, 0x04, 0x0B, 0x21, 0x01, 0x23, | # YI, FoD, Metal, Meadows, GT, FD, DL
-0x1C, 0x08, 0x1A, 0x00, 0x28, 0x03, 0x02 # GHZ, TT, SV, BF, PS2, Mansion, Delfino
+0x0C, 0x18, 0x04, 0x0B, 0x21, 0x01, 0x23, | # YI, FoD, Metal, Frigate, GT, FD, DL
+0x1C, 0x08, 0x1A, 0x00, 0x28, 0x03, 0x02 # GHZ, ToT, SV, BF, PS2, Mansion, Delfino
 
 STG0_PAGE2:
     byte[27] |

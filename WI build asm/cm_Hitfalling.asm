@@ -1,9 +1,11 @@
-###########################################################
+###################################
 Enable fastfall on aerial hit [Eon]
-###########################################################
-# Code menu variant by mawwwk, with format by Desi
-.alias CodeMenuStart = 0x804E
-.alias CodeMenuHeader = 0x02D0
+###################################
+# Code menu variant by mawwwk
+
+.include Source/Extras/Macros.asm
+
+.alias CodeMenuLoc = 0x804E02D8
 .alias fallFrameBuffer = 5
 
 HOOK @ $8077e8d4                # "First hook is innocuous on its own"
@@ -15,17 +17,12 @@ HOOK @ $8077e8d4                # "First hook is innocuous on its own"
 HOOK @ $8077e8f4
 {  
     lwz r31, 0x1C(r1)           # Original instr
-    
-    lis r4, CodeMenuStart
-    ori r4, r4, CodeMenuHeader  # \ Load Code Menu Header
-    lwz r4, 0(r4)
-    lbz r4, 0xB(r4)
-    cmpwi r4, 0                 # / Skip if (codemenu var == 0)
+	%cmHeader(r4, CodeMenuLoc)
+    cmpwi r4, 0                 # / Skip if toggled off
     beq end
     
     lwz r3, 0x10(r1)            # If hitstun/SDI-able code, just jump out its not worth it
-    lis r4, 0x80B8
-    ori r4, r4, 0x97BC
+    %lwi(r4, 0x80B897BC)
     cmpw r3, r4
     beq end
 

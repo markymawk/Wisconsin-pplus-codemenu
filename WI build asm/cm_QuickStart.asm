@@ -1,17 +1,18 @@
 ##################################################################
 [Project+] 1-P Battles Don't Use Start Countdown [JOJI, DukeItOut]
-# Code menu variant by mawwwk
 ##################################################################
-.alias CodeMenuStart = 0x804E
-.alias CodeMenuHeader = 0x02FC
+# Code menu variant by mawwwk
+
+.include Source/Extras/Macros.asm
+
+.alias CodeMenuLoc = 0x804E02F8
 HOOK @ $806D182C
 {
 	cmpwi r0, 0;  bne- normal	# not multiplayer if non-zero
 	
-	lis r12, CodeMenuStart			# Check code menu value
-	ori r12, r12, CodeMenuHeader
-	lwz r12, 0(r12); lbz r12, 0xB(r12)
-	cmpwi r12, 0; bne normal		# Skip if value ON
+	%cmHeader(r12, CodeMenuLoc)
+	cmpwi r12, 0
+	bne normal			# Skip if value ON
 	
 	lis r12, 0x9018;  ori r12, r12, 0xF5D	# 90180F5D+5C= 90180FB9, the first address we need, with each port separated by 0x5C bytes
 	lbzu r3, 0x5C(r12)	# note that is a load with update and not a load, reading port 1
@@ -26,4 +27,3 @@ HOOK @ $806D182C
 normal:
 	mulli r0, r0, 0x14
 }
-# Removed from main codeset due to replay incompatibility.

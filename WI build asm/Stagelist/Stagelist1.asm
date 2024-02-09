@@ -3,7 +3,7 @@
 
 byte 13 @ $806B929C # Page 1
 byte 27 @ $806B92A4 # Page 2
-byte 67 @ $800AF673 # Stage Count (above values plus 27)
+byte 67 @ $800AF673 # Stage Count (sum of above values plus 27)
 
 # Random stage select
 * 42000000 90000000
@@ -18,8 +18,8 @@ byte 67 @ $800AF673 # Stage Count (above values plus 27)
 
 STG1_PAGE1:
     byte[8] |
-0x0C, 0x0B, 0x23, 				| # YI, Meadows, DL
-0x08, 0x1A, 0x00, 0x28, 0x03 	| # TT, SV, BF, PS2, Mansion
+0x0C, 0x0B, 0x23, 				| # YI, Frigate, DL
+0x08, 0x1A, 0x00, 0x28, 0x03 	| # ToT, SV, BF, PS2, Mansion
 
 STG1_PAGE2:
     byte[27] |

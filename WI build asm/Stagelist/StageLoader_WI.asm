@@ -1,11 +1,24 @@
 ########################################################
 Custom Stage SD File Loader (WI ver.) [DukeItOut, mawwwk]
 # WI build edit: Checks for _WI suffix in param files, and replaces based on Theme toggle
+# Uses addresses:
+# 8053EF10: Writes Splat battle tlst string loc
+# 8053EF14: Stores currently opened TLST name (first 4 chars)
 # Used in Source/Project+/StageFiles.asm
 # Requires CMM SD File Saver
 #
 # Prerequisite: Stage ID in r3 (retrieves input, itself)
 ########################################################
+.include Source/Extras/Macros.asm
+
+	.BA<-SplatBattleTLST
+	.BA->$8053EF10
+	.RESET
+.GOTO->LoaderCode
+SplatBattleTLST:
+	string "SP_Battle"
+
+LoaderCode:
 CODE @ $8053E000
 {
 	lhz r0, 0xFB8(r12)
@@ -29,6 +42,8 @@ CODE @ $8053E000
 	li r0, 0xFF				# Clear random reroll flag for substages
 	stb r0, -0x7E(r12)		#
 	sth r7, -0x80(r12)		# Store stage ID
+	lhz r4, 2(r28)			# \ (NEW P+ 2.5: )
+	sth r4, -0x46(r12)		# / Store stage ASL ID
 	addi r3, r1, 0x90
 	lwz r4, -0x20(r12)		# "%s%s%02X%s"
 	lwz r5, -0x1C(r12)		# "/stage/"
@@ -71,7 +86,8 @@ Replay:
 	sth     r16, 2(r28)       	# /
 	li		r0, 0xFF			# r0 was overwritten, but we still need it!
 Multiplayer:    
-ClassicAllStar:	
+ClassicAllStar:
+# $8053e0f0
 	lis r12, 0x8053
 	ori r12, r12, 0xF000
 	lhz r23, 4(r12)			# \ Get the slot count
@@ -113,94 +129,169 @@ not_found:
 	add r23, r23, r29		# Get the title address
 	addi r3, r1, 0x90
 
-#############################
-### START WI LOADER EDITS ###
-#############################
-# $8053e174
+############################
+### START WI EDITS (1/2) ###
+############################
+# $8053e17c
 .alias ThemeToggleLoc = 0x80495D1C
-.alias SmashvilleID = 0x21
-.alias PS2ID = 0x2E
 .alias ConfigID = 0x26
+.alias ResultsID = 0x28
 .alias CxToggle = 1
-.alias WaveToggle = 2
-.alias InvToggle = 3
+.alias CvToggle = 2
+.alias SpToggle = 3
+.alias WvToggle = 4
+.alias Inv6Toggle = 5	# \ PS2, YI, TOT CHECKS ASSUME THIS ORDER
+.alias Inv7Toggle = 6	# /
 
-.alias addrHi = ThemeToggleLoc / 0x10000
-.alias addrLo = ThemeToggleLoc & 0xFFFF
+	%lwi(r12, ThemeToggleLoc)	# r12: Theme addr
+	%loadByte(r6, 0x8053EF81)	# r6: ASL stage ID
+	mr r7, r23					# r7: Param filename loc
+	lbz r8, 0(r12)				# r8: Theme ID
 
-	lis r8, addrHi; ori r8, r8, addrLo
-	lbz r8, 0(r8)			# Check theme toggle
-	cmpwi r8, 0				# Skip this code if on default WI theme
-	beq end_WI
+	cmpwi r6, ResultsID
+	bne notResults
+
+ResultsCodeMenuCheck:
+	addi r7, r7, 7			# "Results"
 	
-	mr r7, r23				# Copy param filename loc
+	lbz r5, 2(r12)					# Check code menu Results toggle
+	cmpwi r5, 1; beq GetThemeString # Results: Theme
+	cmpwi r5, 2; beq StageResults 	# Results: Stage
+	cmpwi r5, 3; beq end_WI			# Results: Skip
+	
+							# \ Default results behavior:
+	cmpwi r8, 0             # | If WI theme, use stage-specific results.
+	bne GetThemeString      # / Otherwise load theme-based results param
 
-# Shortcut to avoid redundant param files
-ConfigParamCheck:
-	lis r6, 0x8053			# Load ASL ID
-	ori r6, r6, 0xEF81
-	lbz r6, 0(r6)
+StageResults:
+	%loadByte(r6, 0x9017F42D)	# Load previous stage ID
+	
+	cmpwi r6, 0x01; li r5, 0x4246; beq StoreString	# Battlefield
+	cmpwi r6, 0x02; li r5, 0x4644; beq StoreString	# Final Destination
+	cmpwi r6, 0x04; li r5, 0x4C4D; beq StoreString	# Luigi's Mansion
+	cmpwi r6, 0x09; li r5, 0x5454; beq StoreString	# Temple of Time
+	cmpwi r6, 0x0C; li r5, 0x4648; beq StoreString	# Frigate Husk
+	cmpwi r6, 0x0D; li r5, 0x5949; beq StoreString	# Yoshi's Island
+	cmpwi r6, 0x21; li r5, 0x5356; beq StoreString	# Smashville
+	cmpwi r6, 0x2D; li r5, 0x444C; beq StoreString	# Dream Land
+	cmpwi r6, 0x37; li r5, 0x5452; beq StoreString	# Training Room
+	cmpwi r6, 0x47; li r5, 0x4754; beq StoreString	# Golden Temple
+	cmpwi r6, 0x2E	# PS2
+	
+	bne GetThemeString		# If stage ID not found, use theme
+
+PS2_Results:
+	li r5, 0x5053			# Use "PS"
+	%lwi(r12, 0x8053EFBA)	# Get ASL ID
+	lhz r12, 0(r12)
+	andi. r12, r12, 0x1000	# Check if Start is pressed
+	beq StoreString			#
+	li r5, 0x4D53			# If so, use "MS"
+	b StoreString
+
+notResults:
+	cmpwi r8, 0				# If theme is WI,
+	beq end_WI				# skip this code (no stage change)
+	
 	cmpwi r6, ConfigID		# Check asl ID for menu (Config)
-	bne SVParamCheck
-	cmpwi r8, InvToggle		# Skip checking Config for IN and up
-	bge end_WI
+	bne StageCheck
+	cmpwi r8, Inv6Toggle	# \ If Config and not Inv6/CV,
+	beq end_WI				# | skip checking params
+	cmpwi r8, CvToggle		# | (These use Config_WI)
+	beq end_WI				# /
 	addi r7, r7, 6			# "Config"
-	b GetNewString			# No other possible suffixes, so replace
+	b GetThemeString		# No other possible suffixes, so replace
+
+StageCheck:					# Not on menu or results
+	cmpwi r8, CxToggle		# \ If Construct theme,
+	beq DelfinoParamCheck	# / force a continue to check stages
+	
+	lbz r5, 1(r12)			# \ If Alternate Stages OFF,
+	cmpwi r5, 2				# | skip this code
+	beq end_WI				# /
+
+DelfinoParamCheck:
+	cmpwi r6, 0x03			# \
+	bne MetalParamCheck		# | If Delfino and not Inv6,
+	cmpwi r8, Inv6Toggle	# | skip checking params
+	bne end_WI				# /
+	addi r7, r7, 14			# "Delfino_Secret"
+	b StartCompare
+
+MetalParamCheck:
+	cmpwi r6, 0x05			# \
+	bne SVParamCheck		# | If MC and not Inv6,
+	cmpwi r8, Inv6Toggle	# | skip checking params
+	bne end_WI				# /
+	addi r7, r7, 12			# "Metal_Cavern"
+	b StartCompare
 
 SVParamCheck:
-	cmpwi r6, SmashvilleID	# \
-	bne PS2ParamCheck		# | If Smashville and not Inv6/CV,
-	cmpwi r8, InvToggle		# | skip checking params
+	cmpwi r6, 0x21			# \
+	bne PS2ParamCheck		# | If Smashville and not Inv6/CX,
+	cmpwi r8, Inv6Toggle	# | skip checking params
 	beq continueSV			# |
 	cmpwi r8, CxToggle		# |
 	bne end_WI				# /
 continueSV:
 	addi r7, r7, 10			# "Smashville"
-	b StartCompare			# Check for other suffixes
+	b StartCompare
 
 PS2ParamCheck:
-	cmpwi r6, PS2ID			# \ If PS2 and not Inv6,
-	bne StartCompare		# | skip checking params
-	cmpwi r8, InvToggle		# |
-	bne end_WI				# /
+	cmpwi r6, 0x2E			# \ If PS2 and not Inv6 or Inv7,
+	bne TOTParamCheck		# | skip checking params
+	cmpwi r8, Inv6Toggle	# |
+	blt end_WI				# /
 	addi r7, r7, 17			# "Pokemon_Stadium_2"
-	b StartCompare			# Check for other suffixes (_S, _DPAD)
+	b StartCompare
+
+TOTParamCheck:
+	cmpwi r6, 0x09			# \
+	bne YIParamCheck		# | If Temple of Time and not Inv6 or Inv7,
+	cmpwi r8, Inv6Toggle	# | skip checking params
+	blt end_WI				# /
+	addi r7, r7, 14			# "Temple_of_Time"
+	b StartCompare
+
+YIParamCheck:
+	cmpwi r6, 0x0D			# \
+	bne StartCompare		# | If YI and not Inv6 or Inv7,
+	cmpwi r8, Inv6Toggle	# | skip checking params
+	blt end_WI				# /
+	addi r7, r7, 13			# "Yoshis_Island"
 
 StartCompare:
 	lis r4, 0x5F57; ori r4, r4, 0x4900	# "_WI" followed by null terminator
 
 CheckParamFilename:
-	lwz r6, 0(r7)			# Compare param filename with "_WI."
-	cmpw r6, r4
-	beq GetNewString
-	andi. r6, r6, 0xFF		# If terminator char reached, 
+	lwz r6, 0(r7)			# \ Compare param filename with "_WI."
+	cmpw r6, r4				# /
+	beq GetThemeString
+	andi. r6, r6, 0xFF		# If terminator char (00) reached,
 	beq end_WI				# give up
 	
 	addi r7, r7, 1			# Otherwise, check the next character
 	b CheckParamFilename
 
-# Load replacement string
-GetNewString:
-	cmpwi r8, CxToggle		# 1: "CX"
-	li r5, 0x4358
-	beq StoreString
-	cmpwi r8, WaveToggle	# 2: "WV"
-	li r5, 0x5756
-	beq StoreString
-	cmpwi r8, InvToggle		# 3: "IN"
-	li r5, 0x494E
-	beq StoreString
-	li r5, 0x4356			# 4: "CV"
+# Load replacement theme string. Location must be set in r7
+GetThemeString:
+	cmpwi r8, 0; li r5, 0x5749; beq StoreString				# "WI"
+	cmpwi r8, CxToggle; li r5, 0x4358; beq StoreString		# "CX"
+	cmpwi r8, CvToggle; li r5, 0x4356; beq StoreString		# "CV"
+	cmpwi r8, SpToggle; li r5, 0x5350; beq StoreString		# "SP"
+	cmpwi r8, WvToggle; li r5, 0x5756; beq StoreString		# "WV"
+	cmpwi r8, Inv6Toggle; li r5, 0x4936; beq StoreString	# "I6"
+	li r5, 0x4937			# "I7"
 
 StoreString:
 	sth r5, 1(r7)			# Replace "WI" with new suffix
 
 end_WI:
 
-###########################
-### END WI LOADER EDITS ###
-###########################
-
+##########################
+### END WI EDITS (1/2) ###
+##########################
+# $8053e380
 	lis r12, 0x8053			# Stage files write to 8053F000
 	ori r12, r12, 0xF000	#	
 	lis r4, 0x8048			#
@@ -231,22 +322,57 @@ end_WI:
 	ori r12, r12, 0xBF0C	# | load the file
 	mtctr r12				# | 
 	bctrl 					# /
-
-	lis r12, 0x8053			# \
-	ori r12, r12, 0xF000	# | Get the tracklist file name
+############################
+### START WI EDITS (2/2) ###
+############################
+# $8053e338
+	%lwi(r12, 0x8053F000)	# \ Get tracklist file name
 	lwz r8, 0x18(r12)		# |
 	lwz r4, 0x4(r12)		# |
 	add r4, r4, r12			# |
 	add r8, r8, r4			# /
 	
-TracklistLoading:	
+	%lwi(r18, 0x8053EF10)		# SP_Battle tlst loc
+	%lwi(r12, ThemeToggleLoc)
+	
+	lbz r5, 0(r12)				# \ If not on splat theme,
+	cmpwi r5, SpToggle     		# | load tracklist from param
+	bne TracklistLoading    	# /
+	
+	lbz r5, 1(r12)				# Check Alternate Stage toggle
+	cmpwi r5, 2					# If OFF,
+	beq TracklistLoading		# load tracklist from param
+	
+	%loadByte(r12, 0x8053EF81)	# Load ASL ID
+	cmpwi r12, ConfigID			# If on Config or Results,
+	beq TracklistLoading        # load tracklist from param
+	cmpwi r12, ResultsID
+	beq TracklistLoading
+	
+	lhz r12, 2(r28)				# Check controller inputs at 800b9ea2
+	andi. r12, r12, 0xF			# \ If between 0x1-0xF inclusive,
+	beq LoadSpBattleTLST		# | dpad is held, so use normal tlst
+	cmpwi r12, 0xF				# |
+	ble TracklistLoading		# /
+
+LoadSpBattleTLST:	
+	lwz r8, 0(r18)		# Use Sp_Battle tracklist
+
+TracklistLoading:
+	lwz r19, 0(r8)		# Store tracklist name in 8053EF14
+	stw r19, 4(r18)		# for checks in My Music
+
+##########################
+### END WI EDITS (2/2) ###
+##########################
+
 	stwu r1, -0xF0(r1)
 	stw r4, 0x8(r1)
 	stw r5, 0xC(r1)
 	stw r6, 0x10(r1)
 	stw r7, 0x14(r1)
 	stw r3, 0x18(r1)
-	lis r4, 0x8053;  ori r4, r4, 0xCFF8	# 
+	lis r4, 0x8053;  ori r4, r4, 0xCFF8	# $8053CFF8
 	lwz r5, 0x0(r4)						# "sound/tracklist/" (or netplaylist)
 	lwz r4, 0x4(r4)						# "%s%s.tlst"
 	mr r6, r8

@@ -3,7 +3,7 @@
 
 byte 16 @ $806B929C # Page 1
 byte 27 @ $806B92A4 # Page 2
-byte 70 @ $800AF673 # Stage Count (above values plus 27)
+byte 70 @ $800AF673 # Stage Count (sum of above values plus 27)
 
 # Random stage select
 * 42000000 90000000
@@ -23,7 +23,7 @@ STG2_PAGE1:
 
 STG2_PAGE2:
     byte[27] |
-0x0C, 0x18, 0x04, 0x0B, 0x1C, 0x08, 0x02, | # YI, FoD, Metal, Frigate, GHZ, TT, Delfino
+0x0C, 0x18, 0x04, 0x0B, 0x1C, 0x08, 0x02, | # YI, FoD, Metal, Frigate, GHZ, ToT, Delfino
 0x38, | # Mushroomy Kingdom
 0x45, | # Flat Zone
 0x2F, | # Hanenbow

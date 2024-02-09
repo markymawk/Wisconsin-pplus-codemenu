@@ -1,13 +1,13 @@
 ######################################################################################
 L-Cancel Landing Lag and Success Rate and Score Display is Auto L-Cancel Option + White L-cancel Flash v3.0 [Magus, Standardtoaster, wiiztec, Eon]
 ######################################################################################
-# Original Code Menu mod made by Desi, based on Per Player versions by wiiztec
-# Code adapted to WI code menu by mawwwk - removed dependency on per-port ALC, ALC efficacy, and input buffer toggles, and added working flash for global ALC miss
-
+# Code menu variant by Desi, based on per-player versions by wiiztec
+# Code adapted to WI code menu by mawwwk
+# Removed dependency on per-port ALC, ALC efficacy, and input buffer toggles, and added working flash for global ALC miss
 # Requires REMOVAL of similarly-named code inside Source/Project+/L-Cancel.asm
 
 .alias CodeMenuStart = 0x804E
-.alias CodeMenuHeader = 0x02BC       #Offset of word containing location of the player 1 toggle. Source is compiled with headers for this.
+.alias CodeMenuHeader = 0x02A8       #Offset of word containing location of the player 1 toggle. Source is compiled with headers for this.
 
 HOOK @ $80874850 
 {
@@ -58,11 +58,12 @@ trueLcancel:
   b calcStat
 
 missedLCancel: 
-  lis r11, 0x9017			# \ Check if universal ALC toggle is on,
-  ori r11, r11, 0xF36B		# / and skip red flash check if so
-  lbz r11, 0(r11)
-  cmpwi r11, 1
-  beq applyLcancelALC
+  lis r11, 0x805A		# P+ 2.5 change
+  lwz r11, 0xE0(r11)	
+  lwz r11, 0x08(r11)		
+  lbz r11, 0xE5(r11)	# 0x4D (+ 0x98)
+  andi. r11, r11, 1	# bit used for ALC
+  bne applyLcancelALC
   lwz r11, 28(r31)          # \ Begin code menu check here.
   lwz r11, 40(r11)          # | Obtain player ID
   lwz r11, 16(r11)          # | 

@@ -1,11 +1,9 @@
 .include Source/Stagelist/Stagelist0.asm	# Default
 .include Source/Stagelist/Stagelist1.asm	# P+ 2023 Singles
-.include Source/Stagelist/Stagelist2.asm	# WI 2023 Doubles (FH > GT)
-.include Source/Stagelist/Stagelist3.asm	# P+ 2023 Doubles
-.include Source/Stagelist/Stagelist4.asm	# WI 2022 Singles
-.include Source/Stagelist/Stagelist5.asm	# WI 2022 Doubles
-.include Source/Stagelist/Stagelist6.asm	# PMBR Singles
-.include Source/Stagelist/Stagelist7.asm	# PMBR Doubles
+.include Source/Stagelist/Stagelist2.asm	# WI 2023 Doubles (GT, no FH)
+.include Source/Stagelist/Stagelist3.asm	# P+ 2023 Doubles (FH, no GT)
+.include Source/Stagelist/Stagelist4.asm	# PMBR Singles
+.include Source/Stagelist/Stagelist5.asm	# PMBR Doubles
 
 .BA<-TABLE_STAGES
 .BA->$80495D00

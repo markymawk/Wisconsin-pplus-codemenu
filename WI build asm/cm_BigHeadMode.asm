@@ -1,8 +1,12 @@
+########################
 Big Head Mode v1.0 [Eon]
-#Code Menu Variation by Desi (WI: changed to 2 size options from 4)
+########################
+# Code menu variant by Desi
+# WI: changed to 2 size options from 4
 
-.alias CodeMenuStart = 0x804E
-.alias CodeMenuHeader = 0x02AC       #Offset of word containing location of the Big Head Mode. Source is compiled with headers for this.
+.include Source/Extras/Macros.asm
+
+.alias CodeMenuLoc = 0x804E02B8
 
 HOOK @ $80839010
 { 
@@ -10,12 +14,8 @@ HOOK @ $80839010
   mflr r0
   stw r0, 0x24(r1)
  
-  #Code Menu Check
-  lis r3, CodeMenuStart
-  ori r3, r3, CodeMenuHeader    #Load Code Menu Header
-  lwz r3, 0 (r3)
-  lbz r3, 0xB(r3)
-  cmpwi r3, 0x1
+  %cmHeader(r3, CodeMenuLoc)
+  cmpwi r3, 1
   blt return
 
   #getCameraSubject(0)
@@ -30,13 +30,9 @@ HOOK @ $80839010
  
   lwz r4, 0x10(r3)
 
-  lis r3, CodeMenuStart
-  ori r3, r3, CodeMenuHeader    #Load Code Menu Header
-  lwz r3, 0 (r3)
-  lbz r3, 0xB(r3)
-  lis r0, 0x4000
-Large:
-  cmpwi r3, 2
+  %cmHeader(r3, CodeMenuLoc)
+  lis r0, 0x4000			# Load 1x big head size
+  cmpwi r3, 2				# If 2, set 2x big head size
   bne Size_Set
   lis r0, 0x4050
 

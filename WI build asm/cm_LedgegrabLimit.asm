@@ -1,9 +1,9 @@
-###################################
+######################################
 Tiebreaker (WI LGL ver.) [Eon, mawwwk]
-###################################
+######################################
+.include Source/Extras/Macros.asm
 
-.alias CodeMenuStart = 0x804E
-.alias CodeMenuHeader = 0x02F8
+.alias CodeMenuLoc = 0x804E02CC
 
 HOOK @ $8095617c 
 {
@@ -30,20 +30,21 @@ HOOK @ $8095617c
     sub r0, r7, r0
     sth r0, 0x27E(r3) # Store (1000 - percent) into bottom half
 	
-	# START LEDGEGRAB CHECKS
-	lwz r7, 0xE0(r31)			# Check frames remaining in game
-	cmpwi r7, 0					# Only apply ledgegrabs as a wincon for timeout
+	# Start ledgegrab chacks
+	lwz r7, 0xE0(r31)	# Check frames remaining in game
+	cmpwi r7, 0			# Only apply as a wincon for timeout
 	bne %end%
 	
-	lis r7, CodeMenuStart		# \ Load LGL toggle value
-	ori r7, r7, CodeMenuHeader  
-	lwz r7, 0(r7)
-	lbz r7, 0xB(r7)
-	cmpwi r7, 0                 # / Skip if toggle OFF
-	beq %end%
+	# TO USE WITHOUT CODE MENU TOGGLE, 
+	# remove the code menu check below,
+	# and uncomment this line:
+	# li r7, 45									
 	
-	addi r7, r7, 5				# LGL = (menuVal + 5) * 5
-	mulli r7, r7, 5
+	%cmHeader(r7, CodeMenuLoc)	# Code menu check
+	cmpwi r7, 0                 # Skip if toggle OFF
+	beq %end%
+	mulli r7, r7, 15			# LGL = (codeMenuVal * 15) + 15
+	addi r7, r7, 15				#
 	
 checkLedgegrabs:
 	lwz r0, 0x228(r3)		# Get ledgegrab count for current port
@@ -58,8 +59,8 @@ checkByteOverflow:
 	li r0, 255
 
 storeLedgegrabs:
-	li r7, 255
-	sub r0, r7, r0			# \ Store (255 - grabs) to invert the count
-	stb r0, 0x27C(r3)		# /
+	li r7, 255				# \ Store (255 - grabs) to invert the count
+	sub r0, r7, r0			
+	stb r0, 0x27C(r3)		# / Fewer grabs = higher val = prioritize winner
 	
 }
