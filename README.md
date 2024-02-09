@@ -2,12 +2,10 @@
 
 Fork of Fracture's code menu as used in Project+ 2.2, rebuilt on QuickLava's edits as included in Project+ 2.5.
 
-The latest release is for use with Project+ v2.5.
-
 Intended only for use with WI P+ build v1.6, but forks are welcome. Please give credit and open-source any edits for custom builds!
 
 # Changes:
-- Recolored text & background colors with less contrast to be easier on the eyes
+- Recolored text & background with less contrast to be easier on the eyes
 - Includes shield color & theme toggles built-in, among other new toggles. Fuctionality for many toggles requires external asm files included in this repo
 - Salty Runback button combination loosened to R+Y. Skip Results combo loosened to R+X
 - Start-alts replace Y-alts in random Alternate Stages
