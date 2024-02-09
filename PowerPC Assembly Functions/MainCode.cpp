@@ -183,10 +183,6 @@ int main(int argc, char** argv)
 			logOutput << "\tAttempting to use this code menu on console can (and likely will) damage your system.\n";
 		}
 
-		if (TOURNAMENT_ADDITION_BUILD == true)
-		{
-			logOutput << "Note: Tournament Addition Flag is ON!\n";
-		}
 		if (IS_DEBUGGING == true)
 		{
 			logOutput << "Note: General Debug Flag is ON!\n";

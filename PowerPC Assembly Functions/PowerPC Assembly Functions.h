@@ -21,9 +21,8 @@ using namespace std;
 #define PROJECT_PLUS 2
 #define BUILD_TYPE PROJECT_PLUS
 #define NETPLAY_BUILD false
-#define WI_LITE_BUILD false && !NETPLAY_BUILD
+#define WI_LITE_BUILD (false && !NETPLAY_BUILD)
 #define EON_DEBUG_BUILD false
-#define TOURNAMENT_ADDITION_BUILD false
 
 // Character List Config Constants
 // Defines different base versions of the character lists. 
