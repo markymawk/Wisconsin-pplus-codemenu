@@ -21,7 +21,7 @@ using namespace std;
 #define PROJECT_PLUS 2
 #define BUILD_TYPE PROJECT_PLUS
 #define NETPLAY_BUILD false
-#define WI_LITE_BUILD false
+#define WI_LITE_BUILD false && !NETPLAY_BUILD
 #define EON_DEBUG_BUILD false
 #define TOURNAMENT_ADDITION_BUILD false
 
@@ -55,7 +55,7 @@ extern const std::array<std::string, characterListVersions::__clv_Count> charact
 // Note: Console builds can't use Netplay anyway, so setting NETPLAY_BUILD to false will force this off as well.
 // This is important, as some Netplay codes save data directly to NAND, which is safe on Dolphin but not on console.
 // As a result, attempting to run Netplay GCTs on console may brick your Wii. 
-#define BUILD_NETPLAY_FILES (false && NETPLAY_BUILD)
+#define BUILD_NETPLAY_FILES NETPLAY_BUILD
 
 // ASM Output Formatting Settings
 #define ALLOW_BLANK_CODE_NAMES_IN_ASM true
