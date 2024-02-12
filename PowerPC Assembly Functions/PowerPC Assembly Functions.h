@@ -195,14 +195,12 @@ const int MENU_PORT_NUM_OFFSET = 0x57;
 const int MENU_SELECTED_TAG_OFFSET = 0x164;
 ///Control code constants end
 
-
-
 ///addresses end
 
 ///constants start
 ///colors
 #define RED     LINE_COLOR_TABLE.COLORS[LINE_COLOR_TABLE.COLOR_RED]
-#define BLUE    0x0066FFFF // WI build: Other blue value is used for lines. It's weird but this works for FPS, maybe elsewhere
+#define BLUE    0x0066FFFF // WI build: Other blue value is used for text line colors. This one is used for FPS, maybe elsewhere
 #define ORANGE  LINE_COLOR_TABLE.COLORS[LINE_COLOR_TABLE.COLOR_ORANGE]
 #define GREEN   LINE_COLOR_TABLE.COLORS[LINE_COLOR_TABLE.COLOR_GREEN]
 #define YELLOW  LINE_COLOR_TABLE.COLORS[LINE_COLOR_TABLE.COLOR_YELLOW]

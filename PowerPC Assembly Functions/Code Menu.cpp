@@ -928,6 +928,7 @@ void CodeMenu()
 	SpecialModeLines.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
 	SpecialModeLines.push_back(new Toggle("Screen Shake", true, SCREEN_SHAKE_INDEX));
 	SpecialModeLines.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
+	// Move replays here since people don't toggle them for netplay
 #if NETPLAY_BUILD
 	SpecialModeLines.push_back(new Comment(""));
 	SpecialModeLines.push_back(new Toggle("Autosave Replays", NETPLAY_BUILD, AUTO_SAVE_REPLAY_INDEX));
@@ -952,12 +953,14 @@ void CodeMenu()
 #endif
 	MainLines.push_back(new Toggle("Endless Friendlies", false, ENDLESS_FRIENDLIES_MODE_INDEX));
 	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
+// Results
 #if WI_LITE_BUILD
 	MainLines.push_back(new Toggle("Skip Results", false, AUTO_SKIP_TO_CSS_INDEX));
 #else
 	MainLines.push_back(new Selection("Results", { "Default", "Theme",  "Stage", "OFF" }, 0, AUTO_SKIP_TO_CSS_INDEX));
 #endif
 	MainLines.push_back(new Comment(""));
+// Replays
 #if !NETPLAY_BUILD
 	MainLines.push_back(new Toggle("Autosave Replays", NETPLAY_BUILD, AUTO_SAVE_REPLAY_INDEX));
 	MainLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
@@ -968,11 +971,13 @@ void CodeMenu()
 #endif
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (P+ 2023)", "Doubles (WI 2023)", "Doubles (P+ 2023)", "Singles (PMBR)", "Doubles (PMBR)" }, 0, STAGELIST_INDEX));
+//Theme
 #if WI_LITE_BUILD
 	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's" }, 0, THEME_INDEX));
 #else
 	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's", "Splat", "Project Wave", "Invincible 6", "Invincible 7" }, 0, THEME_INDEX));
 #endif
+
 	MainLines.push_back(&PlayerCodesPage.CalledFromLine);
 	MainLines.push_back(&SpecialModePage.CalledFromLine);
 
