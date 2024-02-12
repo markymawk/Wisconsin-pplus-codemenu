@@ -939,11 +939,11 @@ void CodeMenu()
 	//main page
 	vector<Line*> MainLines;
 #if WI_LITE_BUILD
-	MainLines.push_back(new Comment("WI Code Menu v1.6 (P+ 2.5) Lite", &MENU_TITLE_CHECK_LOCATION));
+	MainLines.push_back(new Comment("WI Code Menu v1.6 (P+ 2.5.1) Lite", &MENU_TITLE_CHECK_LOCATION));
 #elif NETPLAY_BUILD
-	MainLines.push_back(new Comment("WI Code Menu v1.6 (P+ 2.5) Netplay", &MENU_TITLE_CHECK_LOCATION));
+	MainLines.push_back(new Comment("WI Code Menu v1.6 (P+ 2.5.1) Netplay", &MENU_TITLE_CHECK_LOCATION));
 #else
-	MainLines.push_back(new Comment("WI Code Menu v1.6 (P+ 2.5)", &MENU_TITLE_CHECK_LOCATION));
+	MainLines.push_back(new Comment("WI Code Menu v1.6 (P+ 2.5.1)", &MENU_TITLE_CHECK_LOCATION));
 #endif
 
 	MainLines.push_back(new Comment(""));
