@@ -109,6 +109,9 @@ int SHIELD_COLOR_P2_INDEX = -1;
 int SHIELD_COLOR_P3_INDEX = -1;
 int SHIELD_COLOR_P4_INDEX = -1;
 int ORDERED_STAGE_INDEX = -1;
+
+int P1_HIDDEN_COSTUME_INDEX = -1;
+int P2_HIDDEN_COSTUME_INDEX = -1;
 int EXTERNAL_INDEX = -1;	//Used for GCTRM codes that use other indexs for context
 
 //constant overrides
@@ -925,6 +928,11 @@ void CodeMenu()
 	SpecialModeLines.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
 	SpecialModeLines.push_back(new Toggle("Screen Shake", true, SCREEN_SHAKE_INDEX));
 	SpecialModeLines.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
+#if NETPLAY_BUILD
+	SpecialModeLines.push_back(new Comment(""));
+	SpecialModeLines.push_back(new Toggle("Autosave Replays", NETPLAY_BUILD, AUTO_SAVE_REPLAY_INDEX));
+	SpecialModeLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
+#endif
 	Page SpecialModePage("Other Settings", SpecialModeLines);
 
 	//main page
@@ -936,6 +944,7 @@ void CodeMenu()
 #else
 	MainLines.push_back(new Comment("WI Code Menu v1.6 (P+ 2.5)", &MENU_TITLE_CHECK_LOCATION));
 #endif
+
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(&DebugMode.CalledFromLine);
 #if NETPLAY_BUILD
@@ -949,8 +958,14 @@ void CodeMenu()
 	MainLines.push_back(new Selection("Results", { "Default", "Theme",  "Stage", "OFF" }, 0, AUTO_SKIP_TO_CSS_INDEX));
 #endif
 	MainLines.push_back(new Comment(""));
+#if !NETPLAY_BUILD
 	MainLines.push_back(new Toggle("Autosave Replays", NETPLAY_BUILD, AUTO_SAVE_REPLAY_INDEX));
-	MainLines.push_back(new Selection("Save Previous Replay", {"OFF", "Save On Exit"}, 0, SAVE_REPLAY_ANYWHERE_INDEX));
+	MainLines.push_back(new Selection("Save Previous Replay", { "OFF", "Save On Exit" }, 0, SAVE_REPLAY_ANYWHERE_INDEX));
+// Netplay alt costume
+#else
+	MainLines.push_back(new Selection("P1 Costume", { "Default", "Z-alt", "R-alt" }, 0, P1_HIDDEN_COSTUME_INDEX));
+	MainLines.push_back(new Selection("P2 Costume", { "Default", "Z-alt", "R-alt" }, 0, P2_HIDDEN_COSTUME_INDEX));
+#endif
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (P+ 2023)", "Doubles (WI 2023)", "Doubles (P+ 2023)", "Singles (PMBR)", "Doubles (PMBR)" }, 0, STAGELIST_INDEX));
 #if WI_LITE_BUILD
@@ -1510,6 +1525,9 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(SHIELD_COLOR_P4_INDEX, Header);
 
 	AddValueToByteArray(ORDERED_STAGE_INDEX, Header);
+
+	AddValueToByteArray(P1_HIDDEN_COSTUME_INDEX, Header);
+	AddValueToByteArray(P2_HIDDEN_COSTUME_INDEX, Header);
 	/*
 	//War Mode Index
 	AddValueToByteArray(WAR_MODE_INDEX, Header);

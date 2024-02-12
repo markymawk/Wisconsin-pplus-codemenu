@@ -91,6 +91,9 @@ extern int BALLOON_STOCK_INDEX;
 extern int ALL_CHARS_WALLJUMP_INDEX;
 extern int SOLO_COUNTDOWN_INDEX;
 extern int ORDERED_STAGE_INDEX;
+extern int P1_HIDDEN_COSTUME_INDEX;
+extern int P2_HIDDEN_COSTUME_INDEX;
+
 extern int WAR_MODE_INDEX;
 extern int BUFFER_P1_INDEX;
 extern int BUFFER_P2_INDEX;
