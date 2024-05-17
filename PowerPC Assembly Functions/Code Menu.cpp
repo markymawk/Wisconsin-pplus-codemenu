@@ -938,13 +938,8 @@ void CodeMenu()
 
 	//main page
 	vector<Line*> MainLines;
-#if WI_LITE_BUILD
-	MainLines.push_back(new Comment("WI Code Menu v1.6b (P+ 2.5.2) Lite", &MENU_TITLE_CHECK_LOCATION));
-#elif NETPLAY_BUILD
-	MainLines.push_back(new Comment("WI Code Menu v1.6b (P+ 2.5.2) Netplay", &MENU_TITLE_CHECK_LOCATION));
-#else
-	MainLines.push_back(new Comment("WI Code Menu v1.6b (P+ 2.5.2)", &MENU_TITLE_CHECK_LOCATION));
-#endif
+	MainLines.push_back(new Comment("Inv8 Code Menu v1.6b (P+ 2.5.2)", &MENU_TITLE_CHECK_LOCATION));
+	MainLines.push_back(new Comment("start.gg/invincible | @WiscoPM", &MENU_TITLE_CHECK_LOCATION));
 
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(&DebugMode.CalledFromLine);
