@@ -924,7 +924,7 @@ void CodeMenu()
 	SpecialModeLines.push_back(new Toggle("Random Teams", false, RANDOM_TEAMS_INDEX));
 	SpecialModeLines.push_back(new Selection("Big Head Mode", { "OFF", "ON (1x)", "ON (2x)"}, 0, BIG_HEAD_INDEX));
 	SpecialModeLines.push_back(new Comment(""));
-	SpecialModeLines.push_back(new Selection("Timeout LGL", { "OFF", "30", "45", "60" }, 2, LEDGEGRAB_LIMIT_INDEX));
+	SpecialModeLines.push_back(new Selection("Timeout LGL", { "45 (Locked)" }, 0, LEDGEGRAB_LIMIT_INDEX));
 	SpecialModeLines.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
 	SpecialModeLines.push_back(new Toggle("Screen Shake", true, SCREEN_SHAKE_INDEX));
 	SpecialModeLines.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
