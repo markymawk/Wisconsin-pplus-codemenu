@@ -943,6 +943,8 @@ void CodeMenu()
 
 	MainLines.push_back(new Comment(""));
 	MainLines.push_back(&DebugMode.CalledFromLine);
+	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles", "Doubles" }, 0, STAGELIST_INDEX));
+	MainLines.push_back(new Comment(""));
 #if NETPLAY_BUILD
 	MainLines.push_back(new Toggle("Ordered Stage Choice", false, ORDERED_STAGE_INDEX));
 #endif
@@ -965,7 +967,6 @@ void CodeMenu()
 	MainLines.push_back(new Selection("P2 Costume", { "Default", "Z-alt", "R-alt" }, 0, P2_HIDDEN_COSTUME_INDEX));
 #endif
 	MainLines.push_back(new Comment(""));
-	MainLines.push_back(new Selection("Stagelist", { "Default", "Singles (P+ 2023)", "Doubles (WI 2023)", "Doubles (P+ 2023)", "Singles (PMBR)", "Doubles (PMBR)" }, 0, STAGELIST_INDEX));
 //Theme
 #if WI_LITE_BUILD
 	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's" }, 0, THEME_INDEX));
