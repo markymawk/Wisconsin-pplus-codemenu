@@ -950,12 +950,10 @@ void CodeMenu()
 #endif
 	MainLines.push_back(new Toggle("Endless Friendlies", false, ENDLESS_FRIENDLIES_MODE_INDEX));
 	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
+
 // Results
-#if WI_LITE_BUILD
 	MainLines.push_back(new Toggle("Skip Results", false, AUTO_SKIP_TO_CSS_INDEX));
-#else
-	MainLines.push_back(new Selection("Results", { "Default", "Theme",  "Stage", "OFF" }, 0, AUTO_SKIP_TO_CSS_INDEX));
-#endif
+	//MainLines.push_back(new Selection("Results", { "Default", "Theme",  "Stage", "OFF" }, 0, AUTO_SKIP_TO_CSS_INDEX));
 	MainLines.push_back(new Comment(""));
 // Replays
 #if !NETPLAY_BUILD
@@ -967,12 +965,13 @@ void CodeMenu()
 	MainLines.push_back(new Selection("P2 Costume", { "Default", "Z-alt", "R-alt" }, 0, P2_HIDDEN_COSTUME_INDEX));
 #endif
 	MainLines.push_back(new Comment(""));
+	
 //Theme
-#if WI_LITE_BUILD
-	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's" }, 0, THEME_INDEX));
-#else
-	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's", "Splat", "Project Wave", "Invincible 6", "Invincible 7" }, 0, THEME_INDEX));
-#endif
+//#if WI_LITE_BUILD
+//	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's" }, 0, THEME_INDEX));
+//#else
+//	MainLines.push_back(new Selection("Theme", { "WI", "The Construct", "Craig's", "Splat", "Project Wave", "Invincible 6", "Invincible 7" }, 0, THEME_INDEX));
+//#endif
 
 	MainLines.push_back(&PlayerCodesPage.CalledFromLine);
 	MainLines.push_back(&SpecialModePage.CalledFromLine);
@@ -1503,7 +1502,7 @@ void CreateMenu(Page MainPage)
 	AddValueToByteArray(STAGELIST_INDEX, Header);
 
 	//Theme Index
-	AddValueToByteArray(THEME_INDEX, Header);
+	AddValueToByteArray(0, Header);
 
 	AddValueToByteArray(RANDOM_TEAMS_INDEX, Header);
 	AddValueToByteArray(LEDGEGRAB_LIMIT_INDEX, Header);
@@ -1724,7 +1723,8 @@ void constantOverride() {
 	STB(reg1, reg3, 0);
 
 	//Store theme toggle next to stagelist toggle
-	LoadWordToReg(reg1, THEME_INDEX + Line::VALUE);
+	//LoadWordToReg(reg1, THEME_INDEX + Line::VALUE);
+	LoadWordToReg(reg1, 0);
 	STB(reg1, reg3, 1);
 
 	//Store Alternate Stage toggle (If disabled, forces default music in Splat theme)
@@ -1733,13 +1733,10 @@ void constantOverride() {
 
 	//Store Results toggle
 	LoadWordToReg(reg1, AUTO_SKIP_TO_CSS_INDEX + Line::VALUE);
-#if WI_LITE_BUILD
 	// if false (0), store 1 (Theme) for StageLoader_WI.
 	// if true (1), store 3 (Skip)
 	MULLI(reg1, reg1, 2);
 	ADDI(reg1, reg1, 1);
-#endif
-	STB(reg1, reg3, 3);
 
 	// Universal walljumping - if in a match, must restart. Attempted writing to 0x80FC15C0 and 0x80FC15D8, but got same result
 	LoadWordToReg(reg1, ALL_CHARS_WALLJUMP_INDEX + Line::VALUE);
