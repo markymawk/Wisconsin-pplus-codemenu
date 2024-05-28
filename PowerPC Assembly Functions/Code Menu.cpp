@@ -1724,7 +1724,7 @@ void constantOverride() {
 
 	//Store theme toggle next to stagelist toggle
 	//LoadWordToReg(reg1, THEME_INDEX + Line::VALUE);
-	LoadWordToReg(reg1, 0);
+	SetRegister(reg1, 0);
 	STB(reg1, reg3, 1);
 
 	//Store Alternate Stage toggle (If disabled, forces default music in Splat theme)
