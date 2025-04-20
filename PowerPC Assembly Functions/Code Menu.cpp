@@ -1134,10 +1134,28 @@ void CodeMenu()
 	Page SpecialModePage("Other Settings", SpecialModeLines, lava::shortNameType("_SPECIAL"));
 	
 	vector<Line*> PlayerCodesLines;
+	PlayerCodesLines.push_back(new Comment("Port-specific functions"));
+	PlayerCodesLines.push_back(new Comment(""));
 	PlayerCodesLines.push_back(P1.CalledFromLine.get());
 	PlayerCodesLines.push_back(P2.CalledFromLine.get());
 	PlayerCodesLines.push_back(P3.CalledFromLine.get());
 	PlayerCodesLines.push_back(P4.CalledFromLine.get());
+
+	PlayerCodesLines.push_back(new Comment(""));
+	PlayerCodesLines.push_back(new Comment("HUD Colors"));
+	
+	// HUD Color Settings
+	std::vector<std::string> schemeNames(pscc::schemeTable.entries.size(), "");
+	for (std::size_t i = 0; i < pscc::schemeTable.entries.size(); i++)
+	{
+		schemeNames[i] = pscc::schemeTable.entries[i].name;
+	}
+	Selection* P1ColorLine = new Selection("Player 1", schemeNames, pscc::schemePredefIDs::spi_P1, PSCC_COLOR_1_INDEX);
+	P1ColorLine->behaviorFlags[Line::lbf_STICKY].value = 1;
+	PlayerCodesLines.push_back(P1ColorLine);
+	PlayerCodesLines.push_back(new SelectionMirror(*P1ColorLine, "Player 2", pscc::schemePredefIDs::spi_P2, PSCC_COLOR_2_INDEX));
+	PlayerCodesLines.push_back(new SelectionMirror(*P1ColorLine, "Player 3", pscc::schemePredefIDs::spi_P3, PSCC_COLOR_3_INDEX));
+	PlayerCodesLines.push_back(new SelectionMirror(*P1ColorLine, "Player 4", pscc::schemePredefIDs::spi_P4, PSCC_COLOR_4_INDEX));
 	Page PlayerCodesPage("Player Codes", PlayerCodesLines, lava::shortNameType("_PLAYER"));
 
 	//main page
@@ -1157,7 +1175,6 @@ void CodeMenu()
 		MainLines.push_back(new Comment(xml::CONFIG_INCOMING_COMMENTS[i]));
 	}
 	
-
 	MainLines.push_back(DebugMode.CalledFromLine.get());
 	//	MainLines.push_back(new Selection("Endless Friendlies", { "OFF", "Same Stage", "Random Stage", "Round Robin" }, 0, INFINITE_FRIENDLIES_INDEX));
 	MainLines.push_back(new Toggle("Endless Friendlies", false, ENDLESS_FRIENDLIES_MODE_INDEX));
@@ -1171,33 +1188,8 @@ void CodeMenu()
 	MainLines.push_back(new Toggle("Autosave Replays", DOLPHIN_BUILD, AUTO_SAVE_REPLAY_INDEX));
 	MainLines.push_back(new Selection("Save Previous Replay", {"OFF", "Save on Exit"}, 0, SAVE_REPLAY_ANYWHERE_INDEX));
 	MainLines.push_back(new Comment(""));
-	
-
-
 	MainLines.push_back(PlayerCodesPage.CalledFromLine.get());
 	MainLines.push_back(SpecialModePage.CalledFromLine.get());
-
-	// HUD Color Settings
-	vector<Line*> HUDColorLines;
-	HUDColorLines.push_back(new Comment("Replacement HUD Colors"));
-	std::vector<std::string> schemeNames(pscc::schemeTable.entries.size(), "");
-	for (std::size_t i = 0; i < pscc::schemeTable.entries.size(); i++)
-	{
-		schemeNames[i] = pscc::schemeTable.entries[i].name;
-	}
-	Selection* P1ColorLine = new Selection("Player 1", schemeNames, pscc::schemePredefIDs::spi_P1, PSCC_COLOR_1_INDEX);
-	P1ColorLine->behaviorFlags[Line::lbf_STICKY].value = 1;
-	HUDColorLines.push_back(P1ColorLine);
-	HUDColorLines.push_back(new SelectionMirror(*P1ColorLine, "Player 2", pscc::schemePredefIDs::spi_P2, PSCC_COLOR_2_INDEX));
-	HUDColorLines.push_back(new SelectionMirror(*P1ColorLine, "Player 3", pscc::schemePredefIDs::spi_P3, PSCC_COLOR_3_INDEX));
-	HUDColorLines.push_back(new SelectionMirror(*P1ColorLine, "Player 4", pscc::schemePredefIDs::spi_P4, PSCC_COLOR_4_INDEX));
-	Page HUDColorsPage("HUD Colors", HUDColorLines);
-	if (xml::CONFIG_PSCC_ENABLED && (pscc::schemeTable.entries.size() >= 4))
-	{
-		MainLines.push_back(HUDColorsPage.CalledFromLine.get());
-	}
-
-
 
 	//MainLines.push_back(new Selection("Code Menu Activation", { "Default", "PM 3.6", "OFF" }, 0, CODE_MENU_ACTIVATION_SETTING_INDEX));
 	if (ROSTER_LIST.size() > 1)
