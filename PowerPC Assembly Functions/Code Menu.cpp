@@ -1115,7 +1115,7 @@ void CodeMenu()
 	
 	//Special Mode Settings
 	vector<Line*> SpecialModeLines;
-	SpecialModeLines.push_back(new Comment("Special Modes"));
+	SpecialModeLines.push_back(new Comment("Special Settings"));
 	SpecialModeLines.push_back(ConstantsPage.CalledFromLine.get());
 	SpecialModeLines.push_back(DBZModePage.CalledFromLine.get());
 	SpecialModeLines.push_back(new Selection("Random Angle Mode", {"Off", "True Random", "Static Random"}, 0, RANDOM_ANGLE_INDEX));
@@ -1129,10 +1129,16 @@ void CodeMenu()
 	SpecialModeLines.push_back(new Floating("Scale Modifier", 0.5, 3, 1, 0.05, EXTERNAL_INDEX, "%.2fX"));
 	SpecialModeLines.back()->behaviorFlags[Line::lbf_REMOVED].value = !PROJECT_PLUS_EX_BUILD;
 	SpecialModeLines.push_back(new Selection("Big Head Mode", { "Off", "On", "Larger", "Largest", "Largerest" }, 0, BIG_HEAD_INDEX));
-	Page SpecialModePage("Special Modes", SpecialModeLines, lava::shortNameType("_SPECIAL"));
-
-
+	SpecialModeLines.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
+	SpecialModeLines.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
+	Page SpecialModePage("Other Settings", SpecialModeLines, lava::shortNameType("_SPECIAL"));
 	
+	vector<Line*> PlayerCodesLines;
+	PlayerCodesLines.push_back(P1.CalledFromLine.get());
+	PlayerCodesLines.push_back(P2.CalledFromLine.get());
+	PlayerCodesLines.push_back(P3.CalledFromLine.get());
+	PlayerCodesLines.push_back(P4.CalledFromLine.get());
+	Page PlayerCodesPage("Player Codes", PlayerCodesLines, lava::shortNameType("_PLAYER"));
 
 	//main page
 	vector<Line*> MainLines;
@@ -1152,33 +1158,25 @@ void CodeMenu()
 	}
 	
 
-#if EON_DEBUG_BUILD
-	MainLines.push_back(&TestPage.CalledFromLine);
-#endif
-	
 	MainLines.push_back(DebugMode.CalledFromLine.get());
 	//	MainLines.push_back(new Selection("Endless Friendlies", { "OFF", "Same Stage", "Random Stage", "Round Robin" }, 0, INFINITE_FRIENDLIES_INDEX));
-	MainLines.push_back(new Selection("Endless Friendlies Mode", { "OFF", "All Stay", "Winner Stays", "Loser Stays", "Rotation"}, 0, ENDLESS_FRIENDLIES_MODE_INDEX));
+	MainLines.push_back(new Toggle("Endless Friendlies", false, ENDLESS_FRIENDLIES_MODE_INDEX));
 	MainLines.push_back(new Selection("Endless Friendlies Stage Selection", { "Random", "Same" }, 0, ENDLESS_FRIENDLIES_STAGE_SELECTION_INDEX));
 #if TOURNAMENT_ADDITION_BUILD
 	MainLines.push_back(new Selection("Random 1-1", { "OFF", "ON" }, 0, RANDOM_1_TO_1_INDEX));
 #endif
-	MainLines.push_back(new Selection("Alternate Stages", { "Enabled", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
+	MainLines.push_back(new Selection("Alternate Stages", { "ON", "Random", "OFF" }, 0, ALT_STAGE_BEHAVIOR_INDEX));
 	MainLines.push_back(new Toggle("Autoskip Results Screen", false, AUTO_SKIP_TO_CSS_INDEX));
-#if DOLPHIN_BUILD
-	MainLines.push_back(new Toggle("Autosave Replays", true, AUTO_SAVE_REPLAY_INDEX));
-#else
-	MainLines.push_back(new Toggle("Autosave Replays", false, AUTO_SAVE_REPLAY_INDEX));
-#endif
-	MainLines.push_back(new Toggle("Save Previous Replay", false, SAVE_REPLAY_ANYWHERE_INDEX));
-	MainLines.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
-	MainLines.push_back(P1.CalledFromLine.get());
-	MainLines.push_back(P2.CalledFromLine.get());
-	MainLines.push_back(P3.CalledFromLine.get());
-	MainLines.push_back(P4.CalledFromLine.get());
+	MainLines.push_back(new Comment(""));
+	MainLines.push_back(new Toggle("Autosave Replays", DOLPHIN_BUILD, AUTO_SAVE_REPLAY_INDEX));
+	MainLines.push_back(new Selection("Save Previous Replay", {"OFF", "Save on Exit"}, 0, SAVE_REPLAY_ANYWHERE_INDEX));
+	MainLines.push_back(new Comment(""));
+	
+
+
+	MainLines.push_back(PlayerCodesPage.CalledFromLine.get());
 	MainLines.push_back(SpecialModePage.CalledFromLine.get());
 
-	
 	// HUD Color Settings
 	vector<Line*> HUDColorLines;
 	HUDColorLines.push_back(new Comment("Replacement HUD Colors"));
@@ -1200,11 +1198,8 @@ void CodeMenu()
 	}
 
 
-#if BUILD_TYPE == PROJECT_PLUS
-	MainLines.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
-#endif
 
-	MainLines.push_back(new Selection("Code Menu Activation", { "Default", "PM 3.6", "OFF" }, 0, CODE_MENU_ACTIVATION_SETTING_INDEX));
+	//MainLines.push_back(new Selection("Code Menu Activation", { "Default", "PM 3.6", "OFF" }, 0, CODE_MENU_ACTIVATION_SETTING_INDEX));
 	if (ROSTER_LIST.size() > 1)
 	{
 		MainLines.push_back(new Selection("CSS Roster Version", ROSTER_LIST, 0, CSS_VERSION_SETTING_INDEX));
