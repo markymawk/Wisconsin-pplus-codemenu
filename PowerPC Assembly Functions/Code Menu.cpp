@@ -1056,6 +1056,7 @@ void CodeMenu()
 	DBZModeLines.push_back(new Comment("Take flight!"));
 	DBZModeLines.push_back(new Comment(""));
 	DBZModeLines.push_back(new Toggle("Flight Mode", false, DBZ_MODE_INDEX));
+	DBZModeLines.push_back(new Comment(""));
 	DBZModeLines.push_back(new Floating("Max Horizontal Speed", 0, 100, 2, .05, DBZ_MODE_MAX_SPEED_X_INDEX, "%.3f"));
 	DBZModeLines.push_back(new Floating("Max Vertical Speed", 0, 100, 2, .05, DBZ_MODE_MAX_SPEED_Y_INDEX, "%.3f"));
 
@@ -1076,14 +1077,16 @@ void CodeMenu()
 	constantOverrides.emplace_back(0x80B87AEC, HITLAG_MULTIPLIER_INDEX);
 	ConstantsLines.push_back(new Floating("Hitlag Maximum", 0, 999, 30, 1, HITLAG_MAXIMUM_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B87AE8, HITLAG_MAXIMUM_INDEX);
-	ConstantsLines.push_back(new Floating("Electric Hitlag Multiplier", 0, 999, 1.5, .1, ELECTRIC_HITLAG_MULTIPLIER_INDEX, "%.3f"));
-	constantOverrides.emplace_back(0x80B87B10, ELECTRIC_HITLAG_MULTIPLIER_INDEX);
+	//ConstantsLines.push_back(new Floating("Electric Hitlag Multiplier", 0, 999, 1.5, .1, ELECTRIC_HITLAG_MULTIPLIER_INDEX, "%.3f"));
+	//constantOverrides.emplace_back(0x80B87B10, ELECTRIC_HITLAG_MULTIPLIER_INDEX);
+	ConstantsLines.push_back(new Floating("Knockback Decay Rate", -999, 999, 0.051, .001, KNOCKBACK_DECAY_MULTIPLIER_INDEX, "%.3f"));
+	constantOverrides.emplace_back(0x80B88534, KNOCKBACK_DECAY_MULTIPLIER_INDEX);
 	ConstantsLines.push_back(new Floating("SDI Distance", -999, 999, 6, .5, SDI_DISTANCE_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B88354, SDI_DISTANCE_INDEX);
 	ConstantsLines.push_back(new Floating("ASDI Distance", -999, 999, 3, .5, ASDI_DISTANCE_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B88358, ASDI_DISTANCE_INDEX);
-	ConstantsLines.push_back(new Floating("Walljump Horizontal Multiplier", -999, 999, 0.9, .05, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX, "%.3f"));
-	constantOverrides.emplace_back(0x80B88420, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX);
+	ConstantsLines.push_back(new Comment(""));
+	ConstantsLines.push_back(new Comment("Shield behavior"));
 	ConstantsLines.push_back(new Floating("Minimum Shield Size Scale", -999, 999, 0.15, .02, MINIMUM_SHIELD_SIZE_SCALING_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B88444, MINIMUM_SHIELD_SIZE_SCALING_INDEX);
 	ConstantsLines.push_back(new Floating("Shield Damage Multiplier", -999, 999, 1, .02, SHIELD_DAMAGE_MULTIPLIER_INDEX, "%.3f"));
@@ -1095,31 +1098,36 @@ void CodeMenu()
 	ConstantsLines.push_back(new Floating("Shield Tilt Multiplier", -999, 999, 0.5, .05, SHIELD_TILT_MULTIPLIER_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B88484, SHIELD_TILT_MULTIPLIER_INDEX);
 	//ValueLines.push_back(new Floating("Attacker Shield Pushback Friction Multiplier", -999, 999, 1.1, .05, SDI_DISTANCE_INDEX, "%.3f"));
+	
+	if (xml::CONFIG_JUMPSQUAT_OVERRIDE_ENABLED)
+	{
+		ConstantsLines.push_back(new Comment(""));
+		ConstantsLines.push_back(new Comment("Jumpsquat modifiers"));
+		const int minFrameCount = 1;
+		const int maxFrameCount = 1800;
+		ConstantsLines.push_back(new Selection("Jumpsquat Modifier Mode", { "Disabled", "Replace", "Add", "Subtract", "Multiply", "Divide", "Distance From Value", "Random Within Range" }, 0, JUMPSQUAT_OVERRIDE_TOGGLE_INDEX));
+		ConstantsLines.push_back(new Integer("Jumpsquat Modifier Value", minFrameCount, maxFrameCount, 3, 1, JUMPSQUAT_OVERRIDE_FRAMES_INDEX, "%d", Integer::INT_FLAG_ALLOW_WRAP));
+		ConstantsLines.push_back(new Integer("Jumpsquat Modifier Minimum Length", minFrameCount, maxFrameCount, minFrameCount, 1, JUMPSQUAT_OVERRIDE_MIN_INDEX, "%d", Integer::INT_FLAG_ALLOW_WRAP));
+		ConstantsLines.push_back(new Integer("Jumpsquat Modifier Maximum Length", minFrameCount, maxFrameCount, maxFrameCount / 2, 1, JUMPSQUAT_OVERRIDE_MAX_INDEX, "%d", Integer::INT_FLAG_ALLOW_WRAP));
+	}
+	ConstantsLines.push_back(new Comment(""));
+	ConstantsLines.push_back(new Comment("Misc. modifiers"));
+	ConstantsLines.push_back(new Floating("Walljump Horizontal Multiplier", -999, 999, 0.9, .05, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX, "%.3f"));
+	constantOverrides.emplace_back(0x80B88420, WALLJUMP_HORIZONTAL_MULTIPLIER_INDEX);
 	ConstantsLines.push_back(new Floating("Wall Bounce Knockback Multiplier", -999, 999, 0.80, .02, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B88510, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX);
-	ConstantsLines.push_back(new Floating("Knockback Decay Rate", -999, 999, 0.051, .001, KNOCKBACK_DECAY_MULTIPLIER_INDEX, "%.3f"));
-	constantOverrides.emplace_back(0x80B88534, KNOCKBACK_DECAY_MULTIPLIER_INDEX);
 
 	//ConstantsLines.push_back(new Selection("Staling Toggle", { "Default", "ON", "OFF" }, 0, STALING_TOGGLE_INDEX));
 	if (xml::CONFIG_DASH_ATTACK_ITEM_GRAB_ENABLED)
 	{
-		ConstantsLines.push_back(new Toggle("Aerial & Dash Attack Item Grab Toggle", 0, DASH_ATTACK_ITEM_GRAB_INDEX));
+		ConstantsLines.push_back(new Toggle("Aerials & Dash Attacks Grab Items", false, DASH_ATTACK_ITEM_GRAB_INDEX));
 	}
 	//ConstantsLines.push_back(new Selection("Tripping Toggle", { "OFF", "ON" }, 0, TRIP_TOGGLE_INDEX));
 	//ConstantsLines.push_back(new Floating("Tripping Rate", 0, 100, 1.0, 1.0, TRIP_RATE_MULTIPLIER_INDEX, "%.2f%"));
 	//ConstantsLines.push_back(new Selection("Tripping Cooldown Toggle", { "ON", "OFF" }, 0, TRIP_INTERVAL_INDEX));
-	if (xml::CONFIG_JUMPSQUAT_OVERRIDE_ENABLED)
-	{
-		const int minFrameCount = 1;
-		const int maxFrameCount = 3600;
-		ConstantsLines.push_back(new Selection("Jumpsquat Modifier Mode", { "Disabled", "Replace", "Add", "Subtract", "Multiply", "Divide", "Distance From Value", "Random Within Range"}, 0, JUMPSQUAT_OVERRIDE_TOGGLE_INDEX));
-		ConstantsLines.push_back(new Integer("Jumpsquat Modifier Value", minFrameCount, maxFrameCount, 3, 1, JUMPSQUAT_OVERRIDE_FRAMES_INDEX, "%d", Integer::INT_FLAG_ALLOW_WRAP));
-		ConstantsLines.push_back(new Integer("Jumpsquat Modifier Minimum Length", minFrameCount, maxFrameCount, minFrameCount, 1, JUMPSQUAT_OVERRIDE_MIN_INDEX, "%d", Integer::INT_FLAG_ALLOW_WRAP));
-		ConstantsLines.push_back(new Integer("Jumpsquat Modifier Maximum Length", minFrameCount, maxFrameCount, maxFrameCount, 1, JUMPSQUAT_OVERRIDE_MAX_INDEX, "%d", Integer::INT_FLAG_ALLOW_WRAP));
-	}
+
 	Page ConstantsPage("Gameplay Modifiers", ConstantsLines, lava::shortNameType("_GMPLMOD"));
 
-	
 	//Special Mode Settings
 	vector<Line*> SpecialModeLines;
 	SpecialModeLines.push_back(new Comment("For-fun toggles & other settings"));
