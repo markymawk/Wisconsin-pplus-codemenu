@@ -1144,7 +1144,7 @@ void CodeMenu()
 	SpecialModeLines.back()->behaviorFlags[Line::lbf_REMOVED].value = !PROJECT_PLUS_EX_BUILD;
 	SpecialModeLines.push_back(new Floating("Scale Modifier", 0.5, 3, 1, 0.05, EXTERNAL_INDEX, "%.2fX"));
 	SpecialModeLines.back()->behaviorFlags[Line::lbf_REMOVED].value = !PROJECT_PLUS_EX_BUILD;
-	SpecialModeLines.push_back(new Selection("Big Head Mode", { "OFF", "ON (1x)", "ON (2x)" }, 0, BIG_HEAD_INDEX));
+	SpecialModeLines.push_back(new Selection("Big Head Mode", { "OFF", "ON (1x)", "ON (2x)", "ON (3x)"}, 0, BIG_HEAD_INDEX));
 	SpecialModeLines.push_back(new Comment(""));
 	SpecialModeLines.push_back(new Selection("Move Staling", { "ON (Default)", "ON (All Modes)", "OFF" }, 0, STALING_TOGGLE_INDEX));
 	SpecialModeLines.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
