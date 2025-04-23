@@ -487,7 +487,7 @@ void EndMatch()
 
 		if (AUTO_SKIP_TO_CSS_INDEX != -1) {
 			LoadWordToReg(reg1, AUTO_SKIP_TO_CSS_INDEX + Line::VALUE);
-			If(reg1, EQUAL_I, 1); {
+			If(reg1, EQUAL_I, 0); { //WI: Setting flipped
 				SetRegister(reg4, 0); //clear hold to pause
 				SetRegister(NextSceneReg, 0xD);
 			}EndIf();
