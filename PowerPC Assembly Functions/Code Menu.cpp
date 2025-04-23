@@ -1065,8 +1065,11 @@ void CodeMenu()
 
 	//value setting
 	vector<Line*> ConstantsLines;
-	ConstantsLines.push_back(new Comment("Set attributes to new values"));
+	ConstantsLines.push_back(new Comment("Modify core game mechanics"));
 	ConstantsLines.push_back(new Comment(""));
+	ConstantsLines.push_back(DBZModePage.CalledFromLine.get());
+	ConstantsLines.push_back(new Comment(""));
+	ConstantsLines.push_back(new Comment("On-hit behavior"));
 	ConstantsLines.push_back(new Floating("Hitstun Multiplier", 0, 999, 0.4, .01, HITSTUN_MULTIPLIER_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B87AA8, HITSTUN_MULTIPLIER_INDEX);
 	ConstantsLines.push_back(new Floating("Hitlag Multiplier", 0, 999, 1. / 3., .02, HITLAG_MULTIPLIER_INDEX, "%.3f"));
@@ -1096,7 +1099,8 @@ void CodeMenu()
 	constantOverrides.emplace_back(0x80B88510, WALL_BOUNCE_KNOCKBACK_MULTIPLIER_INDEX);
 	ConstantsLines.push_back(new Floating("Knockback Decay Rate", -999, 999, 0.051, .001, KNOCKBACK_DECAY_MULTIPLIER_INDEX, "%.3f"));
 	constantOverrides.emplace_back(0x80B88534, KNOCKBACK_DECAY_MULTIPLIER_INDEX);
-	ConstantsLines.push_back(new Selection("Staling Toggle", { "Default", "ON", "OFF" }, 0, STALING_TOGGLE_INDEX));
+
+	//ConstantsLines.push_back(new Selection("Staling Toggle", { "Default", "ON", "OFF" }, 0, STALING_TOGGLE_INDEX));
 	if (xml::CONFIG_DASH_ATTACK_ITEM_GRAB_ENABLED)
 	{
 		ConstantsLines.push_back(new Toggle("Aerial & Dash Attack Item Grab Toggle", 0, DASH_ATTACK_ITEM_GRAB_INDEX));
@@ -1118,10 +1122,11 @@ void CodeMenu()
 	
 	//Special Mode Settings
 	vector<Line*> SpecialModeLines;
-	SpecialModeLines.push_back(new Comment("Special Settings"));
+	SpecialModeLines.push_back(new Comment("For-fun toggles & other settings"));
+	SpecialModeLines.push_back(new Comment(""));
 	SpecialModeLines.push_back(ConstantsPage.CalledFromLine.get());
-	SpecialModeLines.push_back(DBZModePage.CalledFromLine.get());
-	SpecialModeLines.push_back(new Selection("Random Angle Mode", {"Off", "True Random", "Static Random"}, 0, RANDOM_ANGLE_INDEX));
+	SpecialModeLines.push_back(new Comment(""));
+	SpecialModeLines.push_back(new Selection("Random Angle Mode", {"OFF", "True Random", "Static Random"}, 0, RANDOM_ANGLE_INDEX));
 	SpecialModeLines.push_back(new Toggle("War Mode", false, WAR_MODE_INDEX));
 	// War Mode is only visible by default on P+Ex builds based on pre v3.0 P+.
 	SpecialModeLines.back()->behaviorFlags[Line::lbf_HIDDEN].value = !(PROJECT_PLUS_EX_BUILD && ENSURE_PRE_PP30_COMPAT);
@@ -1131,7 +1136,9 @@ void CodeMenu()
 	SpecialModeLines.back()->behaviorFlags[Line::lbf_REMOVED].value = !PROJECT_PLUS_EX_BUILD;
 	SpecialModeLines.push_back(new Floating("Scale Modifier", 0.5, 3, 1, 0.05, EXTERNAL_INDEX, "%.2fX"));
 	SpecialModeLines.back()->behaviorFlags[Line::lbf_REMOVED].value = !PROJECT_PLUS_EX_BUILD;
-	SpecialModeLines.push_back(new Selection("Big Head Mode", { "Off", "On", "Larger", "Largest", "Largerest" }, 0, BIG_HEAD_INDEX));
+	SpecialModeLines.push_back(new Selection("Big Head Mode", { "OFF", "ON (1x)", "ON (2x)" }, 0, BIG_HEAD_INDEX));
+	SpecialModeLines.push_back(new Comment(""));
+	SpecialModeLines.push_back(new Selection("Move Staling", { "ON (Default)", "ON (All Modes)", "OFF" }, 0, STALING_TOGGLE_INDEX));
 	SpecialModeLines.push_back(new Toggle("Crowd Cheers", false, CROWD_CHEER_TOGGLE_INDEX));
 	SpecialModeLines.push_back(new Selection("Tag-Based Costumes", { "ON", "ON + Teams", "OFF" }, 0, TAG_COSTUME_TOGGLE_INDEX));
 	Page SpecialModePage("Other Settings", SpecialModeLines, lava::shortNameType("_SPECIAL"));
