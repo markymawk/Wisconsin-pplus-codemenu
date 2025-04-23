@@ -1051,6 +1051,18 @@ void CodeMenu()
 	DebugLines.push_back(new Selection("Code Menu", { "ON", "OFF (Debug)", "OFF" }, 0, CODE_MENU_ACTIVATION_SETTING_INDEX));
 	Page DebugMode("Debug Settings", DebugLines, lava::shortNameType("_DEBUG"));
 
+	//DBZ Mode settings
+	vector<Line*> DBZModeLines;
+	DBZModeLines.push_back(new Comment("Take flight!"));
+	DBZModeLines.push_back(new Comment(""));
+	DBZModeLines.push_back(new Toggle("Flight Mode", false, DBZ_MODE_INDEX));
+	DBZModeLines.push_back(new Floating("Max Horizontal Speed", 0, 100, 2, .05, DBZ_MODE_MAX_SPEED_X_INDEX, "%.3f"));
+	DBZModeLines.push_back(new Floating("Max Vertical Speed", 0, 100, 2, .05, DBZ_MODE_MAX_SPEED_Y_INDEX, "%.3f"));
+
+	DBZModeLines.push_back(new Floating("Horizontal Acceleration", -100, 100, 1, .01, DBZ_MODE_ACCEL_X_INDEX, "%.3f"));
+	DBZModeLines.push_back(new Floating("Vertical Acceleration", -100, 100, 1, .01, DBZ_MODE_ACCEL_Y_INDEX, "%.3f"));
+	Page DBZModePage("Flight Mode Settings", DBZModeLines, lava::shortNameType("_FLIGHT"));
+
 	//value setting
 	vector<Line*> ConstantsLines;
 	ConstantsLines.push_back(new Comment("Set attributes to new values"));
@@ -1103,15 +1115,6 @@ void CodeMenu()
 	}
 	Page ConstantsPage("Gameplay Modifiers", ConstantsLines, lava::shortNameType("_GMPLMOD"));
 
-	//DBZ Mode settings
-	vector<Line*> DBZModeLines;
-	DBZModeLines.push_back(new Toggle("Flight Mode", false, DBZ_MODE_INDEX));
-	DBZModeLines.push_back(new Floating("Max Horizontal Speed", 0, 100, 2, .05, DBZ_MODE_MAX_SPEED_X_INDEX, "%.3f"));
-	DBZModeLines.push_back(new Floating("Max Vertical Speed", 0, 100, 2, .05, DBZ_MODE_MAX_SPEED_Y_INDEX, "%.3f"));
-	DBZModeLines.push_back(new Comment("Acceleration Scales Based On Stick Magnitude"));
-	DBZModeLines.push_back(new Floating("Horizontal Acceleration", -100, 100, 1, .01, DBZ_MODE_ACCEL_X_INDEX, "%.3f"));
-	DBZModeLines.push_back(new Floating("Vertical Acceleration", -100, 100, 1, .01, DBZ_MODE_ACCEL_Y_INDEX, "%.3f"));
-	Page DBZModePage("Flight Mode Settings", DBZModeLines, lava::shortNameType("_FLIGHT"));
 	
 	//Special Mode Settings
 	vector<Line*> SpecialModeLines;
