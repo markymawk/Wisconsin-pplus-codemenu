@@ -1,3 +1,4 @@
+# (deprecated; compiled asm will not function in P+ 3.0 or later)
 # Wisconsin Project+ code menu
 
 Fork of Fracture's code menu as used in Project+ 2.2, rebuilt on QuickLava's edits as included in Project+ 2.5.
