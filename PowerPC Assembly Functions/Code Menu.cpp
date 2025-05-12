@@ -937,6 +937,8 @@ void CodeMenu()
 	
 	//player pages
 	vector<Line*> P1Lines;
+	P1Lines.push_back(new Comment("Player 1 Codes"));
+	P1Lines.push_back(new Comment(""));
 	P1Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P1_INDEX));
 	Selection* P1CharSelect = new Selection("P1 Character Select", CHARACTER_LIST, CHARACTER_ID_LIST, 0, CHARACTER_SELECT_P1_INDEX);
 	if (!CHARACTER_LIST.empty())
@@ -965,6 +967,8 @@ void CodeMenu()
 	Page P1("Player 1 Codes", P1Lines, lava::shortNameType("_PLAYER1"));
 
 	vector<Line*> P2Lines;
+	P2Lines.push_back(new Comment("Player 2 Codes"));
+	P2Lines.push_back(new Comment(""));
 	P2Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P2_INDEX));
 	if (!CHARACTER_LIST.empty())
 	{
@@ -988,6 +992,8 @@ void CodeMenu()
 	Page P2("Player 2 Codes", P2Lines, lava::shortNameType("_PLAYER2"));
 
 	vector<Line*> P3Lines;
+	P3Lines.push_back(new Comment("Player 3 Codes"));
+	P3Lines.push_back(new Comment(""));
 	P3Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P3_INDEX));
 	if (!CHARACTER_LIST.empty())
 	{
@@ -1011,6 +1017,8 @@ void CodeMenu()
 	Page P3("Player 3 Codes", P3Lines, lava::shortNameType("_PLAYER3"));
 
 	vector<Line*> P4Lines;
+	P4Lines.push_back(new Comment("Player 4 Codes"));
+	P4Lines.push_back(new Comment(""));
 	P4Lines.push_back(new Toggle("Infinite Shield", false, INFINITE_SHIELDS_P4_INDEX));
 	if (!CHARACTER_LIST.empty())
 	{
