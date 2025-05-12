@@ -444,9 +444,16 @@ void psccSSSRandomStocks()
 void psccRandomIcons()
 {
 	ASMStart(0x80697558, codePrefix + "CSS Random Always Uses P1 CSP" + codeSuffix, "");
+	// Check theme ID
+	SetRegister(3, 0x80495D1C);
+	LBZ(3, 3, 0);
+	// Set to 0 if on certain themes (use PSCC-dependent color settings)
+	If(3, NOT_EQUAL_I, 0); {
+		SetRegister(24, 0);
+	}
+	EndIf();
+	
 	// Restore Original Instruction
-	SetRegister(24, 0);
-	// Force Number for Portrait Texture Name to 501 (for P1 Random)
 	SetRegister(25, 501);
 	ASMEnd();
 
