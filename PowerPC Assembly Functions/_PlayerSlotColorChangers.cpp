@@ -447,8 +447,8 @@ void psccRandomIcons()
 	// Check theme ID
 	SetRegister(3, 0x80495D1C);
 	LBZ(3, 3, 0);
-	// Set to 0 if on certain themes (use PSCC-dependent color settings)
-	If(3, NOT_EQUAL_I, 0); {
+	// Set to 0 if on certain themes (i.e. ignore PSCC-dependent color settings)
+	If(3, GREATER_I, 1); {
 		SetRegister(24, 0);
 	}
 	EndIf();
