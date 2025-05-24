@@ -1884,6 +1884,11 @@ void constantOverride() {
 	int reg2 = 12;
 	int reg3 = 10;
 
+	// WI build: Store Alternate Stages at static value (next to theme byte)
+	LoadWordToReg(reg1, ALT_STAGE_BEHAVIOR_INDEX + Line::VALUE);
+	SetRegister(reg2, 0x80495D1D);
+	STB(reg1, reg2, 0);
+
 	unsigned short prevIndexHiHalf = 0xFFFF;
 	unsigned short prevDestHiHalf = 0xFFFF;
 	std::sort(constantOverrides.begin(), constantOverrides.end());
