@@ -443,6 +443,8 @@ void psccSSSRandomStocks()
 
 void psccRandomIcons()
 {
+	// WI build: P1 CSP code moved to Addons/WI Themes/Source.asm
+	/*
 	ASMStart(0x80697558, codePrefix + "CSS Random Always Uses P1 CSP" + codeSuffix, "");
 	// Check theme ID
 	SetRegister(3, 0x80495D1C);
@@ -456,6 +458,7 @@ void psccRandomIcons()
 	// Restore Original Instruction
 	SetRegister(25, 501);
 	ASMEnd();
+	*/
 
 	std::string codeGroupName = "Random Franchise Icon uses Unique CLR0 Frame ";
 	int randFranchiseIconExitLabel = GetNextLabel();
