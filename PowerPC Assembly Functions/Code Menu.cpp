@@ -1227,11 +1227,13 @@ void CodeMenu()
 		MainLines.push_back(new Selection("CSS Roster Version", ROSTER_LIST, 0, CSS_VERSION_SETTING_INDEX));
 	}
 
+	// WI build: Theme list disabled for custom implementation
+	/*
 	if (THEME_LIST.size() > 1)
 	{
 		MainLines.push_back(new Selection("Active Theme", THEME_LIST, 0, THEME_SETTING_INDEX));
 	}
-	
+	*/
 	Page Main("Main", MainLines, lava::shortNameType("_MAIN"));
 	
 	//Unclepunch fps code
